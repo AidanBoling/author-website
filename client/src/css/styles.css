@@ -54,14 +54,23 @@ body {
     background-image: url("https://www.transparenttextures.com/patterns/dark-wall.png");
 }
 
-/* .main {
-    padding: 0px 16px;
-  } */
+.main {
+    /* margin: 0px 16px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 
 h1,
 a {
     color: var(--text-color);
     font-weight: 200;
+}
+
+.main h1 {
+    text-align: center;
 }
 
 .navbar {
@@ -83,4 +92,28 @@ a {
     align-items: center;
     width: 80%;
     max-width: 600px;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 80vw;
+
+    width: 800px;
+}
+
+.post-form .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.post-form>* {
+    /* width: 100%; */
+    margin: 10px 0;
+}
+
+.post-form .btn-group>* {
+    margin-right: 10px;
 }
