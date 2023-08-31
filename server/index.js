@@ -30,10 +30,10 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello, World</h1>');
 });
 
-app.get('/blog', async (req, res) => {
+app.get('/posts', async (req, res) => {
     const allPosts = await Post.find().where('published').equals('true');
-    console.log(allPosts);
-    // res.json(allPosts);
+    // console.log(allPosts);
+    res.json(allPosts);
 });
 
 app.get('/compose', (req, res) => {

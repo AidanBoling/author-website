@@ -20,6 +20,7 @@
 
     --bg-light: #eee;
     --text-color: black;
+    --grey-m: #858585;
     /* --note-bg: #fff;
     --note-shadow-color: #ccc;
     --note-divider-color: #aaa; */
@@ -38,40 +39,62 @@
 
 
 * {
-    padding: 0;
-    margin: 0;
+    /* padding: 0; */
+    /* margin: 0; */
     box-sizing: border-box;
 }
 
 html {
+    margin: 0;
+    padding: 0;
     font-family: "Helvetica", sans-serif;
     color: var(--text-color);
     /* overflow-y: hidden; */
 }
 
 body {
+    padding: 0;
+    margin: 0;
     background: var(--bg);
     background-image: url("https://www.transparenttextures.com/patterns/dark-wall.png");
 }
+
+h1,
+h2,
+a {
+    color: var(--text-color);
+    font-weight: 300;
+}
+
 
 .main {
     /* margin: 0px 16px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
+
     align-items: center;
     width: 100%;
+    padding: 1rem 5vw;
 }
 
-h1,
-a {
-    color: var(--text-color);
-    font-weight: 200;
-}
-
-.main h1 {
+.main>.header {
     text-align: center;
+    margin: 2rem 0;
 }
+
+.main .content {
+    width: 75vw;
+    max-width: 800px;
+}
+
+.main>hr {
+    width: 80%;
+    color: var(--grey-m);
+    background: var(--grey-m);
+}
+
+
 
 .navbar {
     display: flex;
@@ -94,6 +117,8 @@ a {
     max-width: 600px;
 }
 
+
+/* CREATE POST/COMPOSE */
 .post-form {
     display: flex;
     flex-direction: column;
@@ -116,4 +141,26 @@ a {
 
 .post-form .btn-group>* {
     margin-right: 10px;
+}
+
+
+/* BLOG */
+
+/* POSTS */
+
+.post {
+    margin-top: 2.5rem;
+}
+
+.post-header {
+    display: flex;
+    align-items: baseline;
+}
+
+.post-header span {
+    margin-left: auto;
+}
+
+.post-header h2 {
+    margin-bottom: .5rem;
 }
