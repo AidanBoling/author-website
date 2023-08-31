@@ -1,19 +1,31 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import reactLogo from '../assets/react.svg';
-import Header from './Header';
-import Compose from './pages/Compose';
+import Navbar from './Navbar';
 import Home from './pages/Home';
+import Published from './pages/Published';
+import Blog from './pages/Blog';
+import Compose from './pages/Compose';
+import About from './pages/About';
+import Contact from './pages/Contact';
+
 // import '../css/styles.css';
 // import '../css/App.css';
 
 function App() {
     return (
         <div>
-            <Header />
-            <div className="main">
-                <Home />
-                <Compose />
-            </div>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/published" element={<Published />} />
+                    <Route path="/published/blog" element={<Blog />} />
+                    <Route path="/admin/compose" element={<Compose />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                </Routes>
+            </Router>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 function Contact() {
     return (
-        <div>
+        <div className="main">
             <h1>Contact</h1>
         </div>
     );

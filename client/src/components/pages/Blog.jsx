@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 function Blog() {
     return (
-        <div>
-            <h1>Contact</h1>
+        <div className="main">
+            <h1>Blog</h1>
         </div>
     );
 }

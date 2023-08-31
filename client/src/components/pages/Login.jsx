@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 function Login() {
     return (
-        <div>
+        <div className="main">
             <h1>Login</h1>
         </div>
     );

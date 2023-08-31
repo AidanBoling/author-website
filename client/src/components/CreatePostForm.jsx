@@ -1,29 +1,83 @@
 import { useState } from 'react';
 
 function CreatePostForm() {
+    const postRoute = 'http://localhost:8000/compose';
+    const [errorMessage, setErrorMessage] = useState('');
+    const [postInput, setPostInput] = useState({
+        title: '',
+        content: '',
+    });
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setPostInput({ ...postInput, [name]: value });
+    }
+
+    async function submitPost(event) {
+        event.preventDefault();
+
+        const formData = { ...postInput, published: event.target.value };
+        console.log(formData);
+
+        await fetch('http://localhost:8000/compose', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(result => console.log(result))
+            .then(setPostInput({ title: '', content: '' }))
+            .catch(err => {
+                console.log(err);
+                setErrorMessage(
+                    'Something went wrong -- unable to publish post'
+                );
+            });
+    }
+
     return (
-        <form className="post-form" action="/compose" method="POST">
-            <div className="form-group">
-                <label for="newPostTitle">Title</label>
-                <input type="text" name="postTitle" id="newPostTitle" />
-            </div>
-            <div className="form-group">
-                <label for="newPostContent">Content</label>
-                <textarea
-                    type="text"
-                    name="postContent"
-                    id="newPostContent"
-                    rows="8"></textarea>
-            </div>
-            <div className="btn-group">
-                <button type="submit" name="postPublished" value="true">
-                    Publish
-                </button>
-                <button type="submit" name="postSaveDraft" value="false">
-                    Save As Draft
-                </button>
-            </div>
-        </form>
+        <div>
+            <form className="post-form">
+                <div className="form-group">
+                    <label htmlFor="newPostTitle">Title</label>
+                    <input
+                        onChange={handleChange}
+                        type="text"
+                        name="title"
+                        id="newPostTitle"
+                        value={postInput.title}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="newPostContent">Content</label>
+                    <textarea
+                        onChange={handleChange}
+                        type="text"
+                        name="content"
+                        id="newPostContent"
+                        value={postInput.content}
+                        rows="8"></textarea>
+                </div>
+                <div className="btn-group">
+                    <button
+                        onClick={submitPost}
+                        type="submit"
+                        name="publish"
+                        value="true">
+                        Publish
+                    </button>
+                    <button
+                        onClick={submitPost}
+                        type="submit"
+                        name="draft"
+                        value="false">
+                        Save As Draft
+                    </button>
+                </div>
+            </form>
+            {errorMessage && <p>{errorMessage}</p>}
+        </div>
     );
 }
 

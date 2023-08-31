@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 const { Schema, SchemaTypes, model } = mongoose;
 
-const taskSchema = new Schema({
+const userSchema = new Schema({
     username: { type: String, required: [true, 'Username is missing'] },
     password: { type: String, required: [true, 'Password is missing'] },
     permissionLevel: {
@@ -21,7 +21,7 @@ const taskSchema = new Schema({
     lastLogin: Date,
 });
 
-taskSchema.pre('save', function (next) {
+userSchema.pre('save', function (next) {
     this.updatedAt = Date.now(); // update the date every time document is saved (may be useful to track password changes?)
     next();
 });
@@ -51,5 +51,5 @@ taskSchema.pre('save', function (next) {
 //     });
 // });
 
-const Task = model('Task', taskSchema);
-export default Task;
+const User = model('User', userSchema);
+export default User;
