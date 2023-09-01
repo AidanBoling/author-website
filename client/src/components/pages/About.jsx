@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import PageTitle from '../PageTitle';
 
 function About() {
     return (
         <div className="main">
-            <h1>About</h1>
+            <PageTitle title="About" />
         </div>
     );
 }

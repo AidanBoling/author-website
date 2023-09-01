@@ -78,7 +78,7 @@ a {
     padding: 1rem 5vw;
 }
 
-.main>.header {
+.main .header {
     text-align: center;
     margin: 2rem 0;
 }
@@ -88,13 +88,29 @@ a {
     max-width: 800px;
 }
 
-.main>hr {
-    width: 80%;
+.main hr {
+    width: 80vw;
+    max-width: 700px;
     color: var(--grey-m);
     background: var(--grey-m);
 }
 
+.main h1 {
+    text-align: center;
+}
 
+
+.main .link {
+    color: rgb(155, 190, 255);
+}
+
+.main .link span {
+    font-style: italic;
+}
+
+.main .link:hover {
+    color: rgb(170, 200, 255);
+}
 
 .navbar {
     display: flex;
@@ -148,8 +164,8 @@ a {
 
 /* POSTS */
 
-.post {
-    margin-top: 2.5rem;
+.posts.card {
+    margin: 2.5rem 0;
 }
 
 .post-header {
@@ -163,4 +179,8 @@ a {
 
 .post-header h2 {
     margin-bottom: .5rem;
+}
+
+.posts.card .link {
+    text-decoration: none;
 }

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
     return (
         <div className="navbar">
             <div className="nav-links">
-                <a href="/">Home</a>
-                <a href="/published">Published Works</a>
-                <a href="/about">About</a>
-                <a href="/contact">Contact</a>
+                <Link to="/">Home</Link>
+                <Link to="/published">Published Works</Link>
+                <Link to="/about">About</Link>
+                <Link to="/contact">Contact</Link>
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { createPost } from '../api/createPost';
 
 function CreatePostForm() {
-    const postRoute = 'http://localhost:8000/compose';
     const [errorMessage, setErrorMessage] = useState('');
     const [postInput, setPostInput] = useState({
         title: '',
@@ -19,13 +19,7 @@ function CreatePostForm() {
         const formData = { ...postInput, published: event.target.value };
         console.log(formData);
 
-        await fetch('http://localhost:8000/compose', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
+        await createPost(formData)
             .then(result => console.log(result))
             .then(setPostInput({ title: '', content: '' }))
             .catch(err => {

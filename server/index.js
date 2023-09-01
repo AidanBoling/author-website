@@ -36,6 +36,15 @@ app.get('/posts', async (req, res) => {
     res.json(allPosts);
 });
 
+app.get('/posts/post/:id', async (req, res) => {
+    const post = await Post.findById(`${req.params.id}`);
+    if (post) {
+        res.json(post);
+    } else {
+        res.json({ title: 'Post Not Found' });
+    }
+});
+
 app.get('/compose', (req, res) => {
     res.send(
         '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'
@@ -46,15 +55,9 @@ app.post('/compose', (req, res) => {
     createPost(req.body.title, req.body.content, req.body.published, res);
     //Send response back to client-side confirming success?
     // res.json(newPost);
-    // res.redirect('/compose');
 });
 
 async function createPost(title, content, published, res) {
-    // console.log(title, content, published);
-    // const contentParagraphs = content.split('\n\n');
-    // console.log(contentParagraphs);
-    // return contentParagraphs;
-
     await Post.create({
         title: title,
         content: content.split('\n\n'),
@@ -68,8 +71,6 @@ async function createPost(title, content, published, res) {
             console.log('Project not created: ' + err);
             res.json('Project not created');
         });
-
-    // return newPost;
 }
 
 mongoose

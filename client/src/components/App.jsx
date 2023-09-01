@@ -4,7 +4,11 @@ import reactLogo from '../assets/react.svg';
 import Navbar from './Navbar';
 import Home from './pages/Home';
 import Published from './pages/Published';
-import Blog from './pages/Blog';
+import Books from './pages/Books';
+import BookPage from './pages/BookPage';
+import Articles from './pages/Articles';
+import Posts from './pages/Posts';
+import PostPage from './pages/PostPage';
 import Login from './pages/Login';
 import Compose from './pages/Compose';
 import About from './pages/About';
@@ -21,7 +25,18 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/published" element={<Published />} />
-                    <Route path="/published/blog" element={<Blog />} />
+                    <Route path="/published/posts" element={<Posts />} />
+                    <Route
+                        path="/published/posts/:postId"
+                        element={<PostPage />}
+                    />
+
+                    <Route path="/published/books" element={<Books />} />
+                    <Route
+                        path="/published/books/:bookName"
+                        element={<BookPage />}
+                    />
+                    <Route path="/published/articles" element={<Articles />} />
                     <Route path="/admin/login" element={<Login />} />
                     <Route path="/admin/compose" element={<Compose />} />
                     <Route path="/about" element={<About />} />

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 function Post(props) {
-    console.log('Received post: ', props.post);
-    console.log(props.post._id);
+    // console.log('Received post: ', props.post);
+    // console.log(props.post._id);
 
     return (
         <div className="post">
@@ -12,9 +12,13 @@ function Post(props) {
                 <span>{props.post.createdAt}</span>
             </div>
             <div className="post-content">
-                {props.post.content.map((paragraph, index) => (
-                    <p key={index + 1}>{paragraph}</p>
-                ))}
+                {[props.shortened] ? (
+                    <p>{props.post.content[0].substring(0, 300) + '...'}</p>
+                ) : (
+                    props.post.content.map((paragraph, index) => (
+                        <p key={index + 1}>{paragraph}</p>
+                    ))
+                )}
             </div>
         </div>
     );

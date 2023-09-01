@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import PageTitle from '../PageTitle';
 import CreatePostForm from '../CreatePostForm';
 
 function Compose() {
     return (
         <div className="main">
-            <h1>Compose</h1>
+            <PageTitle title="Compose" />
             <CreatePostForm />
         </div>
     );
