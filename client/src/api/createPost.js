@@ -1,6 +1,6 @@
 import { BASE_URL } from '../api/config';
 
-export default async function createPost(formData) {
+export async function createPost(formData) {
     return await fetch(`${BASE_URL}/compose`, {
         method: 'POST',
         headers: {

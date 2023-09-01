@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPosts } from '../../api/getPosts';
 import PageTitle from '../PageTitle';
-import Post from '../Post';
+import PostCard from '../PostCard';
 
 function Posts() {
     const [publishedPosts, setPosts] = useState([]);
@@ -23,14 +23,7 @@ function Posts() {
             <PageTitle title="Blog" />
             <div className="content">
                 {publishedPosts.map(post => (
-                    <div className="card posts" key={post._id}>
-                        <Post post={post} shortened="true" />
-                        <Link
-                            to={`/published/posts/post/${post._id}`}
-                            className="link">
-                            ➣ <span>Read post</span>
-                        </Link>
-                    </div>
+                    <PostCard key={post._id} post={post} />
                 ))}
             </div>
             <hr />

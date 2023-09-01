@@ -1,27 +1,37 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getPostById } from '../../api/getPost';
 import PageTitle from '../PageTitle';
 
 function PostPage() {
-    const baseRoute = 'http://localhost:8000';
+    const { postId } = useParams();
     const [post, setPost] = useState('');
 
     useEffect(() => {
-        async function fetchPosts() {
-            const getPost = await fetch(`${baseRoute}/posts/post/${post}`)
-                .then(res => {
-                    return res.json();
-                })
-                .then(result => {
-                    setPost(result);
-                    return post;
-                });
+        async function fetchPost() {
+            const foundPost = await getPostById(postId);
+            console.log(foundPost);
+            setPost(foundPost);
         }
-        fetchPosts();
+        fetchPost();
     }, []);
 
     return (
         <div className="main">
-            <PageTitle title={post} />
+            {post && (
+                <div>
+                    <div className="post-header fullpage">
+                        <h1>{post.title}</h1>
+                        {/* TODO: Update this date to published date, once that's fixed */}
+                        <p>{post.createdAt}</p>
+                    </div>
+                    <div className="post-content">
+                        {post.content.map((paragraph, index) => (
+                            <p key={index + 1}>{paragraph}</p>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

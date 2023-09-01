@@ -164,7 +164,7 @@ a {
 
 /* POSTS */
 
-.posts.card {
+.post.card {
     margin: 2.5rem 0;
 }
 
@@ -173,14 +173,22 @@ a {
     align-items: baseline;
 }
 
+.post-header.fullpage {
+    flex-direction: column;
+}
+
 .post-header span {
     margin-left: auto;
+}
+
+.post-header h1 {
+    margin-bottom: 0;
 }
 
 .post-header h2 {
     margin-bottom: .5rem;
 }
 
-.posts.card .link {
+.post.card .link {
     text-decoration: none;
 }

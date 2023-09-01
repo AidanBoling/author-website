@@ -36,7 +36,7 @@ app.get('/posts', async (req, res) => {
     res.json(allPosts);
 });
 
-app.get('/posts/post/:id', async (req, res) => {
+app.get('/posts/id/:id', async (req, res) => {
     const post = await Post.findById(`${req.params.id}`);
     if (post) {
         res.json(post);
@@ -45,11 +45,11 @@ app.get('/posts/post/:id', async (req, res) => {
     }
 });
 
-app.get('/compose', (req, res) => {
-    res.send(
-        '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'
-    );
-});
+// app.get('/compose', (req, res) => {
+//     res.send(
+//         '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'
+//     );
+// });
 
 app.post('/compose', (req, res) => {
     createPost(req.body.title, req.body.content, req.body.published, res);

@@ -27,7 +27,7 @@ function App() {
                     <Route path="/published" element={<Published />} />
                     <Route path="/published/posts" element={<Posts />} />
                     <Route
-                        path="/published/posts/:postId"
+                        path="/published/posts/id/:postId"
                         element={<PostPage />}
                     />
 
