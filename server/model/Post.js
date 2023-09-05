@@ -3,7 +3,8 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const postSchema = new Schema({
     title: { type: String, required: [true, 'Post title is missing'] },
-    content: [String],
+    imageUrl: String,
+    content: { richText: String, plain: [String] },
     tags: [String],
     createdAt: {
         type: Date,
@@ -15,7 +16,7 @@ const postSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    publishDate: { type: Date, immutable: true },
+    publishedDate: { type: Date, immutable: true },
 });
 
 postSchema.pre('save', function (next) {

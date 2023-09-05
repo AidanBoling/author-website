@@ -10,7 +10,7 @@ const userSchema = new Schema({
     password: { type: String, required: [true, 'Password is missing'] },
     permissionLevel: {
         type: String,
-        default: 'siteOwner',
+        default: 'owner',
     },
     createdAt: {
         type: Date,

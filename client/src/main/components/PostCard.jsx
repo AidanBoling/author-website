@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function PostCard(props) {
-    // console.log('Received post: ', props.post);
+    console.log('Received post: ', props.post);
     // console.log(props.post._id);
+    let summary = '';
+    if (props.post.teaser) {
+        summary = props.post.teaser;
+    } else if (
+        props.post.content.plain &&
+        props.post.content.plain.length > 0
+    ) {
+        summary = props.post.content.plain[0].substring(0, 300) + '...';
+    }
 
     return (
         <div className="post card">
@@ -13,7 +22,7 @@ function PostCard(props) {
                 <span>{props.post.createdAt}</span>
             </div>
             <div className="post-content">
-                <p>{props.post.content[0].substring(0, 300) + '...'}</p>
+                <p>{summary}</p>
             </div>
             <Link to={`/published/posts/id/${props.post._id}`} className="link">
                 ➣ <span>Read post</span>

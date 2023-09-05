@@ -1,0 +1,11 @@
+.tiptap {
+    min-height: 15rem;
+    height: fit-content;
+}
+
+.form,
+.tiptap {
+    width: 80vw;
+    max-width: 800px;
+
+}

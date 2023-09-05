@@ -1,4 +1,4 @@
-import { BASE_URL } from '../api/config';
+import { BASE_URL } from './config';
 
 export async function createPost(formData) {
     return await fetch(`${BASE_URL}/compose`, {

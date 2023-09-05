@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import postController from './controllers/postController.js';
 
 // import session from 'express-session';
 // import passport from 'passport';
@@ -23,8 +24,13 @@ const corsOrigin = '*';
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
+app.use(
+    cors({
+        origin: corsOrigin,
+        exposedHeaders: 'Content-Range,X-Total-Count',
+    })
+);
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello, World</h1>');
@@ -51,27 +57,46 @@ app.get('/posts/id/:id', async (req, res) => {
 //     );
 // });
 
-app.post('/compose', (req, res) => {
-    createPost(req.body.title, req.body.content, req.body.published, res);
-    //Send response back to client-side confirming success?
-    // res.json(newPost);
-});
+// app.post('/compose', (req, res) => {
+//     createPost(req.body.title, req.body.content.plain, req.body.published, res);
+//     //Send response back to client-side confirming success?
+//     // res.json(newPost);
+// });
 
-async function createPost(title, content, published, res) {
-    await Post.create({
-        title: title,
-        content: content.split('\n\n'),
-        published: published,
-    })
-        .then(newPost => {
-            console.log('Created post:\n' + newPost);
-            res.json(newPost);
-        })
-        .catch(err => {
-            console.log('Project not created: ' + err);
-            res.json('Project not created');
-        });
-}
+// async function createPost(title, content, published, res) {
+//     await Post.create({
+//         title: title,
+//         content: content.split('\n\n'),
+//         published: published,
+//     })
+//         .then(newPost => {
+//             console.log('Created post:\n' + newPost);
+//             res.json(newPost);
+//         })
+//         .catch(err => {
+//             console.log('Project not created: ' + err);
+//             res.json('Project not created');
+//         });
+// }
+
+// ADMIN APP
+
+// -- POSTS routes
+
+// create one
+app.post('/admin/posts', postController.create);
+
+// get a list
+app.get('/admin/posts', postController.fetch);
+
+// get one
+app.get('/admin/posts/:id', postController.get);
+
+// update one
+app.put('/admin/posts/:id', postController.update);
+
+// delete one
+app.delete('/admin/posts/:id', postController.delete);
 
 mongoose
     .connect(
@@ -83,5 +108,5 @@ mongoose
         });
     });
 
-const allPosts = await Post.where('published').equals('true').exec();
-console.log(allPosts);
+// const allPosts = await Post.where('published').equals('true').exec();
+// console.log(allPosts);

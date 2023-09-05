@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dompurify": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "react-admin": "^4.13.0",
+    "ra-input-rich-text": "^4.13.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
