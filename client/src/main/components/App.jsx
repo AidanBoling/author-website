@@ -27,6 +27,10 @@ function App() {
                 />
                 <Route path="published/books" element={<Books />} />
                 <Route
+                    path="/published/books/id/:bookId"
+                    element={<BookPage />}
+                />
+                <Route
                     path="/published/books/:bookName"
                     element={<BookPage />}
                 />

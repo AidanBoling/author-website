@@ -5,8 +5,8 @@ function PostCard(props) {
     console.log('Received post: ', props.post);
     // console.log(props.post._id);
     let summary = '';
-    if (props.post.teaser) {
-        summary = props.post.teaser;
+    if (props.post.content.teaser) {
+        summary = props.post.content.teaser;
     } else if (
         props.post.content.plain &&
         props.post.content.plain.length > 0

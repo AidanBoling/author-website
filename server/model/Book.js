@@ -7,7 +7,7 @@ const bookSchema = new Schema({
     description: { short: String, long: String },
     tags: [String],
     datePublished: Date,
-    storeLink: String,
+    purchaseInfo: [{ location: String, link: String }],
     category: { type: String, enum: ['Fiction', 'Non-fiction'] },
 });
 

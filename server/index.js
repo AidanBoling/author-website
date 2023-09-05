@@ -9,6 +9,7 @@ import postController from './controllers/postController.js';
 
 import mongoose, { isObjectIdOrHexString, Types } from 'mongoose';
 import Post from './model/Post.js';
+import Book from './model/Book.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
@@ -32,9 +33,13 @@ app.use(
     })
 );
 
+// MAIN APP
+
 app.get('/', (req, res) => {
     res.send('<h1>Hello, World</h1>');
 });
+
+// -- Posts routes
 
 app.get('/posts', async (req, res) => {
     const allPosts = await Post.find().where('published').equals('true');
@@ -50,6 +55,25 @@ app.get('/posts/id/:id', async (req, res) => {
         res.json({ title: 'Post Not Found' });
     }
 });
+
+// -- Books routes
+
+app.get('/books', async (req, res) => {
+    const allBooks = await Book.find();
+    console.log(allBooks);
+    res.json(allBooks);
+});
+
+app.get('/books/id/:id', async (req, res) => {
+    const book = await Book.findById(`${req.params.id}`);
+    if (book) {
+        res.json(book);
+    } else {
+        res.json({ title: 'Book Not Found' });
+    }
+});
+
+// -- Articles routes
 
 // app.get('/compose', (req, res) => {
 //     res.send(

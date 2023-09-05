@@ -1,10 +1,29 @@
 import { useState, useEffect } from 'react';
+import { getBooks } from '../../api/getBooks';
 import PageTitle from '../PageTitle';
+import BookCard from '../BookCard';
 
 function Books() {
+    const [books, setBooks] = useState([]);
+
+    useEffect(() => {
+        async function fetchBooks() {
+            const allBooks = await getBooks();
+            console.log(allBooks);
+            setBooks(allBooks);
+            // return publishedPosts;
+        }
+        fetchBooks();
+    }, []);
+
     return (
         <div className="main">
             <PageTitle title="Books" />
+            {console.log('Books: ', books)}
+            <div className="content">
+                {books.length > 0 &&
+                    books.map(book => <BookCard key={book._id} book={book} />)}
+            </div>
         </div>
     );
 }
