@@ -1,9 +1,9 @@
-import { useRecordContext } from "react-admin";
+import { useRecordContext } from 'react-admin';
 
 function PostTitle() {
-  const record = useRecordContext();
+    const record = useRecordContext();
 
-  return <span>Post {record ? `"${record.title}"` : ""}</span>;
+    return <span>Post: {record && `"${record.title}"`}</span>;
 }
 
 export default PostTitle;

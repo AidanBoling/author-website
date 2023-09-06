@@ -16,6 +16,11 @@ import PostList from './posts/PostList';
 import PostShow from './posts/PostShow';
 import PostEdit from './posts/PostEdit';
 import PostCreate from './posts/PostCreate';
+import BookList from './books/BookList';
+import BookShow from './books/BookShow';
+import BookCreate from './books/BookCreate';
+import BookEdit from './books/BookEdit';
+
 // import authProvider from './authProvider';
 
 function AdminApp() {
@@ -32,6 +37,13 @@ function AdminApp() {
                 show={PostShow}
                 create={PostCreate}
                 edit={PostEdit}
+            />
+            <Resource
+                name="books"
+                list={BookList}
+                show={BookShow}
+                create={BookCreate}
+                edit={BookEdit}
                 icon={PostIcon}
             />
 

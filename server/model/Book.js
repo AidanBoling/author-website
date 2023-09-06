@@ -8,7 +8,8 @@ const bookSchema = new Schema({
     tags: [String],
     datePublished: Date,
     purchaseInfo: [{ location: String, link: String }],
-    category: { type: String, enum: ['Fiction', 'Non-fiction'] },
+    category: { type: String, enum: ['fiction', 'non-fiction'] },
+    updatedAt: Date,
 });
 
 const Book = model('Book', bookSchema);

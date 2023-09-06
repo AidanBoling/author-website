@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import postController from './controllers/postController.js';
+import bookController from './controllers/bookController.js';
 
 // import session from 'express-session';
 // import passport from 'passport';
@@ -122,6 +123,23 @@ app.put('/admin/posts/:id', postController.update);
 // delete one
 app.delete('/admin/posts/:id', postController.delete);
 
+// -- BOOKS routes
+
+// create one
+app.post('/admin/books', bookController.create);
+
+// get a list
+app.get('/admin/books', bookController.fetch);
+
+// get one
+app.get('/admin/books/:id', bookController.get);
+
+// update one
+app.put('/admin/books/:id', bookController.update);
+
+// delete one
+app.delete('/admin/books/:id', bookController.delete);
+
 mongoose
     .connect(
         `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
@@ -132,5 +150,5 @@ mongoose
         });
     });
 
-// const allPosts = await Post.where('published').equals('true').exec();
-// console.log(allPosts);
+const allBooks = await Book.find();
+console.log(allBooks);
