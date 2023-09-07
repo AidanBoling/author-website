@@ -3,7 +3,7 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const articleSchema = new Schema({
     title: { type: String, required: [true, 'Article title is missing'] },
-    imageUrl: String,
+    image: { url: String, altText: String },
     url: String,
     descriptionShort: String,
     content: String,

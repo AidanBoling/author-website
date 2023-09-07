@@ -78,6 +78,23 @@ app.get('/books/id/:id', async (req, res) => {
 
 // -- Articles routes
 
+app.get('/articles', async (req, res) => {
+    const allArticles = await Article.find();
+    console.log(allArticles);
+    res.json(allArticles);
+});
+
+app.get('/articles/id/:id', async (req, res) => {
+    const article = await Article.findById(`${req.params.id}`);
+    if (article) {
+        console.log('Article retrieved from db: ', article);
+        res.json(article);
+    } else {
+        console.log('Something went wrong in retrieving article');
+        res.json({ title: 'Article Not Found' });
+    }
+});
+
 // app.get('/compose', (req, res) => {
 //     res.send(
 //         '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'

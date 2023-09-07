@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPosts } from '../../api/getPosts';
+import { getList } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 import PostCard from '../PostCard';
 
@@ -7,13 +7,13 @@ function Posts() {
     const [publishedPosts, setPosts] = useState([]);
 
     useEffect(() => {
-        async function fetchPosts() {
-            const allPosts = await getPosts();
-            console.log(allPosts);
-            setPosts(allPosts);
+        async function fetchItems() {
+            const allItems = await getList('posts');
+            console.log(allItems);
+            setPosts(allItems);
             // return publishedPosts;
         }
-        fetchPosts();
+        fetchItems();
     }, []);
 
     return (

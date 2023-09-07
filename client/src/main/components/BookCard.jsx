@@ -7,17 +7,24 @@ function BookCard(props) {
     let shortSummary = props.book.description.short;
 
     return (
-        <div className="book card">
-            <div className="book-header">
-                <h2>{props.book.title}</h2>
-                {/* <span>{props.post.createdAt}</span> */}
+        <div className="book card resource-card">
+            <div className="book-image card image">
+                <img src={props.book.coverImageUrl} />
             </div>
-            <div className="book-content">
-                <p>{shortSummary}</p>
+            <div className="card content">
+                <div className="book-header">
+                    <h2>{props.book.title}</h2>
+                    {/* <span>{Date(props.post.datePublished).getFullYear()}</span> */}
+                </div>
+                <div className="book-content">
+                    <p>{shortSummary}</p>
+                </div>
+                <Link
+                    to={`/published/books/id/${props.book._id}`}
+                    className="link">
+                    ➣ <span>Read more</span>
+                </Link>
             </div>
-            <Link to={`/published/books/id/${props.book._id}`} className="link">
-                ➣ <span>Read more</span>
-            </Link>
         </div>
     );
 }

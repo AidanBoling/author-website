@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getBooks } from '../../api/getBooks';
+import { getList } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 import BookCard from '../BookCard';
 
@@ -7,13 +7,13 @@ function Books() {
     const [books, setBooks] = useState([]);
 
     useEffect(() => {
-        async function fetchBooks() {
-            const allBooks = await getBooks();
-            console.log(allBooks);
-            setBooks(allBooks);
+        async function fetchItems() {
+            const allItems = await getList('books');
+            console.log(allItems);
+            setBooks(allItems);
             // return publishedPosts;
         }
-        fetchBooks();
+        fetchItems();
     }, []);
 
     return (
@@ -30,13 +30,13 @@ function Books() {
 
 export default Books;
 
-// Create "Book" component/cards
+// [x] Create "Book" component/cards
 // - cover pic
 // - summary-short
 // - link to book page
 // - link to sales page (and/or)
 
-// Create Books in server/db
+// [x] Create Books in server/db
 // - Title
 // - Publish date
 // - Cover pic (link) (lorem picsum, random)
@@ -44,4 +44,4 @@ export default Books;
 // - Summary
 // - store/purchase link (??)
 
-// Create admin "Add/Submit Book" form/page (and same for articles...)
+// [x] Create admin "Add/Submit Book" form/page (and same for articles...)

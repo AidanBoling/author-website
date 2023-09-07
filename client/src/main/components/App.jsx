@@ -7,9 +7,10 @@ import Published from './pages/Published';
 import Books from './pages/Books';
 import BookPage from './pages/BookPage';
 import Articles from './pages/Articles';
+import ArticlePage from './pages/ArticlePage';
 import Posts from './pages/Posts';
 import PostPage from './pages/PostPage';
-import Compose from './pages/Compose';
+// import Compose from './pages/Compose';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
@@ -30,12 +31,15 @@ function App() {
                     path="/published/books/id/:bookId"
                     element={<BookPage />}
                 />
-                <Route
+                {/* <Route
                     path="/published/books/:bookName"
                     element={<BookPage />}
-                />
+                /> */}
                 <Route path="/published/articles" element={<Articles />} />
-
+                <Route
+                    path="/published/articles/id/:articleId"
+                    element={<ArticlePage />}
+                />
                 {/* <Route path="/admin/compose" element={<Compose />} /> */}
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />

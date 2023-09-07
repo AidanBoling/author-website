@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { getPostById } from '../../api/getPost';
+import { getById } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 
 function PostPage() {
@@ -10,13 +10,13 @@ function PostPage() {
     const [richText, setRichText] = useState('');
 
     useEffect(() => {
-        async function fetchPost() {
-            const foundPost = await getPostById(postId);
-            console.log(foundPost);
-            setPost(foundPost);
-            setRichText(foundPost.content.richText);
+        async function fetchItem() {
+            const foundItem = await getById(postId, 'posts');
+            console.log(foundItem);
+            setPost(foundItem);
+            setRichText(foundItem.content.richText);
         }
-        fetchPost();
+        fetchItem();
     }, []);
 
     return (
@@ -26,10 +26,21 @@ function PostPage() {
                     <div className="post-header fullpage">
                         <h1>{post.title}</h1>
                         {/* TODO: Update this date to published date, once that's fixed */}
-                        <p>Published: {post.createdAt}</p>
+                        <p>
+                            Published:{' '}
+                            {new Date(post.createdAt).toLocaleDateString()}
+                        </p>
                         {/* <p>{post.publishedDate}</p> */}
                         {/* <p>Updated: {post.updatedAt}</p> */}
                     </div>
+                    {post.image && (
+                        <div className="image fullpage">
+                            <img
+                                src={post.image.url}
+                                alt={post.image.altText}
+                            />
+                        </div>
+                    )}
                     <div className="post-content">
                         {post.content.richText ? (
                             <div

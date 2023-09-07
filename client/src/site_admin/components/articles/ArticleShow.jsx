@@ -15,8 +15,8 @@ function ArticleShow() {
         <Show title={<ArticleTitle />}>
             <TabbedShowLayout>
                 <TabbedShowLayout.Tab label="summary">
+                    <ImageField source="image.url" label={false} />
                     <TextField source="title" />
-                    <ImageField source="imageUrl" />
                     <DateField source="datePublished" />
                     <TextField source="publisher.name" />
                     <UrlField source="publisher.website" />
@@ -28,7 +28,7 @@ function ArticleShow() {
                     {/* <ReferenceField source="tagsId" reference="tags" /> */}
                 </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab label="content">
-                    <ImageField source="imageUrl" label={false} />
+                    <ImageField source="image.url" label={false} />
                     <RichTextField source="content" label={false} />
                     {/* <ReferenceField source="tagsId" reference="tags" /> */}
                 </TabbedShowLayout.Tab>

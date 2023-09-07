@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { getBookById } from '../../api/getBook';
+import { getById } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 
 function BookPage() {
@@ -10,12 +10,12 @@ function BookPage() {
     const [book, setBook] = useState('');
 
     useEffect(() => {
-        async function fetchBook() {
-            const foundBook = await getBookById(bookId);
-            console.log(foundBook);
-            setBook(foundBook);
+        async function fetchItem() {
+            const foundItem = await getById(bookId, 'books');
+            console.log(foundItem);
+            setBook(foundItem);
         }
-        fetchBook();
+        fetchItem();
     }, []);
 
     return (
@@ -32,7 +32,10 @@ function BookPage() {
                     </div>
 
                     <div className="book-details">
-                        <p>Published: {book.datePublished}</p>
+                        <p>
+                            Published:{' '}
+                            {new Date(book.datePublished).toLocaleDateString()}
+                        </p>
                     </div>
 
                     <div className="book-content">
@@ -53,10 +56,8 @@ function BookPage() {
                             {/* TODO: - Make sure link opens new tab; - add accessibility for button */}
                             <p>Where to buy:</p>
                             {book.purchaseInfo.map(store => (
-                                <a href={`${store.link}`}>
-                                    <button key={store._id}>
-                                        {store.location}
-                                    </button>
+                                <a href={`${store.link}`} key={store._id}>
+                                    <button>{store.location}</button>
                                 </a>
                             ))}
                         </div>

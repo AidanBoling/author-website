@@ -24,9 +24,14 @@ function ArticleForm() {
                     label="Link to Article"
                 />
                 <TextInput
-                    source="imageUrl"
+                    source="image.url"
                     className="form"
                     label="Image URL"
+                />
+                <TextInput
+                    source="image.altText"
+                    className="form"
+                    label="Image description (accessibility)"
                 />
                 <TextInput
                     source="descriptionShort"
