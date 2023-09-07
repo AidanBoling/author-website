@@ -4,7 +4,9 @@ import {
     ListGuesser,
     EditGuesser,
     ShowGuesser,
+    defaultTheme,
 } from 'react-admin';
+import { customLightTheme, customDarkTheme } from './themeCustom';
 import '../css/styles.css';
 import BookIcon from '@mui/icons-material/Book';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
@@ -29,14 +31,18 @@ import ArticleEdit from './articles/ArticleEdit';
 
 // import authProvider from './authProvider';
 
+// const lightTheme = customLightTheme;
+// const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
+
 function AdminApp() {
     return (
         <Admin
             basename="/admin"
             dataProvider={myDataProvider}
-            dashboard={Dashboard}
             //   authProvider={authProvider}
-        >
+            theme={customLightTheme}
+            darkTheme={customDarkTheme}
+            dashboard={Dashboard}>
             <Resource
                 name="posts"
                 list={PostList}

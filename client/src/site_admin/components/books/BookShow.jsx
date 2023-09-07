@@ -8,6 +8,7 @@ import {
     ImageField,
 } from 'react-admin';
 import { Grid } from '@mui/material';
+
 import BookTitle from './BookPageTitle';
 
 function BookShow() {

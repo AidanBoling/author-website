@@ -1,3 +1,37 @@
+:root {
+    --content-section-width: 90%;
+
+}
+
+
+.RaLayout-content>* {
+    width: 90%;
+    align-self: center;
+}
+
+
+/* Dashboard */
+.MuiContainer-root {
+    margin-top: 10vh;
+    padding: 0;
+}
+
+.MuiContainer-root>* {
+    padding: 0;
+}
+
+/* Show views */
+.RaShow-main,
+.RaList-main {
+    min-width: calc(80vw - 200px);
+}
+
+.RaShow-main>* {
+    padding: 1rem;
+}
+
+
+/* Forms */
 .tiptap {
     min-height: 15rem;
     height: fit-content;
