@@ -2,14 +2,15 @@ import mongoose from 'mongoose';
 const { Schema, SchemaTypes, model } = mongoose;
 
 const articleSchema = new Schema({
-    title: { type: String, required: [true, 'Book title is missing'] },
-    coverImageUrl: String,
-    externalUrl: String,
-    description: { short: String, long: [String] },
-    content: [String],
+    title: { type: String, required: [true, 'Article title is missing'] },
+    imageUrl: String,
+    url: String,
+    descriptionShort: String,
+    content: String,
     datePublished: Date,
-    publisher: String,
+    publisher: { name: String, website: String },
     tags: [String],
+    updatedAt: Date,
 });
 
 const Article = model('Article', articleSchema);

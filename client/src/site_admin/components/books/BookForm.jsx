@@ -9,6 +9,7 @@ import {
     SimpleFormIterator,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
+import { Grid } from '@mui/material';
 
 function BookForm() {
     return (
@@ -27,20 +28,27 @@ function BookForm() {
                 className="form"
                 label="Teaser"
             />
-
-            <DateInput source="datePublished" />
-            <SelectInput
-                source="category"
-                choices={[
-                    { id: 'fiction', name: 'Fiction' },
-                    { id: 'non-fiction', name: 'Non-Fiction' },
-                ]}
-            />
             <TextInput
                 source="coverImageUrl"
                 className="form"
                 label="Cover Image URL"
             />
+            <Grid container spacing={2} className="form">
+                <Grid item xs={12} sm={6}>
+                    <DateInput source="datePublished" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <SelectInput
+                        source="category"
+                        choices={[
+                            { id: 'fiction', name: 'Fiction' },
+                            { id: 'non-fiction', name: 'Non-Fiction' },
+                        ]}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+
             {/* <ImageInput source="coverImageUrl" className="form" /> */}
 
             <ArrayInput source="purchaseInfo">

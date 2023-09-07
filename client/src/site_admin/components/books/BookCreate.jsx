@@ -3,7 +3,7 @@ import BookForm from './BookForm';
 
 function BookCreate() {
     return (
-        <Create>
+        <Create redirect="show">
             <BookForm />
         </Create>
     );

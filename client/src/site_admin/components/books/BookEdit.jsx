@@ -5,7 +5,7 @@ import BookForm from './BookForm';
 
 function BookEdit() {
     return (
-        <Edit title={<BookTitle />}>
+        <Edit title={<BookTitle />} redirect="show">
             <BookForm />
         </Edit>
     );

@@ -6,7 +6,9 @@ import {
     ShowGuesser,
 } from 'react-admin';
 import '../css/styles.css';
-import PostIcon from '@mui/icons-material/Book';
+import BookIcon from '@mui/icons-material/Book';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import FeedIcon from '@mui/icons-material/Feed';
 import myDataProvider from '../dataProvider';
 
 import Dashboard from './Dashboard';
@@ -20,6 +22,10 @@ import BookList from './books/BookList';
 import BookShow from './books/BookShow';
 import BookCreate from './books/BookCreate';
 import BookEdit from './books/BookEdit';
+import ArticleList from './articles/ArticleList';
+import ArticleShow from './articles/ArticleShow';
+import ArticleCreate from './articles/ArticleCreate';
+import ArticleEdit from './articles/ArticleEdit';
 
 // import authProvider from './authProvider';
 
@@ -37,6 +43,7 @@ function AdminApp() {
                 show={PostShow}
                 create={PostCreate}
                 edit={PostEdit}
+                icon={FeedIcon}
             />
             <Resource
                 name="books"
@@ -44,9 +51,16 @@ function AdminApp() {
                 show={BookShow}
                 create={BookCreate}
                 edit={BookEdit}
-                icon={PostIcon}
+                icon={BookIcon}
             />
-
+            <Resource
+                name="articles"
+                list={ArticleList}
+                show={ArticleShow}
+                create={ArticleCreate}
+                edit={ArticleEdit}
+                icon={NewspaperIcon}
+            />
             {/* <Resource name="users" list={UserList} show={UserShow} recordRepresentation="name" icon={UserIcon} /> */}
         </Admin>
     );

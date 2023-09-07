@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
+import articleController from './controllers/articleController.js';
 
 // import session from 'express-session';
 // import passport from 'passport';
@@ -11,6 +12,7 @@ import bookController from './controllers/bookController.js';
 import mongoose, { isObjectIdOrHexString, Types } from 'mongoose';
 import Post from './model/Post.js';
 import Book from './model/Book.js';
+import Article from './model/Article.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
@@ -140,6 +142,23 @@ app.put('/admin/books/:id', bookController.update);
 // delete one
 app.delete('/admin/books/:id', bookController.delete);
 
+// -- ARTICLES routes
+
+// create one
+app.post('/admin/articles', articleController.create);
+
+// get a list
+app.get('/admin/articles', articleController.fetch);
+
+// get one
+app.get('/admin/articles/:id', articleController.get);
+
+// update one
+app.put('/admin/articles/:id', articleController.update);
+
+// delete one
+app.delete('/admin/articles/:id', articleController.delete);
+
 mongoose
     .connect(
         `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
@@ -150,5 +169,5 @@ mongoose
         });
     });
 
-const allBooks = await Book.find();
-console.log(allBooks);
+// const allBooks = await Book.find();
+// console.log(allBooks);

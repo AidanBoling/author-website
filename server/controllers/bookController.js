@@ -10,20 +10,21 @@ async function sendResponse(model, dbCollection, data, res, code) {
 
 const bookController = {
     // Create a book
-    create: async (request, response) => {
-        const newBookData = request.body;
+    create: async (req, res) => {
+        const newBookData = req.body;
         // console.log('Book: ', newBookData);
 
-        // if (post.published) {
-        //     newPostData = { ...newPostData, publishedDate: new Date() };
-        // }
+        // Fix date by adding dummy time (if no time included, date will be incorrect when translated *back* from UTC, client-side)
+        if (newBookData.datePublished) {
+            newBookData.datePublished = req.body.datePublished + 'T12:00';
+        }
 
         try {
             const newBook = await Book.create(newBookData);
-            sendResponse(Book, 'books', newBook, response, 201);
+            sendResponse(Book, 'books', newBook, res, 201);
         } catch (error) {
             console.log(error);
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 
@@ -39,39 +40,44 @@ const bookController = {
     },
 
     // Get a single book
-    get: async (request, response) => {
+    get: async (req, res) => {
         try {
-            const bookId = request.params.id;
+            const bookId = req.params.id;
             const book = await Book.findById(bookId);
-            sendResponse(Book, 'books', book, response, 200);
+            sendResponse(Book, 'books', book, res, 200);
         } catch (e) {
-            response.status(500).send(e);
+            res.status(500).send(e);
         }
     },
 
     // Update a book
-    update: async (request, response) => {
-        const bookId = request.params.id;
-        let updates = { ...request.body, updatedAt: new Date() };
+    update: async (req, res) => {
+        const bookId = req.params.id;
+        let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
+
+        // Fix date by adding dummy time (if no time included, date will be incorrect when translated *back* from UTC, client-side)
+        if (req.body.datePublished && req.body.datePublished.length < 11) {
+            updates.datePublished = req.body.datePublished + 'T12:00';
+        }
 
         try {
             const bookToUpdate = await Book.findByIdAndUpdate(bookId, updates);
-            sendResponse(Book, 'books', { data: bookToUpdate }, response, 200);
+            sendResponse(Book, 'books', { data: bookToUpdate }, res, 200);
         } catch (e) {
-            response.status(500).send(e);
+            res.status(500).send(e);
         }
     },
 
     // Delete a book
-    delete: async (request, response) => {
+    delete: async (req, res) => {
         try {
-            const bookId = request.params.id;
+            const bookId = req.params.id;
             const bookToDelete = await Book.findById(bookId);
             await Book.findByIdAndDelete(bookId);
-            sendResponse(Book, 'posts', { data: bookToDelete }, response, 200);
+            sendResponse(Book, 'posts', { data: bookToDelete }, res, 200);
         } catch (e) {
-            response.status(500).send(e);
+            res.status(500).send(e);
         }
     },
 };
