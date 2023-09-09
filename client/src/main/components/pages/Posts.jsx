@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Stack } from '@mui/material';
 import { getList } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 import PostCard from '../PostCard';
+import ResourceCardSkeleton from '../ResourceCardSkeleton';
 
 function Posts() {
     const [publishedPosts, setPosts] = useState([]);
@@ -9,23 +11,28 @@ function Posts() {
     useEffect(() => {
         async function fetchItems() {
             const allItems = await getList('posts');
-            console.log(allItems);
+            // console.log(allItems);
             setPosts(allItems);
-            // return publishedPosts;
         }
         fetchItems();
     }, []);
 
     return (
         <div className="main">
-            {console.log('Posts: ', publishedPosts)}
+            {/* {console.log('Posts: ', publishedPosts)} */}
             <PageTitle title="Blog" />
             <div className="content">
-                {publishedPosts.map(post => (
-                    <PostCard key={post._id} post={post} />
-                ))}
+                <Stack spacing={3}>
+                    {publishedPosts.length > 0 ? (
+                        publishedPosts.map(post => (
+                            <PostCard key={post._id} post={post} />
+                        ))
+                    ) : (
+                        <ResourceCardSkeleton hasMedia="false" />
+                    )}
+                </Stack>
             </div>
-            <hr />
+            {/* <hr /> */}
         </div>
     );
 }

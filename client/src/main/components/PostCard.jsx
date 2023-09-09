@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+// import { palette } from '@mui/system';
+import { Button } from '@mui/material';
+import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
-    console.log('Received post: ', props.post);
+    // console.log('Received post: ', props.post);
     // console.log(props.post._id);
     let summary = '';
     if (props.post.content.teaser) {
@@ -15,19 +18,22 @@ function PostCard(props) {
     }
 
     return (
-        <div className="post card">
-            <div className="post-header">
-                <h2>{props.post.title}</h2>
-                {/* TODO: Update this date to published date, once that's fixed */}
-                <span>{props.post.createdAt}</span>
-            </div>
-            <div className="post-content">
-                <p>{summary}</p>
-            </div>
-            <Link to={`/published/posts/id/${props.post._id}`} className="link">
-                ➣ <span>Read post</span>
-            </Link>
-        </div>
+        <ResourceCard
+            title={props.post.title}
+            hasMedia={false}
+            // image={props.article.image.url}
+            // imageAlt={props.article.image.altText}
+            published={props.post.publishedDate}
+            created={props.post.createdAt}
+            content={summary}
+            actions={
+                <Link
+                    to={`/published/posts/id/${props.post._id}`}
+                    className="link">
+                    <Button>➣ Read post</Button>
+                </Link>
+            }
+        />
     );
 }
 

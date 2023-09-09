@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ThemeWrapper from './main/components/style/ThemeWrapper';
 import './main/css/styles.css';
 
 import App from './main/components/App';
@@ -11,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
         <Routes>
             <Route path="/admin/*" element={<AdminApp />} />
-            <Route path="/*" element={<App />} />
+            <Route path="/*" element={<ThemeWrapper element={<App />} />} />
         </Routes>
     </BrowserRouter>
     // </React.StrictMode>

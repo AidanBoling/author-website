@@ -1,47 +1,37 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Card, CardMedia, Button } from '@mui/material';
+import ResourceCard from './ResourceCard';
 
 function ArticleCard(props) {
     console.log('Received article: ', props.article);
     // console.log(props.post._id);
 
     return (
-        <div className="article card resource-card">
-            <div className="article-image card image">
-                <img
-                    src={props.article.image.url}
-                    alt={props.article.image.altText}
-                />
-            </div>
-            <div className="card content">
-                <div className="article-header">
-                    <h2>{props.article.title}</h2>
-                    <span>
-                        {new Date(
-                            props.article.datePublished
-                        ).toLocaleDateString()}
-                    </span>
-                </div>
-
-                <div className="article-content">
-                    <p>{props.article.descriptionShort}</p>
-                </div>
-                {props.article.content ? (
+        <ResourceCard
+            title={props.article.title}
+            hasMedia
+            image={props.article.image.url}
+            imageAlt={props.article.image.altText}
+            published={props.article.datePublished}
+            created={props.article.createdAt}
+            content={props.article.descriptionShort}
+            actions={
+                props.article.content ? (
                     <Link
                         to={`/published/articles/id/${props.article._id}`}
                         className="link">
-                        ➣ <span>Read full article</span>
+                        <Button>➣ Read article</Button>
                     </Link>
                 ) : (
                     <a href={props.article.url} className="link">
-                        ➣
-                        <span>
-                            Read article on {props.article.publisher.name}
-                        </span>
+                        <Button>
+                            ➣ Read article on {props.article.publisher.name}
+                        </Button>
                     </a>
-                )}
-            </div>
-        </div>
+                )
+            }
+        />
     );
 }
 
