@@ -10,6 +10,7 @@ import { customLightTheme, customDarkTheme } from './themeCustom';
 import '../css/styles.css';
 import BookIcon from '@mui/icons-material/Book';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
 import myDataProvider from '../dataProvider';
 
@@ -28,6 +29,10 @@ import ArticleList from './articles/ArticleList';
 import ArticleShow from './articles/ArticleShow';
 import ArticleCreate from './articles/ArticleCreate';
 import ArticleEdit from './articles/ArticleEdit';
+import EventList from './events/EventList';
+import EventShow from './events/EventShow';
+import EventCreate from './events/EventCreate';
+import EventEdit from './events/EventEdit';
 
 // import authProvider from './authProvider';
 
@@ -66,6 +71,14 @@ function AdminApp() {
                 create={ArticleCreate}
                 edit={ArticleEdit}
                 icon={NewspaperIcon}
+            />
+            <Resource
+                name="events"
+                list={EventList}
+                show={EventShow}
+                create={EventCreate}
+                edit={EventEdit}
+                icon={CalendarMonthIcon}
             />
             {/* <Resource name="users" list={UserList} show={UserShow} recordRepresentation="name" icon={UserIcon} /> */}
         </Admin>

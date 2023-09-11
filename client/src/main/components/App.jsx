@@ -10,6 +10,7 @@ import Articles from './pages/Articles';
 import ArticlePage from './pages/ArticlePage';
 import Posts from './pages/Posts';
 import PostPage from './pages/PostPage';
+import Events from './pages/Events';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
@@ -36,6 +37,7 @@ function App() {
                     element={<ArticlePage />}
                 />
                 {/* <Route path="/admin/compose" element={<Compose />} /> */}
+                <Route path="/events" element={<Events />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
             </Routes>

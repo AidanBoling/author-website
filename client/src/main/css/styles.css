@@ -124,6 +124,7 @@ a {
     background-image: linear-gradient(to right, rgba(var(--red-p), 0.7), 2%, rgba(var(--orange-p), 0.6), 25%, rgba(var(--yellow-p), 0.8) 55%, rgba(var(--green-p), 0.85) 75%, 93%, rgba(var(--indigo-p), .90)), url("https://www.transparenttextures.com/patterns/diagmonds.png");
     /* background-size: cover; */
     margin: auto 0;
+    margin-bottom: 2rem;
     padding: 16px 16px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
     width: 100%;

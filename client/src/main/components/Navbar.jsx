@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Link, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -11,12 +11,39 @@ function Navbar() {
     const colorMode = useContext(ColorModeContext);
 
     return (
-        <div className="navbar">
+        <Box className="navbar">
             <div className="nav-links">
-                <Link to="/">Home</Link>
-                <Link to="/published">Published Works</Link>
-                <Link to="/about">About</Link>
-                <Link to="/contact">Contact</Link>
+                <Link component={RouterLink} to="/" underline="hover">
+                    Home
+                </Link>
+                <Link
+                    component={RouterLink}
+                    to="/published/books"
+                    underline="hover">
+                    Books
+                </Link>
+                <Link
+                    component={RouterLink}
+                    to="/published/articles"
+                    underline="hover">
+                    Articles
+                </Link>
+                <Link
+                    component={RouterLink}
+                    to="/published/posts"
+                    underline="hover">
+                    Blog
+                </Link>
+
+                <Link component={RouterLink} to="/events">
+                    Events
+                </Link>
+                <Link component={RouterLink} to="/about" underline="hover">
+                    About
+                </Link>
+                <Link component={RouterLink} to="/contact" underline="hover">
+                    Contact
+                </Link>
             </div>
             <div className="nav-settings">
                 <IconButton
@@ -30,7 +57,7 @@ function Navbar() {
                     )}
                 </IconButton>
             </div>
-        </div>
+        </Box>
     );
 }
 

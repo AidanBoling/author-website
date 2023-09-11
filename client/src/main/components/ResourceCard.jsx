@@ -5,23 +5,34 @@ import {
     CardContent,
     CardActions,
     CardMedia,
+    Typography,
 } from '@mui/material';
 
 function ResourceCard(props) {
     let mediaSX = { width: 200, flexShrink: 0 };
+    let dateFormat = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    };
+    dateFormat = { year: 'numeric' };
     let hasMediaClass = '';
     if (props.hasMedia) {
         hasMediaClass = 'media';
     }
     if (props.mediaSXOverride) {
-        mediaDim = mediaDimOverride;
+        mediaSX = props.mediaSXOverride;
+    }
+    if (props.dateFormatOverride) {
+        dateFormat = props.dateFormatOverride;
     }
 
     return (
         <Card
             className={`card resource-card ${hasMediaClass}`}
             sx={{ display: 'flex' }}>
-            {props.hasMedia && (
+            {props.hasMedia && props.image && (
                 <CardMedia
                     sx={mediaSX}
                     image={props.image}
@@ -33,8 +44,14 @@ function ResourceCard(props) {
                     title={props.title}
                     subheader={
                         props.published
-                            ? new Date(props.published).toLocaleDateString()
-                            : new Date(props.created).toLocaleDateString()
+                            ? new Date(props.published).toLocaleDateString(
+                                  'en-us',
+                                  dateFormat
+                              )
+                            : new Date(props.created).toLocaleDateString(
+                                  'en-us',
+                                  dateFormat
+                              )
                     }
                 />
                 <CardContent>{props.content}</CardContent>

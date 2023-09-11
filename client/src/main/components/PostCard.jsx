@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // import { palette } from '@mui/system';
-import { Button } from '@mui/material';
+import { Button, Link } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
@@ -27,11 +27,12 @@ function PostCard(props) {
             created={props.post.createdAt}
             content={summary}
             actions={
-                <Link
+                <Button
+                    component={RouterLink}
                     to={`/published/posts/id/${props.post._id}`}
                     className="link">
-                    <Button>➣ Read post</Button>
-                </Link>
+                    ➣ Read post
+                </Button>
             }
         />
     );

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Stack } from '@mui/material';
 import { getList } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 import BookCard from '../BookCard';
+import ResourceCardSkeleton from '../ResourceCardSkeleton';
 
 function Books() {
     const [books, setBooks] = useState([]);
@@ -21,8 +23,15 @@ function Books() {
             <PageTitle title="Books" />
             {console.log('Books: ', books)}
             <div className="content">
-                {books.length > 0 &&
-                    books.map(book => <BookCard key={book._id} book={book} />)}
+                <Stack spacing={3}>
+                    {books.length > 0 ? (
+                        books.map(book => (
+                            <BookCard key={book._id} book={book} />
+                        ))
+                    ) : (
+                        <ResourceCardSkeleton hasMedia={true} />
+                    )}
+                </Stack>
             </div>
         </div>
     );

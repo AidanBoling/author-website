@@ -19,7 +19,6 @@ function Posts() {
 
     return (
         <div className="main">
-            {/* {console.log('Posts: ', publishedPosts)} */}
             <PageTitle title="Blog" />
             <div className="content">
                 <Stack spacing={3}>
@@ -41,5 +40,3 @@ export default Posts;
 
 // TODO: Make posts shortened (200-300chars...)
 // TODO: Limit number of posts shown (pulled?) at once (10, 15, 25...) --> use either a "next page", or a "more"
-
-// Link to post full page from each individual

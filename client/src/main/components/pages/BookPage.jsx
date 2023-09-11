@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import {
+    Box,
+    Button,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from '@mui/material';
 import { getById } from '../../api/getResourceItems';
 import PageTitle from '../PageTitle';
 
 function BookPage() {
     const { bookId } = useParams();
-    console.log(bookId);
+    // console.log(bookId);
     const [book, setBook] = useState('');
 
     useEffect(() => {
         async function fetchItem() {
             const foundItem = await getById(bookId, 'books');
-            console.log(foundItem);
+            // console.log(foundItem);
             setBook(foundItem);
         }
         fetchItem();
@@ -21,47 +29,72 @@ function BookPage() {
     return (
         <div className="main">
             {book && (
-                <div className="book fullpage">
-                    {console.log(book)}
-
-                    <div className="book-header fullpage">
-                        <h1>{book.title}</h1>
+                <div className="content">
+                    <div className="book fullpage">
+                        <Box sx={{ display: 'inline' }}>
+                            <Box
+                                component="img"
+                                className="book-cover"
+                                src={book.coverImageUrl}
+                                alt="book cover"
+                                sx={{
+                                    width: 300,
+                                    height: 400,
+                                    borderRadius: '.25rem',
+                                    mr: '1.5rem',
+                                    mb: '1.5rem',
+                                    flexShrink: 0,
+                                    float: 'left',
+                                    shapeOutside: 'margin-box',
+                                }}></Box>
+                            <div className="book-header fullpage">
+                                <Typography
+                                    variant="h3"
+                                    component="h2"
+                                    mb="2rem">
+                                    {book.title}
+                                </Typography>
+                            </div>
+                            <Box className="book-content">
+                                {book.description.long ? (
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: DOMPurify.sanitize(
+                                                book.description.long
+                                            ),
+                                        }}
+                                    />
+                                ) : (
+                                    book.description.short
+                                )}
+                            </Box>
+                            {book.purchaseInfo.length > 0 && (
+                                <Box className="book-purchase" my="2rem" flex>
+                                    {/* TODO: - Make sure link opens new tab; - add accessibility for button */}
+                                    {book.purchaseInfo.map(store => (
+                                        <Button
+                                            variant="contained"
+                                            href={`${store.link}`}
+                                            aria-label="Opens an external link"
+                                            key={store._id}>
+                                            Order on {store.location}
+                                        </Button>
+                                    ))}
+                                </Box>
+                            )}
+                            <Box className="book-details">
+                                <Typography paragraph>
+                                    {`Published: ${new Date(
+                                        book.datePublished
+                                    ).toLocaleDateString('en-us', {
+                                        month: 'long',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                    })}`}
+                                </Typography>
+                            </Box>
+                        </Box>
                     </div>
-                    <div className="book-cover">
-                        <img src={book.coverImageUrl} alt="book cover"></img>
-                    </div>
-
-                    <div className="book-details">
-                        <p>
-                            Published:{' '}
-                            {new Date(book.datePublished).toLocaleDateString()}
-                        </p>
-                    </div>
-
-                    <div className="book-content">
-                        {book.description.long ? (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                        book.description.long
-                                    ),
-                                }}
-                            />
-                        ) : (
-                            book.description.short
-                        )}
-                    </div>
-                    {book.purchaseInfo.length > 0 && (
-                        <div className="book-purchase">
-                            {/* TODO: - Make sure link opens new tab; - add accessibility for button */}
-                            <p>Where to buy:</p>
-                            {book.purchaseInfo.map(store => (
-                                <a href={`${store.link}`} key={store._id}>
-                                    <button>{store.location}</button>
-                                </a>
-                            ))}
-                        </div>
-                    )}
                 </div>
             )}
         </div>

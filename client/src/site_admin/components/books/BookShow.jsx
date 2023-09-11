@@ -9,11 +9,11 @@ import {
 } from 'react-admin';
 import { Grid } from '@mui/material';
 
-import BookTitle from './BookPageTitle';
+import PageTitle from '../PageTitle';
 
 function BookShow() {
     return (
-        <Show title={<BookTitle />}>
+        <Show title={<PageTitle resourceName="Book" />}>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
                     <ImageField source="coverImageUrl" />

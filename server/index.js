@@ -4,6 +4,7 @@ import cors from 'cors';
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
+import eventController from './controllers/eventController.js';
 
 // import session from 'express-session';
 // import passport from 'passport';
@@ -13,6 +14,7 @@ import mongoose, { isObjectIdOrHexString, Types } from 'mongoose';
 import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
+import Event from './model/Event.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
@@ -63,7 +65,7 @@ app.get('/posts/id/:id', async (req, res) => {
 
 app.get('/books', async (req, res) => {
     const allBooks = await Book.find();
-    console.log(allBooks);
+    // console.log(allBooks);
     res.json(allBooks);
 });
 
@@ -80,19 +82,16 @@ app.get('/books/id/:id', async (req, res) => {
 
 app.get('/articles', async (req, res) => {
     const allArticles = await Article.find();
-    console.log(allArticles);
+    // console.log(allArticles);
     res.json(allArticles);
 });
 
-app.get('/articles/id/:id', async (req, res) => {
-    const article = await Article.findById(`${req.params.id}`);
-    if (article) {
-        console.log('Article retrieved from db: ', article);
-        res.json(article);
-    } else {
-        console.log('Something went wrong in retrieving article');
-        res.json({ title: 'Article Not Found' });
-    }
+// -- Events routes
+
+app.get('/events', async (req, res) => {
+    const allEvents = await Event.find();
+    console.log(allEvents);
+    res.json(allEvents);
 });
 
 // app.get('/compose', (req, res) => {
@@ -175,6 +174,23 @@ app.put('/admin/articles/:id', articleController.update);
 
 // delete one
 app.delete('/admin/articles/:id', articleController.delete);
+
+// -- EVENTS routes
+
+// create one
+app.post('/admin/events', eventController.create);
+
+// get a list
+app.get('/admin/events', eventController.fetch);
+
+// get one
+app.get('/admin/events/:id', eventController.get);
+
+// update one
+app.put('/admin/events/:id', eventController.update);
+
+// delete one
+app.delete('/admin/events/:id', eventController.delete);
 
 mongoose
     .connect(
