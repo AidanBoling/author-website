@@ -63,6 +63,7 @@ function Navbar() {
                             textAlign: 'center',
                             mb: { xs: '0', md: '1.5rem' },
                             mx: 'auto',
+                            zIndex: '1',
                         }}>
                         {title}
                     </Typography>
@@ -84,7 +85,8 @@ function Navbar() {
                                 <Typography
                                     key={page.name}
                                     variant="h6"
-                                    component="span">
+                                    component="span"
+                                    zIndex={1}>
                                     <Link
                                         component={RouterLink}
                                         to={page.link}
