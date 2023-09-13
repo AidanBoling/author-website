@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { Box } from '@mui/material';
 import '../css/styles.css';
 import reactLogo from '../../assets/react.svg';
 import Navbar from './Navbar';
@@ -17,6 +18,44 @@ import Contact from './pages/Contact';
 function App() {
     return (
         <div>
+            {/* <div className="bgmask edge">
+                <div className="background-edge">
+                    <img
+                        src="/leaves-wall_matteo-miliddi-unsplash.jpeg"
+                        className="background-edge"
+                    />
+                </div>
+            </div> */}
+            <Box
+                className="bg pattern"
+                sx={{
+                    width: '100vw',
+                    height: '100%',
+                    position: 'fixed',
+                    backgroundAttachment: 'fixed',
+                    opacity: '.2',
+                    zIndex: '-1',
+                }}>
+                {/* <img src="/white-rhombus-background.jpg" className="bg" /> */}
+            </Box>
+            <Box
+                className="bgmountains-mask"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%',
+                    zIndex: '-2',
+                    position: 'fixed',
+                }}>
+                <div className="bgmountains gradient"></div>
+                <img
+                    src="/gradient-mountain-landscape_freepik-crop.jpg"
+                    className="bgmountains"
+                />
+            </Box>
             <Navbar />
             <Routes>
                 <Route index element={<Home />} />

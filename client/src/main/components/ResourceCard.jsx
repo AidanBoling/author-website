@@ -11,12 +11,11 @@ import {
 function ResourceCard(props) {
     let mediaSX = { width: 200, flexShrink: 0 };
     let dateFormat = {
-        weekday: 'long',
+        // weekday: 'long',
         year: 'numeric',
-        month: 'short',
+        month: 'long',
         day: 'numeric',
     };
-    dateFormat = { year: 'numeric' };
     let hasMediaClass = '';
     if (props.hasMedia) {
         hasMediaClass = 'media';

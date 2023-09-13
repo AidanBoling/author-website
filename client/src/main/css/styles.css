@@ -51,15 +51,98 @@ html {
     width: 100%;
     width: 100vw;
     /* color: var(--text-color); */
-    /* overflow-y: hidden; */
+    overflow-x: hidden;
 }
 
 body {
     padding: 0;
     margin: 0;
+
     /* background: var(--bg); */
-    background-image: url("https://www.transparenttextures.com/patterns/dark-wall.png");
+
+    /* background-image:
+        linear-gradient(to top, rgba(162, 166, 184, 1) 60%, 85%, transparent); */
+
+    /* background-image: url("https://www.transparenttextures.com/patterns/dark-wall.png"); */
+    /* background-image:
+        url("https://www.transparenttextures.com/patterns/xv.png"),
+    background-size: 25%;
+    background-position: center; */
+    /* background-repeat: no-repeat;
+
+    background-attachment: fixed; */
 }
+
+
+/* Backgrounds */
+
+.bg.pattern {
+    background-image:
+        /* url("https://www.transparenttextures.com/patterns/rice-paper-2.png"); */
+        url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
+    /* linear-gradient(to top, blue, 75%, white); */
+    background-size: 20%;
+}
+
+.bgmountains.gradient {
+    height: 100%;
+    width: 100%;
+    background-image:
+        linear-gradient(to top, rgba(162, 166, 184, 1), transparent);
+
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+}
+
+img.bgmountains {
+    margin-top: auto;
+    width: 100%;
+    /* height: 50vw; */
+    /* transform: translateY(25%); */
+    object-fit: scale-down;
+}
+
+
+
+/* Probably remove the following two... */
+img.background-edge {
+    padding: 0;
+    margin: 0;
+    /* width: 100%; */
+    height: 150%;
+    position: fixed;
+    z-index: 3;
+    object-fit: contain;
+    object-fit: scale-down;
+
+
+    /* background-image: url("../../assets/leaves-wall_matteo-miliddi-unsplash.jpeg"); */
+    /* background-position: 200% 50%; */
+    /* background-repeat: no-repeat; */
+    /* background-size: 50%; */
+    /* mask-image: linear-gradient(to left, black, 50%, transparent); */
+
+}
+
+.bgmask.edge {
+    --mgradient: linear-gradient(to right, black, 18%, rgba(0, 0, 0, 0.7) 20%, 22%, rgba(0, 0, 0, 0.2) 24%, 26%, transparent 32%, transparent);
+    padding: 0;
+    margin: 0;
+    width: 50vw;
+    height: 100vh;
+    position: fixed;
+    z-index: -1;
+
+    mask-image: var(--mgradient);
+    mask-size: 100% 100%;
+    -webkit-mask-image: var(--mgradient);
+    /* mask-position: center, right; */
+    mask-repeat: no-repeat;
+    /* overflow-x: hidden; */
+    /* contain: strict; */
+}
+
+/* Containers, Headers */
 
 h1,
 h2,
@@ -68,13 +151,15 @@ a {
     font-weight: 300;
 }
 
-
 .main {
     /* margin: 0px 16px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
-
+    /* background-image: url("../../assets/leaves-wall_matteo-miliddi-unsplash.jpeg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 25% 25%; */
     align-items: center;
     /* width: 100%; */
     padding: 1rem 5vw;
@@ -102,7 +187,6 @@ a {
     text-align: center;
 }
 
-
 /* .main .link {
     color: rgb(155, 190, 255);
 } */
@@ -116,28 +200,24 @@ a {
     color: rgb(170, 200, 255);
 } */
 
-.navbar {
+
+/* .navbar {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #f5ba13;
     background-image: linear-gradient(to right, rgba(var(--red-p), 0.7), 2%, rgba(var(--orange-p), 0.6), 25%, rgba(var(--yellow-p), 0.8) 55%, rgba(var(--green-p), 0.85) 75%, 93%, rgba(var(--indigo-p), .90)), url("https://www.transparenttextures.com/patterns/diagmonds.png");
-    /* background-size: cover; */
+    
+    background-size: cover;
+    
     margin: auto 0;
     margin-bottom: 2rem;
     padding: 16px 16px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
     width: 100%;
     height: 80px;
-}
+} */
 
-.nav-links {
-    display: flex;
-    justify-content: space-evenly;
-    /* align-items: center; */
-    width: 80%;
-    max-width: 600px;
-}
 
 /* Pages */
 
@@ -210,6 +290,7 @@ a {
 
 
 /* POSTS */
+
 /* 
 .post.card {
     margin: 2.5rem 0;

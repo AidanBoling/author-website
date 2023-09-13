@@ -15,9 +15,6 @@ import {
     List,
     ListItem,
     ListItemText,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { palette } from '@mui/system';
