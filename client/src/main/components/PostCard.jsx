@@ -5,8 +5,8 @@ import { Button, Link } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
-    // console.log('Received post: ', props.post);
-    // console.log(props.post._id);
+    console.log('Received post: ', props.post);
+
     let summary = '';
     if (props.post.content.teaser) {
         summary = props.post.content.teaser;
@@ -19,13 +19,24 @@ function PostCard(props) {
 
     return (
         <ResourceCard
+            resource="post"
             title={props.post.title}
-            hasMedia={false}
-            // image={props.article.image.url}
-            // imageAlt={props.article.image.altText}
+            image={
+                props.post.image && props.post.image.url
+                    ? props.post.image.url
+                    : null
+            }
+            imageAlt={
+                props.post.image && props.post.image.altText
+                    ? props.post.image.altText
+                    : null
+            }
             published={props.post.publishedDate}
             created={props.post.createdAt}
             content={summary}
+            mainLinkIsLocal={true}
+            mainLinkTo={`/published/posts/id/${props.post._id}`}
+            mainLinkLabel="Read full post"
             actions={
                 <Button
                     component={RouterLink}

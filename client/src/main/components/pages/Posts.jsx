@@ -27,7 +27,7 @@ function Posts() {
                             <PostCard key={post._id} post={post} />
                         ))
                     ) : (
-                        <ResourceCardSkeleton hasMedia="false" />
+                        <ResourceCardSkeleton hasMedia="true" />
                     )}
                 </Stack>
             </div>

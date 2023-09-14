@@ -3,7 +3,7 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const postSchema = new Schema({
     title: { type: String, required: [true, 'Post title is missing'] },
-    imageUrl: String,
+    image: { url: String, fileName: String, altText: String },
     content: { richText: String, plain: [String] },
     tags: [String],
     createdAt: {

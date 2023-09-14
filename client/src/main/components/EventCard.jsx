@@ -112,8 +112,9 @@ function EventCard(props) {
                                 <Button
                                     key={index}
                                     href={action.link}
+                                    target="_blank"
                                     className="link"
-                                    aria-label={`${action.label} link, which opens an external website`}>
+                                    aria-label={`This ${action.label} page is on an external website, and opens in a new tab`}>
                                     {action.label}
                                 </Button>
                             ) : (

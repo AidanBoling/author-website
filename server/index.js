@@ -86,6 +86,15 @@ app.get('/articles', async (req, res) => {
     res.json(allArticles);
 });
 
+app.get('/articles/id/:id', async (req, res) => {
+    const article = await Article.findById(`${req.params.id}`);
+    if (article) {
+        res.json(article);
+    } else {
+        res.json({ title: 'Article Not Found' });
+    }
+});
+
 // -- Events routes
 
 app.get('/events', async (req, res) => {

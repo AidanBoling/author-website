@@ -70,13 +70,13 @@ function BookPage() {
                             </Box>
                             {book.purchaseInfo.length > 0 && (
                                 <Box className="book-purchase" my="2rem" flex>
-                                    {/* TODO: - Make sure link opens new tab; - add accessibility for button */}
                                     {book.purchaseInfo.map(store => (
                                         <Button
+                                            key={store._id}
                                             variant="contained"
-                                            href={`${store.link}`}
-                                            aria-label="Opens an external link"
-                                            key={store._id}>
+                                            href={store.link}
+                                            target="_blank"
+                                            aria-label={`Go to the ${store.location} page for this book, which opens in a new tab`}>
                                             Order on {store.location}
                                         </Button>
                                     ))}

@@ -16,11 +16,11 @@ function BookShow() {
         <Show title={<PageTitle resourceName="Book" />}>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
-                    <ImageField source="coverImageUrl" />
+                    <ImageField source="coverImage" />
                 </Grid>
                 <Grid item xs={12} sm={9}>
                     <SimpleShowLayout>
-                        {/* <ImageField source="coverImageUrl" /> */}
+                        {/* <ImageField source="coverImage" /> */}
                         <TextField source="title" label={false} />
                         <DateField source="datePublished" />
                         <RichTextField

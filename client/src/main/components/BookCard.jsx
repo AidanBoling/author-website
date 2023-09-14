@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Button } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function BookCard(props) {
     console.log('Received book: ', props.book);
     // console.log(props.post._id);
-    let shortSummary = props.book.description.short;
 
     return (
         <ResourceCard
             title={props.book.title}
             hasMedia
-            image={props.book.coverImageUrl}
+            image={props.book.coverImage}
             imageAlt="book cover"
             mediaSXOverride={{
                 width: 200,
@@ -24,37 +23,36 @@ function BookCard(props) {
             published={props.book.datePublished}
             created={props.book.createdAt}
             dateFormatOverride={{ year: 'numeric' }}
-            content={shortSummary}
+            content={props.book.description.short}
             actions={
-                <Link
-                    to={`/published/books/id/${props.book._id}`}
-                    className="link">
-                    <Button>➣ Read more</Button>
-                </Link>
+                <Box
+                    sx={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        mr: '1.75rem',
+                    }}>
+                    <Button
+                        component={RouterLink}
+                        to={`/published/books/id/${props.book._id}`}
+                        className="link">
+                        ➣ Read more
+                    </Button>
+                    {props.book.purchaseInfo.length > 0 &&
+                        props.book.purchaseInfo.map(store => (
+                            <Button
+                                key={store._id}
+                                variant="contained"
+                                href={store.link}
+                                target="_blank"
+                                aria-label={`Go to the ${store.location} page for this book, which opens in a new tab`}>
+                                Order on {store.location}
+                            </Button>
+                        ))}
+                </Box>
             }
         />
     );
 }
 
 export default BookCard;
-
-// <div className="book card resource-card">
-
-// <div className="book-image card image">
-//                 <img src={props.book.coverImageUrl} />
-//             </div>
-//             <div className="card content">
-//                 <div className="book-header">
-//                     <h2>{props.book.title}</h2>
-//                     {/* <span>{Date(props.post.datePublished).getFullYear()}</span> */}
-//                 </div>
-//                 <div className="book-content">
-//                     <p>{shortSummary}</p>
-//                 </div>
-//                 <Link
-//                     to={`/published/books/id/${props.book._id}`}
-//                     className="link">
-//                     ➣ <span>Read more</span>
-//                 </Link>
-//             </div>
-//         </div>

@@ -29,7 +29,7 @@ function BookForm() {
                 label="Teaser"
             />
             <TextInput
-                source="coverImageUrl"
+                source="coverImage"
                 className="form"
                 label="Cover Image URL"
             />
