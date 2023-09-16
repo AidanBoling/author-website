@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     Card,
@@ -6,15 +7,26 @@ import {
     CardContent,
     CardActions,
     CardMedia,
+    Collapse,
     Typography,
     Link,
+    useMediaQuery,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMore from './ExpandToggle';
 
 function ResourceCard(props) {
-    let mediaSX = props.mediaSXOverride
+    const isSmall = useMediaQuery(theme => theme.breakpoints.down('md'));
+    const [isExpanded, setExpanded] = useState(false);
+
+    const mediaSX = props.mediaSXOverride
         ? props.mediaSXOverride
-        : { width: 200, flexShrink: 0 };
-    let dateFormat = props.dateFormatOverride
+        : {
+              width: { xs: 'unset', md: 200 },
+              height: { xs: 200, md: 'unset' },
+              flexShrink: 0,
+          };
+    const dateFormat = props.dateFormatOverride
         ? props.dateFormatOverride
         : {
               // weekday: 'long',
@@ -22,8 +34,24 @@ function ResourceCard(props) {
               month: 'long',
               day: 'numeric',
           };
-    let datePublished = props.published ? props.published : props.created;
-    let linkAriaLabel;
+    const datePublished = props.published ? props.published : props.created;
+    // let linkAriaLabel;
+    const linkAriaLabel =
+        props.mainLinkTo &&
+        (props.mainLinkLabel
+            ? props.mainLinkLabel
+            : `Link to full ${props.resource} page which opens in a new tab`);
+
+    const expandButton = (
+        <ExpandMore
+            expand={isExpanded}
+            onClick={handleExpandClick}
+            aria-expanded={isExpanded}
+            aria-label="show more"
+            sx={{ ml: 'auto', mt: 'auto' }}>
+            <ExpandMoreIcon />
+        </ExpandMore>
+    );
 
     // if (props.mediaSXOverride) {
     //     mediaSX = props.mediaSXOverride;
@@ -31,10 +59,9 @@ function ResourceCard(props) {
     // if (props.dateFormatOverride) {
     //     dateFormat = props.dateFormatOverride;
     // }
-    if (props.mainLinkTo) {
-        linkAriaLabel = props.mainLinkLabel
-            ? props.mainLinkLabel
-            : `Link to full ${props.resource} page which opens in a new tab`;
+
+    function handleExpandClick() {
+        setExpanded(!isExpanded);
     }
 
     function linkWrapper(content) {
@@ -44,7 +71,8 @@ function ResourceCard(props) {
                     <Link
                         component={RouterLink}
                         to={props.mainLinkTo}
-                        underline="none">
+                        underline="none"
+                        sx={{ ':hover': { color: 'primary.dark' } }}>
                         {content}
                     </Link>
                 );
@@ -54,7 +82,8 @@ function ResourceCard(props) {
                         href={props.mainLinkTo}
                         target="_blank"
                         aria-label={linkAriaLabel}
-                        underline="none">
+                        underline="none"
+                        sx={{ ':hover': { color: 'primary.dark' } }}>
                         {content}
                     </Link>
                 );
@@ -94,7 +123,10 @@ function ResourceCard(props) {
         <Card
             className={`card resource-card ${props.image && 'media'}`}
             elevation={3}
-            sx={{ display: 'flex' }}>
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+            }}>
             {props.image &&
                 (props.mainLinkTo ? (
                     mediaWithLink()
@@ -120,38 +152,30 @@ function ResourceCard(props) {
                         </div>
                     }
                 />
-                <CardContent>{props.content}</CardContent>
-                <CardActions>{props.actions}</CardActions>
+                {isSmall && props.content.length > 150 ? (
+                    <>
+                        <CardContent>
+                            {!isExpanded
+                                ? props.content.substring(0, 150) + '...'
+                                : props.content}
+                            <Collapse in={isExpanded} timeout="auto"></Collapse>
+                        </CardContent>
+                        <CardActions>
+                            {!isExpanded
+                                ? props.actionsAlwaysShow
+                                : props.actions}
+                            {expandButton}
+                        </CardActions>
+                    </>
+                ) : (
+                    <>
+                        <CardContent>{props.content}</CardContent>
+                        <CardActions>{props.actions}</CardActions>
+                    </>
+                )}
             </Box>
         </Card>
     );
 }
 
 export default ResourceCard;
-
-{
-    /* <ResourceCard
-    title={props.article.title}
-    hasMedia
-    image={props.article.image.url}
-    imageAlt={props.article.image.altText}
-    published={props.article.datePublished}
-    created={props.article.createdAt}
-    content={props.article.descriptionShort}
-    actions={
-        props.article.content ? (
-            <Link
-                to={`/published/articles/id/${props.article._id}`}
-                className="link">
-                <Button>➣ Read article</Button>
-            </Link>
-        ) : (
-            <a href={props.article.url} className="link">
-                <Button>
-                    ➣ Read article on {props.article.publisher.name}
-                </Button>
-            </a>
-        )
-    }
-/>; */
-}

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // import { palette } from '@mui/system';
-import { Button, Link } from '@mui/material';
+import { Button, Link, useMediaQuery } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
+    const isSmall = useMediaQuery(theme => theme.breakpoints.down('sm'));
+
     console.log('Received post: ', props.post);
 
     let summary = '';
@@ -42,7 +44,7 @@ function PostCard(props) {
                     component={RouterLink}
                     to={`/published/posts/id/${props.post._id}`}
                     className="link">
-                    ➣ Read post
+                    ➣ Read full post
                 </Button>
             }
         />

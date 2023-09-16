@@ -19,18 +19,19 @@ import {
 import { styled } from '@mui/material/styles';
 import { palette } from '@mui/system';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ResourceCard from './ResourceCard';
+// import ResourceCard from './ResourceCard';
+import ExpandMore from './ExpandToggle';
 
-const ExpandMore = styled(props => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    // marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
+// const ExpandMore = styled(props => {
+//     const { expand, ...other } = props;
+//     return <IconButton {...other} />;
+// })(({ theme, expand }) => ({
+//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+//     // marginLeft: 'auto',
+//     transition: theme.transitions.create('transform', {
+//         duration: theme.transitions.duration.shortest,
+//     }),
+// }));
 
 function EventCard(props) {
     const [isExpanded, setExpanded] = useState(false);
