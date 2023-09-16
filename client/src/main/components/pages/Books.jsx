@@ -19,20 +19,15 @@ function Books() {
     }, []);
 
     return (
-        <div className="main">
-            <PageTitle title="Books" />
-            {console.log('Books: ', books)}
-            <div className="content">
-                <Stack spacing={3}>
-                    {books.length > 0 ? (
-                        books.map(book => (
-                            <BookCard key={book._id} book={book} />
-                        ))
-                    ) : (
-                        <ResourceCardSkeleton hasMedia={true} />
-                    )}
-                </Stack>
-            </div>
+        <div>
+            {/* {console.log('Books: ', books)} */}
+            <Stack spacing={3}>
+                {books.length > 0 ? (
+                    books.map(book => <BookCard key={book._id} book={book} />)
+                ) : (
+                    <ResourceCardSkeleton hasMedia={true} />
+                )}
+            </Stack>
         </div>
     );
 }

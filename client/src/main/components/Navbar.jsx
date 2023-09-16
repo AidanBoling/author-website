@@ -66,17 +66,24 @@ function Navbar() {
                         mx: '1.75rem',
                     }}>
                     <Typography
+                        variant="h1"
                         component="h1"
+                        color="lightgold.light"
                         sx={{
                             flexGrow: '1',
                             fontFamily: 'cursive',
-                            fontSize: '4rem',
                             textAlign: 'center',
-                            mb: { xs: '.5rem', md: '1.5rem' },
+                            mb: { xs: '.75rem', md: '1.5rem' },
                             mx: 'auto',
                             zIndex: '1',
                         }}>
-                        {title}
+                        <Link
+                            component={RouterLink}
+                            to={'/'}
+                            underline="none"
+                            color="inherit">
+                            {title}
+                        </Link>
                     </Typography>
                     <Box
                         sx={{
@@ -97,12 +104,18 @@ function Navbar() {
                                     key={page.name}
                                     variant="h6"
                                     component="span"
-                                    zIndex={1}>
+                                    zIndex={1}
+                                    sx={{ fontSize: '300' }}>
                                     <Link
                                         component={RouterLink}
                                         to={page.link}
-                                        underline="hover"
-                                        color="inherit">
+                                        underline="none"
+                                        color="inherit"
+                                        sx={{
+                                            ':hover': {
+                                                color: 'lightgold.light',
+                                            },
+                                        }}>
                                         {page.name}
                                     </Link>
                                 </Typography>

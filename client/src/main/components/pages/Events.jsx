@@ -5,7 +5,7 @@ import PageTitle from '../PageTitle';
 import EventCard from '../EventCard';
 import ResourceCardSkeleton from '../ResourceCardSkeleton';
 
-function Events() {
+function Events(props) {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -19,31 +19,23 @@ function Events() {
     }, []);
 
     return (
-        <div>
-            <div className="main">
-                <PageTitle title="Events" />
-
-                <div className="content">
-                    <Box sx={{ my: '2rem' }}>
-                        <Typography paragraph>
-                            Lorem ipsum dolor sit amet...
-                        </Typography>
-                    </Box>
-                    <Typography variant="h4" component="h2" mb="1.5rem">
-                        Upcoming Events
-                    </Typography>
-                    <Stack spacing={3}>
-                        {events.length > 0 ? (
-                            events.map(event => (
-                                <EventCard key={event._id} event={event} />
-                            ))
-                        ) : (
-                            <ResourceCardSkeleton hasMedia={true} />
-                        )}
-                    </Stack>
-                </div>
-            </div>
-        </div>
+        <Box>
+            <Box sx={{ my: '2rem' }}>
+                <Typography paragraph>Lorem ipsum dolor sit amet...</Typography>
+            </Box>
+            <Typography variant="h3" component="h3" mb="1.5rem" color="primary">
+                Upcoming Events
+            </Typography>
+            <Stack spacing={3}>
+                {events.length > 0 ? (
+                    events.map(event => (
+                        <EventCard key={event._id} event={event} />
+                    ))
+                ) : (
+                    <ResourceCardSkeleton hasMedia={true} />
+                )}
+            </Stack>
+        </Box>
     );
 }
 

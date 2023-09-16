@@ -18,21 +18,15 @@ function Posts() {
     }, []);
 
     return (
-        <div className="main">
-            <PageTitle title="Blog" />
-            <div className="content">
-                <Stack spacing={3}>
-                    {publishedPosts.length > 0 ? (
-                        publishedPosts.map(post => (
-                            <PostCard key={post._id} post={post} />
-                        ))
-                    ) : (
-                        <ResourceCardSkeleton hasMedia="true" />
-                    )}
-                </Stack>
-            </div>
-            {/* <hr /> */}
-        </div>
+        <Stack spacing={3}>
+            {publishedPosts.length > 0 ? (
+                publishedPosts.map(post => (
+                    <PostCard key={post._id} post={post} />
+                ))
+            ) : (
+                <ResourceCardSkeleton hasMedia="true" />
+            )}
+        </Stack>
     );
 }
 

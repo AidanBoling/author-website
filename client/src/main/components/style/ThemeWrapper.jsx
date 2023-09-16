@@ -1,6 +1,10 @@
 import React, { useState, useMemo, createContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {
+    ThemeProvider,
+    createTheme,
+    responsiveFontSizes,
+} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import getDesignTokens from './theme';
 import App from '../App';
@@ -22,7 +26,20 @@ function ThemeWrapper(props) {
         []
     );
 
-    const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+    let theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+
+    theme = createTheme(theme, {
+        // Custom colors created with augmentColor go here
+        palette: {
+            lightgold: theme.palette.augmentColor({
+                color: {
+                    main: '#f3d46b',
+                },
+                name: 'lightgold',
+            }),
+        },
+    });
+    theme = responsiveFontSizes(theme);
 
     return (
         <ColorModeContext.Provider value={colorMode}>

@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import '../css/styles.css';
 import reactLogo from '../../assets/react.svg';
 import Navbar from './Navbar';
+import PageWrapper from './PageWrapper';
 import Home from './pages/Home';
 import Published from './pages/Published';
 import Books from './pages/Books';
@@ -50,35 +51,68 @@ function App() {
                     zIndex: '-2',
                     position: 'fixed',
                 }}>
-                <div className="bgmountains gradient"></div>
+                {/* <div className="bgmountains gradient"></div> */}
                 <img
-                    src="/gradient-mountain-landscape_freepik-crop.jpg"
+                    src="/green-gold-abstract-mountains_transparent.png"
                     className="bgmountains"
                 />
             </Box>
             <Navbar />
             <Routes>
-                <Route index element={<Home />} />
-                <Route path="/published" element={<Published />} />
-                <Route path="/published/posts" element={<Posts />} />
+                <Route
+                    index
+                    element={<PageWrapper header="Home" content={<Home />} />}
+                />
+                {/* <Route path="/published" element={<Published />} /> */}
+                <Route
+                    path="/published/posts"
+                    element={<PageWrapper header="Posts" content={<Posts />} />}
+                />
                 <Route
                     path="/published/posts/id/:postId"
-                    element={<PostPage />}
+                    element={<PageWrapper content={<PostPage />} usePaper />}
                 />
-                <Route path="published/books" element={<Books />} />
+                <Route
+                    path="published/books"
+                    element={<PageWrapper header="Books" content={<Books />} />}
+                />
                 <Route
                     path="/published/books/id/:bookId"
-                    element={<BookPage />}
+                    element={<PageWrapper content={<BookPage />} usePaper />}
                 />
-                <Route path="/published/articles" element={<Articles />} />
+                <Route
+                    path="/published/articles"
+                    element={
+                        <PageWrapper header="Articles" content={<Articles />} />
+                    }
+                />
                 <Route
                     path="/published/articles/id/:articleId"
-                    element={<ArticlePage />}
+                    element={<PageWrapper content={<ArticlePage />} usePaper />}
                 />
                 {/* <Route path="/admin/compose" element={<Compose />} /> */}
-                <Route path="/events" element={<Events />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route
+                    path="/events"
+                    element={
+                        <PageWrapper header="Events" content={<Events />} />
+                    }
+                />
+                <Route
+                    path="/about"
+                    element={
+                        <PageWrapper
+                            header="About"
+                            content={<About />}
+                            usePaper
+                        />
+                    }
+                />
+                <Route
+                    path="/contact"
+                    element={
+                        <PageWrapper header="Contact" content={<Contact />} />
+                    }
+                />
             </Routes>
         </div>
     );

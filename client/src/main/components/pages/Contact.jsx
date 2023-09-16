@@ -2,11 +2,7 @@ import { useState } from 'react';
 import PageTitle from '../PageTitle';
 
 function Contact() {
-    return (
-        <div className="main">
-            <PageTitle title="Contact" />
-        </div>
-    );
+    return <div></div>;
 }
 
 export default Contact;

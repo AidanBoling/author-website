@@ -43,26 +43,22 @@ function EventCard(props) {
         <Card className="card resource-card media" sx={{ display: 'flex' }}>
             <Box sx={{ p: '1.75rem' }}>
                 <Box
+                    color={'primary.contrastText'}
                     bgcolor={'primary.dark'}
                     sx={{
-                        width: 75,
-                        height: 75,
+                        width: 80,
+                        height: 80,
                         flexShrink: 0,
                         borderRadius: '.25rem',
-                        pt: '.5rem',
+                        py: '.5rem',
+                        textAlign: 'center',
                     }}>
-                    <Typography
-                        variant="h6"
-                        component="p"
-                        sx={{ textAlign: 'center' }}>
+                    <Typography variant="h6" component="p">
                         {new Date(props.event.date.start)
                             .toLocaleDateString('en-us', { month: 'short' })
                             .toUpperCase()}
                     </Typography>
-                    <Typography
-                        variant="h6"
-                        component="p"
-                        sx={{ textAlign: 'center' }}>
+                    <Typography variant="h6" component="p">
                         {new Date(props.event.date.start).toLocaleDateString(
                             'en-us',
                             { day: 'numeric' }

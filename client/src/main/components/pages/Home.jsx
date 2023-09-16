@@ -3,9 +3,10 @@ import PageTitle from '../PageTitle';
 
 function Home() {
     return (
-        <div className="main">
-            <PageTitle title="Home" />
-        </div>
+        <div></div>
+        // <div className="main">
+        //     <PageTitle title="Home" />
+        // </div>
     );
 }
 

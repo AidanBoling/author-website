@@ -93,6 +93,7 @@ function ResourceCard(props) {
     return (
         <Card
             className={`card resource-card ${props.image && 'media'}`}
+            elevation={3}
             sx={{ display: 'flex' }}>
             {props.image &&
                 (props.mainLinkTo ? (
