@@ -9,35 +9,31 @@ import {
     Typography,
 } from '@mui/material';
 import PageTitle from './PageTitle';
+import InnerPageContainer from './InnerPageContainer';
+import { pagePaddingX } from './InnerPageContainer';
 
 function PageWrapper(props) {
-    const paddingXMd = '2rem';
-    const paddingXSm = '1rem';
+    // const paddingXMd = '2rem';
+    // const paddingXSm = '1rem';
     // const marginXSm = '.5rem';
 
     return (
-        <Container className="main" sx={{ my: '2.5vh' }}>
+        <Container className="main" sx={{ my: '1rem' }}>
             {props.header && <PageTitle title={props.header} />}
-            <Container
-                className="content"
-                sx={{
-                    width: { xs: '100%', md: '90%', lg: '80%' },
-                    maxWidth: '1000px',
-                    my: '2.5vh',
-                    px: props.usePaper ? 0 : { sm: paddingXSm, md: paddingXMd },
-                    px: { xs: '.25rem' },
-                }}>
+            <InnerPageContainer className="content">
                 {props.content &&
                     (props.usePaper ? (
                         <Paper
                             elevation={1}
-                            sx={{ p: { xs: paddingXSm, md: paddingXMd } }}>
+                            sx={{
+                                p: { xs: pagePaddingX.sm, md: pagePaddingX.md },
+                            }}>
                             {props.content}
                         </Paper>
                     ) : (
                         props.content
                     ))}
-            </Container>
+            </InnerPageContainer>
         </Container>
     );
 }

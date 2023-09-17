@@ -21,19 +21,21 @@ function BookCard(props) {
             </Button>
         ));
 
+    const mediaSXOverride = {
+        width: 200,
+        height: 275,
+        borderRadius: '.25rem',
+        m: '.75rem',
+        flexShrink: 0,
+    };
+
     return (
         <ResourceCard
             title={props.book.title}
             hasMedia
             image={props.book.coverImage}
             imageAlt="book cover"
-            mediaSXOverride={{
-                width: 200,
-                height: 275,
-                borderRadius: '.25rem',
-                m: '.75rem',
-                flexShrink: 0,
-            }}
+            mediaSXOverride={mediaSXOverride}
             published={props.book.datePublished}
             created={props.book.createdAt}
             dateFormatOverride={{ year: 'numeric' }}

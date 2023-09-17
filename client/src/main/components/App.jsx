@@ -59,10 +59,7 @@ function App() {
             </Box>
             <Navbar />
             <Routes>
-                <Route
-                    index
-                    element={<PageWrapper header="Home" content={<Home />} />}
-                />
+                <Route index element={<Home />} />
                 {/* <Route path="/published" element={<Published />} /> */}
                 <Route
                     path="/published/posts"
