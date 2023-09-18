@@ -35,7 +35,7 @@ const postController = {
         };
 
         if (post.published) {
-            newPostData = { ...newPostData, publishedDate: new Date() };
+            newPostData = { ...newPostData, datePublished: new Date() };
         }
 
         try {
@@ -81,8 +81,8 @@ const postController = {
     update: async (request, response) => {
         const postId = request.params.id;
         let updates = { ...request.body, updatedAt: new Date() };
-        if (updates.published && !updates.publishedDate) {
-            updates = { ...updates, publishedDate: new Date() };
+        if (updates.published && !updates.datePublished) {
+            updates = { ...updates, datePublished: new Date() };
         }
         console.log(updates);
 

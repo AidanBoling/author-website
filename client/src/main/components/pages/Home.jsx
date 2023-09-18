@@ -1,10 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Container, Box, Stack, Typography, Link, Button } from '@mui/material';
-import PageTitle from '../PageTitle';
+import {
+    Container,
+    Box,
+    Paper,
+    Stack,
+    Typography,
+    Link,
+    Button,
+} from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
+import PageWrapper from '../PageWrapper';
+import { getList } from '../../api/getResourceItems';
+import ResourceGalleryCard from '../ResourceRecentsGalleryCard';
+
+// const HeroSectionPaper = styled(Paper)(({ theme }) => ({
+//     width: '100%',
+//     height: '100%',
+//     backgroundColor:
+//         theme.palette.mode === 'dark'
+//             ? `${alpha(theme.palette.forestgreen.main, 0.95)}`
+//             : `${alpha(theme.palette.forestgreen.light, 0.95)}`,
+//     color: theme.palette.mode === 'light' && theme.palette.primary.contrastText,
+// }));
 
 function Home() {
+    const headerImageMask = {
+        xs: 'linear-gradient(to top, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
+        md: 'linear-gradient(to left, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
+    };
+
+    const [items, setItems] = useState({
+        posts: [],
+        articles: [],
+    });
+
+    // resourceDate = {posts: , articles: }
+
+    useEffect(() => {
+        async function fetchItems(resource) {
+            const allItems = await getList(resource);
+            // console.log(allItems);
+
+            const filteredItems = allItems
+                .slice()
+                .sort(
+                    (a, b) =>
+                        new Date(b.datePublished) - new Date(a.datePublished)
+                )
+                .slice(0, 4);
+
+            // console.log(filteredItems);
+
+            setItems({ ...items, [resource]: filteredItems });
+        }
+        ['posts', 'articles'].forEach(resource => {
+            fetchItems(resource);
+        });
+    }, []);
+
+    // const words = ['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present'];
+
     //TODO: fetch hero book via id
     //TODO: fetch articles and filter for only most recent
     //TODO: fetch posts and filter for only most recent
@@ -12,91 +70,250 @@ function Home() {
     return (
         <Container
             className="main"
-            sx={{ my: '1rem' }}
+            sx={{ mb: '1rem', mt: '0' }}
             maxWidth={'xl'}
             disableGutters>
-            <PageTitle title="Home" />
-            <InnerPageContainer
+            {/* <PageTitle title="Home" /> */}
+            <Container
+                className="headline"
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    maxHeight: '800px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    px: '1rem',
-                }}>
-                <Typography variant="h3" component="p" textAlign={'center'}>
-                    My Headline Message Here. This is what I'm all about.
-                </Typography>
+                    display: 'grid',
+                    gridTemplateRows: 'minmax(500px, 70vh)',
+                    gridTemplateColumns: '1fr',
+                    // justifyContent: 'center',
+                    alignItems: 'start',
+                    mt: '0',
+                    // p: '1rem',
+                }}
+                maxWidth={'xl'}
+                disableGutters>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        maxWidth: { md: '60vw', lg: '50vw' },
+                        gridRow: '1/-1',
+                        gridColumn: '1/-1',
+                        height: '100%',
+                    }}>
+                    <Typography
+                        variant="h2"
+                        component="p"
+                        sx={{
+                            textAlign: 'center',
+                            m: '2rem',
+                            mt: { xs: '10vh', md: '20vh' },
+                            mx: '5vw',
+                        }}>
+                        My Headline Message Here.{' '}
+                        <Typography
+                            variant="h2"
+                            component="span"
+                            color="primary.dark">
+                            {' '}
+                            This is what I'm all about.
+                        </Typography>
+                    </Typography>
+                </Box>
 
                 <Box
-                    component="img"
-                    src="https://picsum.photos/800/400?random=1"
-                    sx={{ mx: 'auto', height: '100%' }}
-                />
-            </InnerPageContainer>
+                    sx={{
+                        height: '100%',
+                        gridRow: '1/-1',
+                        gridColumn: '1/-1',
+                        position: 'relative',
+                        zIndex: '-2',
+                        maskImage: headerImageMask,
+                        WebkitMaskImage: headerImageMask,
+                        maskRepeat: 'no-repeat',
+                    }}>
+                    <Box
+                        component="img"
+                        src="https://picsum.photos/800/700?random=1"
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                        }}
+                    />
+                </Box>
+            </Container>
 
             <Container
                 className="hero bg"
+                maxWidth={'xl'}
+                disableGutters
                 sx={{
-                    backgroundColor: 'forestgreen.main',
-                }}
-                maxWidth={'xl'}>
-                <Container className="hero content-container">
-                    <Box sx={{ display: 'flex', p: '2rem', py: '3rem' }}>
+                    mb: '200px',
+                    mt: '0',
+                }}>
+                <Paper elevation={10} variant="hero" square>
+                    <Container
+                        className="hero content-container"
+                        sx={{ mt: '0' }}>
                         <Box
-                            component="img"
-                            src="https://picsum.photos/300/400?random=2"
-                            className="hero book-cover"
                             sx={{
-                                borderRadius: '.4rem',
-                                width: '225px',
-                                height: '300',
-                                objectFit: 'fill',
-                            }}
-                        />
-                        <Stack
-                            gap={2}
-                            className="hero content"
-                            sx={{ flexGrow: 1, ml: '2rem' }}>
-                            <Typography variant="h4">Book Title</Typography>
-                            <Typography>
-                                This book is a lorem ipsum dolor...
-                            </Typography>
-                            <Link component={RouterLink} to="/">
-                                Click to read more
-                            </Link>
-                            <Box>
-                                <Button variant="contained">Buy Now!</Button>
-                            </Box>
-                        </Stack>
-                    </Box>
-                </Container>
+                                display: 'flex',
+                                flexDirection: { xs: 'column', sm: 'row' },
+                                p: '2rem',
+                                py: '5rem',
+                                mx: 'auto',
+                            }}>
+                            <Box
+                                component="img"
+                                src="https://picsum.photos/400/500?random=2"
+                                className="hero book-cover"
+                                sx={{
+                                    borderRadius: '.4rem',
+                                    width: '325px',
+                                    height: '400',
+                                    objectFit: 'fill',
+                                }}
+                            />
+                            <Stack
+                                gap={2}
+                                className="hero content"
+                                sx={{ flexGrow: 1, ml: '3rem' }}>
+                                <Typography
+                                    variant="h3"
+                                    component="p"
+                                    color={'lightgold.main'}
+                                    textAlign={'center'}>
+                                    Book Title
+                                </Typography>
+                                <Typography>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Vivamus pharetra nisl
+                                    risus, in volutpat leo viverra vel.
+                                    Suspendisse ac posuere ex. Integer nunc
+                                    nisl, lobortis id ultrices euismod, pulvinar
+                                    in erat. Sed pharetra convallis massa
+                                    consectetur ullamcorper. Nulla lacinia
+                                    ultricies nibh, vel hendrerit dolor. Aenean
+                                    convallis nisi id arcu facilisis ultricies.
+                                    Integer sed nisi eget nunc elementum egestas
+                                    et eu lorem. Mauris mollis tortor id
+                                    eleifend dapibus.
+                                </Typography>
+                                {/* <Link
+                                    component={RouterLink}
+                                    to="/"
+                                    color={'lightgold.main'}>
+                                    Click to read more
+                                </Link> */}
+                                <Box mt={'2rem'}>
+                                    <Stack
+                                        gap={4}
+                                        sx={{ width: '200px', mx: 'auto' }}>
+                                        <Button
+                                            component={RouterLink}
+                                            to="/"
+                                            variant="outlined"
+                                            color="lightgold">
+                                            Learn More
+                                        </Button>
+
+                                        <Button
+                                            variant="contained"
+                                            color="lightgold">
+                                            Order on Amazon
+                                        </Button>
+                                    </Stack>
+                                </Box>
+                            </Stack>
+                        </Box>
+                    </Container>
+                </Paper>
             </Container>
-            <InnerPageContainer sx={{ mx: '1rem' }}>
+            <InnerPageContainer
+                sx={{ display: 'flex', flexDirection: 'column' }}>
+                {/* {console.log(items)} */}
+
                 <Box className="recent-articles gallery container">
-                    {/* <ResourceCard
-                        resource="article"
-                        title={props.article.title}
-                        image={props.article.image.url}
-                        imageAlt={props.article.image.altText}
-                        published={props.article.datePublished}
-                        publisher={props.article.publisher.name}
-                        // created={props.article.createdAt}
-                        mainLinkTo={
-                            props.article.url
-                                ? props.article.url
-                                : `/published/articles/id/${props.article._id}`
-                        }
-                        mainLinkIsLocal={props.article.url ? false : true}
-                        mainLinkLabel={
-                            props.article.url &&
-                            `Read this article on the ${props.article.publisher.name} website, which opens in a new tab.`
-                        }
-                        // actions={''}
-                    /> */}
+                    <Typography variant="h4" component="p" px={'2rem'}>
+                        Recent Articles
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: '1.5rem',
+                            flexWrap: 'wrap',
+                            border: '1px solid primary.main',
+                            borderRadius: '.4rem',
+                            padding: '2rem',
+                        }}>
+                        {items.articles.length > 0 &&
+                            items.articles.map(article => (
+                                <ResourceGalleryCard
+                                    key={article._id}
+                                    resource="article"
+                                    title={article.title}
+                                    image={article.image.url}
+                                    imageAlt={article.image.altText}
+                                    published={article.datePublished}
+                                    publisher={article.publisher.name}
+                                    // created={props.article.createdAt}
+                                    mainLinkTo={
+                                        article.url
+                                            ? article.url
+                                            : `/published/articles/id/${article._id}`
+                                    }
+                                    mainLinkIsLocal={article.url ? false : true}
+                                    mainLinkLabel={
+                                        article.url &&
+                                        `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
+                                    }
+                                    // actions={''}
+                                />
+                            ))}
+                    </Box>
                 </Box>
-                <Box className="home-posts preview"></Box>
+                <Box className="home-posts preview">
+                    <Typography variant="h4" component="p" px={'2rem'}>
+                        Recent Posts
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: '1.5rem',
+                            flexWrap: 'wrap',
+
+                            border: '1px solid primary.main',
+                            borderRadius: '.4rem',
+                            padding: '2rem',
+                        }}>
+                        {items.posts.length > 0 &&
+                            items.posts.map(post => (
+                                <ResourceGalleryCard
+                                    key={post._id}
+                                    resource="post"
+                                    title={post.title}
+                                    image={
+                                        post.image && post.image.url
+                                            ? post.image.url
+                                            : null
+                                    }
+                                    imageAlt={
+                                        post.image && post.image.altText
+                                            ? post.image.altText
+                                            : null
+                                    }
+                                    published={post.datePublished}
+                                    created={post.createdAt}
+                                    mainLinkIsLocal={true}
+                                    mainLinkTo={`/published/posts/id/${post._id}`}
+                                    mainLinkLabel="Read full post"
+                                    // actions={
+                                    //     <Button
+                                    //         component={RouterLink}
+                                    //         to={`/published/posts/id/${props.post._id}`}
+                                    //         className="link">
+                                    //         ➣ Read full post
+                                    //     </Button>}
+                                />
+                            ))}
+                    </Box>
+                </Box>
             </InnerPageContainer>
         </Container>
     );

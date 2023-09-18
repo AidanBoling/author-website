@@ -16,7 +16,7 @@ const postSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    publishedDate: { type: Date, immutable: true },
+    datePublished: { type: Date, immutable: true },
 });
 
 postSchema.pre('save', function (next) {

@@ -80,6 +80,7 @@ function getDesignTokens(mode) {
                         ...(ownerState.color === 'primary' && {
                             backgroundColor: theme.palette.forestgreen.light,
                             color: '#fff',
+                            boxShadow: theme.shadows[8],
                         }),
                     }),
                 },
@@ -112,6 +113,20 @@ function getDesignTokens(mode) {
                 }),
             },
             MuiTypography: {
+                variants: [
+                    {
+                        props: { variant: 'darkbg' },
+                        style: ({ ownerState, theme }) => ({
+                            color: theme.palette.primary.contrastText,
+                        }),
+                    },
+                    {
+                        props: { variant: 'darkbg' },
+                        style: ({ ownerState, theme }) => ({
+                            color: theme.palette.primary.contrastText,
+                        }),
+                    },
+                ],
                 styleOverrides: {
                     root: ({ ownerState, theme }) => ({
                         ...(ownerState.variant === 'subheading1' && {
@@ -119,6 +134,26 @@ function getDesignTokens(mode) {
                         }),
                     }),
                 },
+            },
+            MuiPaper: {
+                variants: [
+                    {
+                        props: { variant: 'hero' },
+                        style: ({ ownerState, theme }) => ({
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: alpha(
+                                theme.palette.forestgreen.light,
+                                0.95
+                            ),
+                            boxShadow: theme.shadows[ownerState.elevation],
+
+                            color:
+                                theme.palette.mode === 'light' &&
+                                theme.palette.primary.contrastText,
+                        }),
+                    },
+                ],
             },
         },
     };

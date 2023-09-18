@@ -33,7 +33,7 @@ function PostCard(props) {
                     ? props.post.image.altText
                     : null
             }
-            published={props.post.publishedDate}
+            published={props.post.datePublished}
             created={props.post.createdAt}
             content={summary}
             mainLinkIsLocal={true}

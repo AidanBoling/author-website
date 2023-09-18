@@ -15,10 +15,17 @@ import PostPage from './pages/PostPage';
 import Events from './pages/Events';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Footer from './Footer';
 
 function App() {
     return (
-        <div>
+        <Box
+            className="bgmountains"
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+            }}>
             {/* <div className="bgmask edge">
                 <div className="background-edge">
                     <img
@@ -39,7 +46,7 @@ function App() {
                 }}>
                 {/* <img src="/white-rhombus-background.jpg" className="bg" /> */}
             </Box>
-            <Box
+            {/* <Box
                 className="bgmountains-mask"
                 sx={{
                     display: 'flex',
@@ -49,14 +56,16 @@ function App() {
                     height: '100%',
                     width: '100%',
                     zIndex: '-2',
-                    position: 'fixed',
-                }}>
-                {/* <div className="bgmountains gradient"></div> */}
-                <img
+                    position: 'absolute',
+                }}> */}
+            {/* <div className="bgmountains gradient"></div> */}
+            {/* <Box
+                    component="img"
                     src="/green-gold-abstract-mountains_transparent.png"
                     className="bgmountains"
-                />
-            </Box>
+                    sx={{ position: 'relative' }}
+                /> */}
+            {/* </Box> */}
             <Navbar />
             <Routes>
                 <Route index element={<Home />} />
@@ -111,7 +120,8 @@ function App() {
                     }
                 />
             </Routes>
-        </div>
+            <Footer />
+        </Box>
     );
 }
 

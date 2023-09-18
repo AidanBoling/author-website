@@ -11,6 +11,7 @@ import {
 import PageTitle from './PageTitle';
 import InnerPageContainer from './InnerPageContainer';
 import { pagePaddingX } from './InnerPageContainer';
+import Footer from './Footer';
 
 function PageWrapper(props) {
     // const paddingXMd = '2rem';
@@ -18,7 +19,7 @@ function PageWrapper(props) {
     // const marginXSm = '.5rem';
 
     return (
-        <Container className="main" sx={{ my: '1rem' }}>
+        <Container className="main" sx={{ my: '1rem', flexGrow: 0 }}>
             {props.header && <PageTitle title={props.header} />}
             <InnerPageContainer className="content">
                 {props.content &&

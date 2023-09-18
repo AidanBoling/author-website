@@ -4,6 +4,7 @@ import {
     ThemeProvider,
     createTheme,
     responsiveFontSizes,
+    alpha,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import getDesignTokens from './theme';
@@ -37,8 +38,14 @@ function ThemeWrapper(props) {
                 },
                 name: 'lightgold',
             }),
+            forestgreenalpha: {
+                main: alpha(theme.palette.forestgreen.main, 0.95),
+                light: alpha(theme.palette.forestgreen.light, 0.95),
+                dark: alpha(theme.palette.forestgreen.dark, 0.95),
+            },
         },
     });
+
     theme = responsiveFontSizes(theme);
 
     return (
