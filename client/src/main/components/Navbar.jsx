@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ColorModeButton from './ColorModeButton';
+import BgPatternBox from './BgPatternBox';
 
 const pages = [
     { name: 'Home', link: '/' },
@@ -48,16 +49,7 @@ function Navbar() {
     return (
         <AppBar position="static">
             <Toolbar sx={{ width: '100%' }} disableGutters>
-                <Box
-                    component="div"
-                    className="bg pattern"
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        opacity: '.3',
-                    }}
-                />
+                <BgPatternBox height={'100%'} />
                 <Box
                     sx={{
                         display: 'flex',

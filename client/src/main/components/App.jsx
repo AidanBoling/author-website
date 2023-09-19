@@ -18,15 +18,19 @@ import Contact from './pages/Contact';
 import Footer from './Footer';
 
 function App() {
+    const footerHeight = '200px';
+
     return (
-        <Box
-            className="bgmountains"
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-            }}>
-            {/* <div className="bgmask edge">
+        <div>
+            <Box
+                className="bgmountains"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: `calc(100vh - ${footerHeight})`,
+                    pb: '15vh',
+                }}>
+                {/* <div className="bgmask edge">
                 <div className="background-edge">
                     <img
                         src="/leaves-wall_matteo-miliddi-unsplash.jpeg"
@@ -34,19 +38,19 @@ function App() {
                     />
                 </div>
             </div> */}
-            <Box
-                className="bg pattern"
-                sx={{
-                    width: '100vw',
-                    height: '100%',
-                    position: 'fixed',
-                    backgroundAttachment: 'fixed',
-                    opacity: '.2',
-                    zIndex: '-1',
-                }}>
-                {/* <img src="/white-rhombus-background.jpg" className="bg" /> */}
-            </Box>
-            {/* <Box
+                <Box
+                    className="bg pattern"
+                    sx={{
+                        width: '100vw',
+                        height: '100%',
+                        position: 'fixed',
+                        backgroundAttachment: 'fixed',
+                        opacity: '.2',
+                        zIndex: '-1',
+                    }}>
+                    {/* <img src="/white-rhombus-background.jpg" className="bg" /> */}
+                </Box>
+                {/* <Box
                 className="bgmountains-mask"
                 sx={{
                     display: 'flex',
@@ -58,70 +62,87 @@ function App() {
                     zIndex: '-2',
                     position: 'absolute',
                 }}> */}
-            {/* <div className="bgmountains gradient"></div> */}
-            {/* <Box
+                {/* <div className="bgmountains gradient"></div> */}
+                {/* <Box
                     component="img"
                     src="/green-gold-abstract-mountains_transparent.png"
                     className="bgmountains"
                     sx={{ position: 'relative' }}
                 /> */}
-            {/* </Box> */}
-            <Navbar />
-            <Routes>
-                <Route index element={<Home />} />
-                {/* <Route path="/published" element={<Published />} /> */}
-                <Route
-                    path="/published/posts"
-                    element={<PageWrapper header="Posts" content={<Posts />} />}
-                />
-                <Route
-                    path="/published/posts/id/:postId"
-                    element={<PageWrapper content={<PostPage />} usePaper />}
-                />
-                <Route
-                    path="published/books"
-                    element={<PageWrapper header="Books" content={<Books />} />}
-                />
-                <Route
-                    path="/published/books/id/:bookId"
-                    element={<PageWrapper content={<BookPage />} usePaper />}
-                />
-                <Route
-                    path="/published/articles"
-                    element={
-                        <PageWrapper header="Articles" content={<Articles />} />
-                    }
-                />
-                <Route
-                    path="/published/articles/id/:articleId"
-                    element={<PageWrapper content={<ArticlePage />} usePaper />}
-                />
-                {/* <Route path="/admin/compose" element={<Compose />} /> */}
-                <Route
-                    path="/events"
-                    element={
-                        <PageWrapper header="Events" content={<Events />} />
-                    }
-                />
-                <Route
-                    path="/about"
-                    element={
-                        <PageWrapper
-                            header="About"
-                            content={<About />}
-                            usePaper
-                        />
-                    }
-                />
-                <Route
-                    path="/contact"
-                    element={
-                        <PageWrapper header="Contact" content={<Contact />} />
-                    }
-                />
-            </Routes>
-            <Footer />
-        </Box>
+                {/* </Box> */}
+                <Navbar />
+                <Routes>
+                    <Route index element={<Home />} />
+                    {/* <Route path="/published" element={<Published />} /> */}
+                    <Route
+                        path="/published/posts"
+                        element={
+                            <PageWrapper header="Posts" content={<Posts />} />
+                        }
+                    />
+                    <Route
+                        path="/published/posts/id/:postId"
+                        element={
+                            <PageWrapper content={<PostPage />} usePaper />
+                        }
+                    />
+                    <Route
+                        path="published/books"
+                        element={
+                            <PageWrapper header="Books" content={<Books />} />
+                        }
+                    />
+                    <Route
+                        path="/published/books/id/:bookId"
+                        element={
+                            <PageWrapper content={<BookPage />} usePaper />
+                        }
+                    />
+                    <Route
+                        path="/published/articles"
+                        element={
+                            <PageWrapper
+                                header="Articles"
+                                content={<Articles />}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/published/articles/id/:articleId"
+                        element={
+                            <PageWrapper content={<ArticlePage />} usePaper />
+                        }
+                    />
+                    {/* <Route path="/admin/compose" element={<Compose />} /> */}
+                    <Route
+                        path="/events"
+                        element={
+                            <PageWrapper header="Events" content={<Events />} />
+                        }
+                    />
+                    <Route
+                        path="/about"
+                        element={
+                            <PageWrapper
+                                header="About"
+                                content={<About />}
+                                usePaper
+                            />
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <PageWrapper
+                                header="Contact"
+                                content={<Contact />}
+                            />
+                        }
+                    />
+                </Routes>
+            </Box>
+            <Footer height={footerHeight} />
+        </div>
     );
 }
 

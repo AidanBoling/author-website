@@ -1,19 +1,28 @@
-import { Box } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import InnerPageContainer from './InnerPageContainer';
+import BgPatternBox from './BgPatternBox';
 
-function Footer() {
+function Footer(props) {
     return (
-        // <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        //     <Box sx={{ flexGrow: 0 }}></Box>
-
         <Box
             sx={{
                 width: '100%',
-                height: '200px',
+                height: props.height,
                 mt: 'auto',
                 backgroundColor: 'forestgreen.light',
                 zIndex: 1,
-            }}></Box>
+                overflowY: 'hidden',
+            }}>
+            <BgPatternBox height={props.height} />
+            <Container>
+                <Typography sx={{ fontSize: '14px' }}>
+                    © {new Date().getFullYear()} Lauren Hall
+                </Typography>
+                <Typography sx={{ fontSize: '14px' }}>
+                    Created by Aidan Boling
+                </Typography>
+            </Container>
+        </Box>
     );
 }
 

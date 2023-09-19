@@ -112,11 +112,12 @@ img.bgmountains {
 
 .bgmountains {
     background-image:
-        url('../../assets/green-gold-abstract-mountains_transparent.png');
+        url('../../assets/green-gold-abstract-mountains_transparent-crop.png');
     background-repeat: no-repeat;
     background-position-y: bottom;
     background-size: contain;
     background-attachment: local;
+
 }
 
 

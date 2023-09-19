@@ -1,16 +1,11 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     Card,
     Box,
     CardHeader,
-    CardContent,
     CardActions,
     CardMedia,
-    Collapse,
     Typography,
-    Link,
-    useMediaQuery,
 } from '@mui/material';
 import { textLinkWrapper, cardMediaWithLink } from './ResourceCardLinkWrappers';
 
@@ -51,14 +46,21 @@ function ResourceGalleryCard(props) {
                 ))}
             <Box className="resource-card content" mt={'auto'}>
                 <CardHeader
+                    sx={{ py: '.5rem' }}
                     title={
-                        <Typography variant="h6" component="p">
+                        <Typography
+                            variant="h6"
+                            component="p"
+                            sx={{ lineHeight: '1.6rem' }}>
                             {textLinkWrapper(props, props.title)}
                         </Typography>
                     }
                     subheader={
                         <div>
-                            <Typography variant="subheading1" component="p">
+                            <Typography
+                                variant="subheading1"
+                                component="p"
+                                mt={'.5rem'}>
                                 {new Date(datePublished).toLocaleDateString(
                                     'en-us',
                                     dateFormat
@@ -66,9 +68,9 @@ function ResourceGalleryCard(props) {
                             </Typography>
                             {props.publisher && (
                                 <Typography
-                                    variant="subheading2"
+                                    variant="subheading1"
                                     component="p"
-                                    sx={{ fontSize: '14px' }}>
+                                    sx={{ fontSize: '14px', mt: '.5rem' }}>
                                     {props.publisher}
                                 </Typography>
                             )}

@@ -15,6 +15,7 @@ import InnerPageContainer from '../InnerPageContainer';
 import PageWrapper from '../PageWrapper';
 import { getList } from '../../api/getResourceItems';
 import ResourceGalleryCard from '../ResourceRecentsGalleryCard';
+// import { set } from 'mongoose';
 
 // const HeroSectionPaper = styled(Paper)(({ theme }) => ({
 //     width: '100%',
@@ -26,46 +27,62 @@ import ResourceGalleryCard from '../ResourceRecentsGalleryCard';
 //     color: theme.palette.mode === 'light' && theme.palette.primary.contrastText,
 // }));
 
+function useResource(name) {
+    const [resourceList, setResource] = useState(null);
+
+    useEffect(() => {
+        async function fetchItems() {
+            const allItems = await getList(name);
+            // console.log(allItems);
+            // const sortedItems = allItems
+            //     .slice()
+            //     .sort(
+            //         (a, b) =>
+            //             new Date(b.datePublished) - new Date(a.datePublished)
+            //     )
+            //     .slice(0, 4);
+            setResource(allItems);
+        }
+        fetchItems();
+    }, []);
+
+    return resourceList;
+}
+
 function Home() {
     const headerImageMask = {
         xs: 'linear-gradient(to top, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
         md: 'linear-gradient(to left, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
     };
 
-    const [items, setItems] = useState({
-        posts: [],
-        articles: [],
-    });
+    const galleryContainerSX = {
+        display: 'flex',
+        gap: '1.5rem',
+        flexWrap: 'wrap',
+        border: '1px solid primary.main',
+        borderRadius: '.4rem',
+        padding: '2rem',
+    };
 
-    // resourceDate = {posts: , articles: }
-
-    useEffect(() => {
-        async function fetchItems(resource) {
-            const allItems = await getList(resource);
-            // console.log(allItems);
-
-            const filteredItems = allItems
-                .slice()
+    function getAndSortResourceByDate(resourceName, returnMaxResults) {
+        const resourceList = useResource(resourceName);
+        if (resourceList) {
+            const sortedResourceList = resourceList
                 .sort(
                     (a, b) =>
                         new Date(b.datePublished) - new Date(a.datePublished)
                 )
-                .slice(0, 4);
-
-            // console.log(filteredItems);
-
-            setItems({ ...items, [resource]: filteredItems });
+                .slice(0, returnMaxResults);
+            return sortedResourceList;
         }
-        ['posts', 'articles'].forEach(resource => {
-            fetchItems(resource);
-        });
-    }, []);
+    }
 
-    // const words = ['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present'];
+    const posts = getAndSortResourceByDate('posts', 4);
+    const articles = getAndSortResourceByDate('articles', 4);
 
     //TODO: fetch hero book via id
-    //TODO: fetch articles and filter for only most recent
-    //TODO: fetch posts and filter for only most recent
+    //[x] TODO: fetch articles and filter for only most recent
+    //[x] TODO: fetch posts and filter for only most recent
 
     return (
         <Container
@@ -73,7 +90,6 @@ function Home() {
             sx={{ mb: '1rem', mt: '0' }}
             maxWidth={'xl'}
             disableGutters>
-            {/* <PageTitle title="Home" /> */}
             <Container
                 className="headline"
                 sx={{
@@ -144,7 +160,6 @@ function Home() {
                 maxWidth={'xl'}
                 disableGutters
                 sx={{
-                    mb: '200px',
                     mt: '0',
                 }}>
                 <Paper elevation={10} variant="hero" square>
@@ -226,94 +241,90 @@ function Home() {
                 </Paper>
             </Container>
             <InnerPageContainer
-                sx={{ display: 'flex', flexDirection: 'column' }}>
-                {/* {console.log(items)} */}
-
-                <Box className="recent-articles gallery container">
-                    <Typography variant="h4" component="p" px={'2rem'}>
-                        Recent Articles
-                    </Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: '1.5rem',
-                            flexWrap: 'wrap',
-                            border: '1px solid primary.main',
-                            borderRadius: '.4rem',
-                            padding: '2rem',
-                        }}>
-                        {items.articles.length > 0 &&
-                            items.articles.map(article => (
-                                <ResourceGalleryCard
-                                    key={article._id}
-                                    resource="article"
-                                    title={article.title}
-                                    image={article.image.url}
-                                    imageAlt={article.image.altText}
-                                    published={article.datePublished}
-                                    publisher={article.publisher.name}
-                                    // created={props.article.createdAt}
-                                    mainLinkTo={
-                                        article.url
-                                            ? article.url
-                                            : `/published/articles/id/${article._id}`
-                                    }
-                                    mainLinkIsLocal={article.url ? false : true}
-                                    mainLinkLabel={
-                                        article.url &&
-                                        `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
-                                    }
-                                    // actions={''}
-                                />
-                            ))}
+                sx={{ display: 'flex', flexDirection: 'column', pb: '15vh' }}>
+                {console.log(posts, articles)}
+                {articles && (
+                    <Box className="recent-articles gallery container">
+                        <Typography
+                            variant="h4"
+                            component="p"
+                            px={'2rem'}
+                            mt={'4rem'}>
+                            Recent Articles
+                        </Typography>
+                        <Box sx={galleryContainerSX}>
+                            {articles.length > 0 &&
+                                articles.map(article => (
+                                    <ResourceGalleryCard
+                                        key={article._id}
+                                        resource="article"
+                                        title={article.title}
+                                        image={article.image.url}
+                                        imageAlt={article.image.altText}
+                                        published={article.datePublished}
+                                        publisher={article.publisher.name}
+                                        // created={props.article.createdAt}
+                                        mainLinkTo={
+                                            article.url
+                                                ? article.url
+                                                : `/published/articles/id/${article._id}`
+                                        }
+                                        mainLinkIsLocal={
+                                            article.url ? false : true
+                                        }
+                                        mainLinkLabel={
+                                            article.url &&
+                                            `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
+                                        }
+                                        // actions={''}
+                                    />
+                                ))}
+                        </Box>
                     </Box>
-                </Box>
-                <Box className="home-posts preview">
-                    <Typography variant="h4" component="p" px={'2rem'}>
-                        Recent Posts
-                    </Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: '1.5rem',
-                            flexWrap: 'wrap',
-
-                            border: '1px solid primary.main',
-                            borderRadius: '.4rem',
-                            padding: '2rem',
-                        }}>
-                        {items.posts.length > 0 &&
-                            items.posts.map(post => (
-                                <ResourceGalleryCard
-                                    key={post._id}
-                                    resource="post"
-                                    title={post.title}
-                                    image={
-                                        post.image && post.image.url
-                                            ? post.image.url
-                                            : null
-                                    }
-                                    imageAlt={
-                                        post.image && post.image.altText
-                                            ? post.image.altText
-                                            : null
-                                    }
-                                    published={post.datePublished}
-                                    created={post.createdAt}
-                                    mainLinkIsLocal={true}
-                                    mainLinkTo={`/published/posts/id/${post._id}`}
-                                    mainLinkLabel="Read full post"
-                                    // actions={
-                                    //     <Button
-                                    //         component={RouterLink}
-                                    //         to={`/published/posts/id/${props.post._id}`}
-                                    //         className="link">
-                                    //         ➣ Read full post
-                                    //     </Button>}
-                                />
-                            ))}
+                )}
+                {posts && (
+                    <Box className="home-posts preview">
+                        <Typography
+                            variant="h4"
+                            component="p"
+                            px={'2rem'}
+                            mt={'2rem'}>
+                            Recent Posts
+                        </Typography>
+                        <Box sx={galleryContainerSX}>
+                            {posts.length > 0 &&
+                                posts.map(post => (
+                                    <ResourceGalleryCard
+                                        key={post._id}
+                                        resource="post"
+                                        title={post.title}
+                                        image={
+                                            post.image && post.image.url
+                                                ? post.image.url
+                                                : null
+                                        }
+                                        imageAlt={
+                                            post.image && post.image.altText
+                                                ? post.image.altText
+                                                : null
+                                        }
+                                        published={post.datePublished}
+                                        created={post.createdAt}
+                                        mainLinkIsLocal={true}
+                                        mainLinkTo={`/published/posts/id/${post._id}`}
+                                        mainLinkLabel="Read full post"
+                                        // actions={
+                                        //     <Button
+                                        //         component={RouterLink}
+                                        //         to={`/published/posts/id/${props.post._id}`}
+                                        //         className="link">
+                                        //         ➣ Read full post
+                                        //     </Button>}
+                                    />
+                                ))}
+                        </Box>
                     </Box>
-                </Box>
+                )}
             </InnerPageContainer>
         </Container>
     );
