@@ -10,7 +10,6 @@ import {
     FormGroupContextProvider,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
-import { CompactForm, RaBox } from 'ra-compact-ui';
 import { Grid } from '@mui/material';
 
 function ArticleForm() {

@@ -1,12 +1,14 @@
 .DS_store
 .env
-
+next-env.d.ts
 
 .eslintrc.cjs
 index.css
 App.css
 react.svg
 vite.svg
+
+.next
 
 
 # Logs

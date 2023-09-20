@@ -30,14 +30,6 @@ function App() {
                     minHeight: `calc(100vh - ${footerHeight})`,
                     pb: '15vh',
                 }}>
-                {/* <div className="bgmask edge">
-                <div className="background-edge">
-                    <img
-                        src="/leaves-wall_matteo-miliddi-unsplash.jpeg"
-                        className="background-edge"
-                    />
-                </div>
-            </div> */}
                 <Box
                     className="bg pattern"
                     sx={{
@@ -47,29 +39,7 @@ function App() {
                         backgroundAttachment: 'fixed',
                         opacity: '.2',
                         zIndex: '-1',
-                    }}>
-                    {/* <img src="/white-rhombus-background.jpg" className="bg" /> */}
-                </Box>
-                {/* <Box
-                className="bgmountains-mask"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    justifyContent: 'center',
-                    height: '100%',
-                    width: '100%',
-                    zIndex: '-2',
-                    position: 'absolute',
-                }}> */}
-                {/* <div className="bgmountains gradient"></div> */}
-                {/* <Box
-                    component="img"
-                    src="/green-gold-abstract-mountains_transparent.png"
-                    className="bgmountains"
-                    sx={{ position: 'relative' }}
-                /> */}
-                {/* </Box> */}
+                    }}></Box>
                 <Navbar />
                 <Routes>
                     <Route index element={<Home />} />
