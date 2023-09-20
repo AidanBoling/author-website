@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 
 import '../../../main/css/styles.css';
 
-// const App = dynamic(() => import('../../main/components/App'), { ssr: false });
 const AdminApp = dynamic(() => import('../../../site_admin/components/App'), {
     ssr: false,
 });

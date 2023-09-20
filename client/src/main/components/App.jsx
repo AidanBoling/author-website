@@ -90,7 +90,7 @@ function App() {
                             <PageWrapper header="Events" content={<Events />} />
                         }
                     />
-                    <Route
+                    {/* <Route
                         path="/about"
                         element={
                             <PageWrapper
@@ -99,7 +99,7 @@ function App() {
                                 usePaper
                             />
                         }
-                    />
+                    /> */}
                     <Route
                         path="/contact"
                         element={
