@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DOMPurify from 'dompurify';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
 import {
     Card,
     CardHeader,
@@ -10,7 +11,6 @@ import {
     Typography,
     Button,
     IconButton,
-    Link,
     Collapse,
     List,
     ListItem,
@@ -20,18 +20,7 @@ import { styled } from '@mui/material/styles';
 import { palette } from '@mui/system';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import ResourceCard from './ResourceCard';
-import ExpandMore from './ExpandToggle';
-
-// const ExpandMore = styled(props => {
-//     const { expand, ...other } = props;
-//     return <IconButton {...other} />;
-// })(({ theme, expand }) => ({
-//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-//     // marginLeft: 'auto',
-//     transition: theme.transitions.create('transform', {
-//         duration: theme.transitions.duration.shortest,
-//     }),
-// }));
+import ExpandMore from '../ExpandToggle';
 
 function EventCard(props) {
     const [isExpanded, setExpanded] = useState(false);
@@ -117,8 +106,8 @@ function EventCard(props) {
                             ) : (
                                 <Button
                                     key={index}
-                                    component={RouterLink}
-                                    to={props.event.action.link}
+                                    component={Link}
+                                    href={props.event.action.link}
                                     className="link">
                                     {action.label}
                                 </Button>

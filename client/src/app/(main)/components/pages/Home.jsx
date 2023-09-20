@@ -1,21 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
 import {
     Container,
     Box,
     Paper,
     Stack,
     Typography,
-    Link,
+    Link as MuiLink,
     Button,
 } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
-import PageWrapper from '../PageWrapper';
-import { getList } from '../../api/getResourceItems';
-import ResourceGalleryCard from '../ResourceRecentsGalleryCard';
-// import { set } from 'mongoose';
+import { getList } from '../../../../main/api/getResourceItems';
+import ResourceGalleryCard from '../cards/ResourceRecentsGalleryCard';
 
 // const HeroSectionPaper = styled(Paper)(({ theme }) => ({
 //     width: '100%',
@@ -211,8 +210,8 @@ function Home() {
                                     eleifend dapibus.
                                 </Typography>
                                 {/* <Link
-                                    component={RouterLink}
-                                    to="/"
+                                    component={Link}
+                                    href="/"
                                     color={'lightgold.main'}>
                                     Click to read more
                                 </Link> */}
@@ -221,8 +220,8 @@ function Home() {
                                         gap={4}
                                         sx={{ width: '200px', mx: 'auto' }}>
                                         <Button
-                                            component={RouterLink}
-                                            to="/"
+                                            component={Link}
+                                            href="/"
                                             variant="outlined"
                                             color="lightgold">
                                             Learn More
@@ -315,8 +314,8 @@ function Home() {
                                         mainLinkLabel="Read full post"
                                         // actions={
                                         //     <Button
-                                        //         component={RouterLink}
-                                        //         to={`/published/posts/id/${props.post._id}`}
+                                        //         component={Link}
+                                        //         href={`/published/posts/id/${props.post._id}`}
                                         //         className="link">
                                         //         ➣ Read full post
                                         //     </Button>}

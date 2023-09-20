@@ -1,5 +1,7 @@
 'use client';
+import PageWrapper from '../components/PageWrapper';
+import About from '../components/pages/About';
 
 export default function Page() {
-    return <h1>About</h1>;
+    return <PageWrapper header="About" content={<About />} usePaper />;
 }

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { getList } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
-import BookCard from '../BookCard';
-import ResourceCardSkeleton from '../ResourceCardSkeleton';
+import { getList } from '../../../../main/api/getResourceItems';
+import BookCard from '../cards/BookCard';
+import ResourceCardSkeleton from '../cards/ResourceCardSkeleton';
 
 function Books() {
     const [books, setBooks] = useState([]);
@@ -33,19 +32,3 @@ function Books() {
 }
 
 export default Books;
-
-// [x] Create "Book" component/cards
-// - cover pic
-// - summary-short
-// - link to book page
-// - link to sales page (and/or)
-
-// [x] Create Books in server/db
-// - Title
-// - Publish date
-// - Cover pic (link) (lorem picsum, random)
-// - Summary (short)
-// - Summary
-// - store/purchase link (??)
-
-// [x] Create admin "Add/Submit Book" form/page (and same for articles...)

@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 import {
     Card,
     Box,
@@ -7,7 +7,10 @@ import {
     CardMedia,
     Typography,
 } from '@mui/material';
-import { textLinkWrapper, cardMediaWithLink } from './ResourceCardLinkWrappers';
+import {
+    textLinkWrapper,
+    cardMediaWithLink,
+} from '../ResourceCardLinkWrappers';
 
 function ResourceGalleryCard(props) {
     const mediaSX = {

@@ -7,8 +7,7 @@ import {
     alpha,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import getDesignTokens from '../../../main/components/style/theme';
-import App from '../../../main/components/App';
+import getDesignTokens from './theme';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 

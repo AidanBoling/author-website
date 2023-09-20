@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { getList } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
-import EventCard from '../EventCard';
-import ResourceCardSkeleton from '../ResourceCardSkeleton';
+import { getList } from '../../../../main/api/getResourceItems';
+import EventCard from '../cards/EventCard';
+import ResourceCardSkeleton from '../cards/ResourceCardSkeleton';
 
 function Events(props) {
     const [events, setEvents] = useState([]);

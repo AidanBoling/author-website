@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, Card, CardMedia, Button, Link, Typography } from '@mui/material';
+// import React from 'react';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
+
+import { Link as MuiLink, Typography } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function ArticleCard(props) {
@@ -12,12 +14,12 @@ function ArticleCard(props) {
             <Typography>{props.article.descriptionShort}</Typography>
             <Typography mt={'1rem'}>
                 This article also available to{' '}
-                <Link
-                    component={RouterLink}
-                    to={`/published/articles/id/${props.article._id}`}
+                <MuiLink
+                    component={Link}
+                    href={`/published/articles/id/${props.article._id}`}
                     className="link">
                     read through this site
-                </Link>
+                </MuiLink>
                 .
             </Typography>
         </>

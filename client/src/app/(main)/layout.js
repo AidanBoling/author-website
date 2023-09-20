@@ -1,9 +1,9 @@
 'use client';
 import '../../main/css/styles.css';
 import { Box } from '@mui/material';
-import Navbar from '../components/Navbar';
-import Footer from '../../main/components/Footer';
-import ThemeWrapper from '../components/style/ThemeWrapper';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ThemeWrapper from './components/style/ThemeWrapper';
 
 export default function MainLayout({
     children, // will be a page or nested layout

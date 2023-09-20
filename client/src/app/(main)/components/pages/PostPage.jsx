@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { Box, Typography, Divider } from '@mui/material';
-import { getById } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
+import { getById } from '../../../../main/api/getResourceItems';
 
 function PostPage() {
     const { postId } = useParams();

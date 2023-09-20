@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 import {
     Card,
     Box,
@@ -9,12 +9,14 @@ import {
     CardMedia,
     Collapse,
     Typography,
-    Link,
     useMediaQuery,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandMore from './ExpandToggle';
-import { textLinkWrapper, cardMediaWithLink } from './ResourceCardLinkWrappers';
+import ExpandMore from '../ExpandToggle';
+import {
+    textLinkWrapper,
+    cardMediaWithLink,
+} from '../ResourceCardLinkWrappers';
 
 function ResourceCard(props) {
     const isSmall = useMediaQuery(theme => theme.breakpoints.down('md'));

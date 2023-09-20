@@ -18,8 +18,8 @@ import {
     Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import ColorModeButton from './ColorModeButton';
-import BgPatternBox from './BgPatternBox';
+import ColorModeButton from '../../app/(main)/components/ColorModeButton';
+import BgPatternBox from '../../app/(main)/components/style/BgPatternBox';
 
 const pages = [
     { name: 'Home', link: '/' },

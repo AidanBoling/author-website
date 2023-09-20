@@ -1,5 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
-import { Link, CardMedia } from '@mui/material';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
+import { Link as MuiLink, CardMedia } from '@mui/material';
 
 function linkAriaLabel(props) {
     if (props.mainLinkTo) {
@@ -15,24 +16,24 @@ function textLinkWrapper(props, content) {
     if (props.mainLinkTo) {
         if (props.mainLinkIsLocal) {
             return (
-                <Link
-                    component={RouterLink}
-                    to={props.mainLinkTo}
+                <MuiLink
+                    component={Link}
+                    href={props.mainLinkTo}
                     underline="none"
                     sx={{ ':hover': { color: 'primary.dark' } }}>
                     {content}
-                </Link>
+                </MuiLink>
             );
         } else {
             return (
-                <Link
+                <MuiLink
                     href={props.mainLinkTo}
                     target="_blank"
                     aria-label={linkAriaLabel(props)}
                     underline="none"
                     sx={{ ':hover': { color: 'primary.dark' } }}>
                     {content}
-                </Link>
+                </MuiLink>
             );
         }
     } else {
@@ -44,8 +45,8 @@ function cardMediaWithLink(props, mediaSX) {
     if (props.mainLinkIsLocal) {
         return (
             <CardMedia
-                component={RouterLink}
-                to={props.mainLinkTo}
+                component={Link}
+                href={props.mainLinkTo}
                 sx={mediaSX}
                 image={props.image}
                 title={props.imageAlt}

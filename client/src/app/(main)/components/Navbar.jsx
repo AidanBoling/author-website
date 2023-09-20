@@ -18,8 +18,8 @@ import {
     Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import ColorModeButton from '../../main/components/ColorModeButton';
-import BgPatternBox from '../../main/components/BgPatternBox';
+import ColorModeButton from './ColorModeButton';
+import BgPatternBox from './style/BgPatternBox';
 
 const pages = [
     { name: 'Home', link: '/' },
@@ -137,7 +137,7 @@ function Navbar() {
                             aria-label="navigation menu"
                             aria-controls="menu-navbar"
                             aria-haspopup="true"
-                            // onClick={toggleDrawer(true)}
+                            onClick={toggleDrawer(true)}
                             color="inherit"
                             sx={{
                                 alignSelf: 'center',

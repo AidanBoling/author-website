@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { getById } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
+import { getById } from '../../../../main/api/getResourceItems';
 
 function ArticlePage() {
     const { articleId } = useParams();

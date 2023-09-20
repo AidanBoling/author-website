@@ -4,18 +4,18 @@ import '../css/styles.css';
 import reactLogo from '../../assets/react.svg';
 import Navbar from './Navbar';
 import PageWrapper from './PageWrapper';
-import Home from './pages/Home';
+import Home from '../../app/(main)/components/pages/Home';
 import Published from './pages/Published';
-import Books from './pages/Books';
-import BookPage from './pages/BookPage';
-import Articles from './pages/Articles';
-import ArticlePage from './pages/ArticlePage';
-import Posts from './pages/Posts';
-import PostPage from './pages/PostPage';
-import Events from './pages/Events';
+import Books from '../../app/(main)/components/pages/Books';
+import BookPage from '../../app/(main)/components/pages/BookPage';
+import Articles from '../../app/(main)/components/pages/Articles';
+import ArticlePage from '../../app/(main)/components/pages/ArticlePage';
+import Posts from '../../app/(main)/components/pages/Posts';
+import PostPage from '../../app/(main)/components/pages/PostPage';
+import Events from '../../app/(main)/components/pages/Events';
 import About from './pages/About';
-import Contact from './pages/Contact';
-import Footer from './Footer';
+import Contact from '../../app/(main)/components/pages/Contact';
+import Footer from '../../app/(main)/components/Footer';
 
 function App() {
     const footerHeight = '200px';

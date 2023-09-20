@@ -9,7 +9,7 @@ import {
     ListItemText,
     Typography,
 } from '@mui/material';
-import { getById } from '../../api/getResourceItems';
+import { getById } from '../../../../main/api/getResourceItems';
 import PageTitle from '../PageTitle';
 
 function BookPage() {

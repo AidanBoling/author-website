@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { getList } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
-import PostCard from '../PostCard';
-import ResourceCardSkeleton from '../ResourceCardSkeleton';
+import { getList } from '../../../../main/api/getResourceItems';
+import PostCard from '../cards/PostCard';
+import ResourceCardSkeleton from '../cards/ResourceCardSkeleton';
 
 function Posts() {
     const [publishedPosts, setPosts] = useState([]);

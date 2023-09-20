@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { getList } from '../../api/getResourceItems';
-import PageTitle from '../PageTitle';
-import ArticleCard from '../ArticleCard';
-import ResourceCardSkeleton from '../ResourceCardSkeleton';
+import { getList } from '../../../../main/api/getResourceItems';
+import ArticleCard from '../cards/ArticleCard';
+import ResourceCardSkeleton from '../cards/ResourceCardSkeleton';
 
 function Articles() {
     const [articles, setArticles] = useState([]);

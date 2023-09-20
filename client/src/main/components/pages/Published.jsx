@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import PageTitle from '../PageTitle';
+// import { Routes, Route, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { Link as MuiLink } from '@mui/material';
+import PageTitle from '../../../app/(main)/components/PageTitle';
 
 function Published() {
     return (
@@ -11,13 +13,13 @@ function Published() {
                 <div className="content">
                     <ul>
                         <li>
-                            <Link to="/published/books">Books</Link>
+                            <MuiLink to="/published/books">Books</MuiLink>
                         </li>
                         <li>
-                            <Link to="/published/articles">Articles</Link>
+                            <MuiLink to="/published/articles">Articles</MuiLink>
                         </li>
                         <li>
-                            <Link to="/published/posts">Blog</Link>
+                            <MuiLink to="/published/posts">Blog</MuiLink>
                         </li>
                     </ul>
                 </div>

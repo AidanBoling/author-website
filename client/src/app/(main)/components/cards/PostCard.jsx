@@ -1,13 +1,12 @@
-// import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-// import { palette } from '@mui/system';
-import { Button, Link, useMediaQuery } from '@mui/material';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
+import { Button, useMediaQuery } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
     const isSmall = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
-    console.log('Received post: ', props.post);
+    // console.log('Received post: ', props.post);
 
     let summary = '';
     if (props.post.content.teaser) {
@@ -41,8 +40,8 @@ function PostCard(props) {
             mainLinkLabel="Read full post"
             actions={
                 <Button
-                    component={RouterLink}
-                    to={`/published/posts/id/${props.post._id}`}
+                    component={Link}
+                    href={`/published/posts/id/${props.post._id}`}
                     className="link">
                     ➣ Read full post
                 </Button>

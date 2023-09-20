@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
+import Link from 'next/link';
 import { Box, Button, useMediaQuery } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
@@ -51,8 +52,8 @@ function BookCard(props) {
                         mr: '1.75rem',
                     }}>
                     <Button
-                        component={RouterLink}
-                        to={`/published/books/id/${props.book._id}`}
+                        component={Link}
+                        href={`/published/books/id/${props.book._id}`}
                         className="link"
                         variant="outlined">
                         ➣ Read more
