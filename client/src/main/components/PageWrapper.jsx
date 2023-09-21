@@ -1,17 +1,7 @@
-import {
-    Container,
-    Box,
-    Paper,
-    Button,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-} from '@mui/material';
-import PageTitle from '../../app/(main)/components/PageTitle';
-import InnerPageContainer from '../../app/(main)/components/InnerPageContainer';
-import { pagePaddingX } from '../../app/(main)/components/InnerPageContainer';
-import Footer from '../../app/(main)/components/Footer';
+'use client';
+import { Container, Paper } from '@mui/material';
+import PageTitle from './PageTitle';
+import InnerPageContainer, { pagePaddingX } from './InnerPageContainer';
 
 function PageWrapper(props) {
     // const paddingXMd = '2rem';

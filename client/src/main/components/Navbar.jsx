@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+'use client';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import {
     AppBar,
     Box,
@@ -13,13 +14,13 @@ import {
     ListItemIcon,
     ListItemText,
     Typography,
-    Link,
+    Link as MuiLink,
     IconButton,
     Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import ColorModeButton from '../../app/(main)/components/ColorModeButton';
-import BgPatternBox from '../../app/(main)/components/style/BgPatternBox';
+import ColorModeButton from './ColorModeButton';
+import BgPatternBox from './style/BgPatternBox';
 
 const pages = [
     { name: 'Home', link: '/' },
@@ -69,13 +70,13 @@ function Navbar() {
                             mx: 'auto',
                             zIndex: '1',
                         }}>
-                        <Link
-                            component={RouterLink}
-                            to={'/'}
+                        <MuiLink
+                            component={Link}
+                            href={'/'}
                             underline="none"
                             color="inherit">
                             {title}
-                        </Link>
+                        </MuiLink>
                     </Typography>
                     <Box
                         sx={{
@@ -98,9 +99,12 @@ function Navbar() {
                                     component="span"
                                     zIndex={1}
                                     sx={{ fontSize: '300' }}>
-                                    <Link
-                                        component={RouterLink}
-                                        to={page.link}
+                                    <MuiLink
+                                        component={Link}
+                                        href={{
+                                            pathname: page.link,
+                                            query: { name: 'test' },
+                                        }}
                                         underline="none"
                                         color="inherit"
                                         sx={{
@@ -109,7 +113,7 @@ function Navbar() {
                                             },
                                         }}>
                                         {page.name}
-                                    </Link>
+                                    </MuiLink>
                                 </Typography>
                             ))}
                         </Box>
@@ -157,10 +161,10 @@ function Navbar() {
                             onKeyDown={toggleDrawer(false)}>
                             <List>
                                 {pages.map(page => (
-                                    <ListItem key={page.name} disablePadding>
+                                    <ListItem key={page.link} disablePadding>
                                         <ListItemButton
-                                            component={RouterLink}
-                                            to={page.link}
+                                            component={Link}
+                                            href={page.link}
                                             color="inherit">
                                             <ListItemText primary={page.name} />
                                         </ListItemButton>

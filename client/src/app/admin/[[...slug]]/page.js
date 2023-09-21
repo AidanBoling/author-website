@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-import '../../../main/css/styles.css';
+import '@/main/styles/styles.css';
 
 const AdminApp = dynamic(() => import('../../../site_admin/components/App'), {
     ssr: false,

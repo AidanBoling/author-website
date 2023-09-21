@@ -1,6 +1,5 @@
-// import '../../main/css/styles.css';
-'use client';
-import Home from './components/pages/Home';
+// import '@/main/styles/styles.css';
+import Home from '@/main/components/mainPages/Home';
 
 export default function Page() {
     return <Home />;

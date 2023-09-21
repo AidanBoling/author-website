@@ -1,6 +1,5 @@
-'use client';
-import PageWrapper from '../components/PageWrapper';
-import Contact from '../components/pages/Contact';
+import PageWrapper from '@/main/components/PageWrapper';
+import Contact from '@/main/components/mainPages/Contact';
 
 export default function Page() {
     return <PageWrapper header="Contact" content={<Contact />} usePaper />;

@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useMemo, createContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -7,8 +8,7 @@ import {
     alpha,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import getDesignTokens from '../../../app/(main)/components/style/theme';
-import App from '../App';
+import getDesignTokens from './theme';
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -52,8 +52,7 @@ function ThemeWrapper(props) {
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                {/* <App /> */}
-                {props.element}
+                {props.children}
             </ThemeProvider>
         </ColorModeContext.Provider>
     );

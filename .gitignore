@@ -1,4 +1,7 @@
 .DS_store
+
+main_archived
+
 .env
 next-env.d.ts
 

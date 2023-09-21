@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "baseUrl": "src/",
+      "paths": {
+        "@/styles/*": ["styles/*"],
+        "@/main/*": ["main/*"],
+        "@/admin/*": ["site_admin/*"],
+      }
+    }
+  }
+  
+  

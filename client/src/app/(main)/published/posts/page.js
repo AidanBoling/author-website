@@ -1,6 +1,6 @@
 'use client';
-import Posts from '../../components/pages/Posts';
-import PageWrapper from '../../components/PageWrapper';
+import Posts from '@/main/components/mainPages/Posts';
+import PageWrapper from '@/main/components/PageWrapper';
 
 export default function Page() {
     return <PageWrapper header="Posts" content={<Posts />} usePaper />;
