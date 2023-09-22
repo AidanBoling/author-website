@@ -5,7 +5,7 @@ import { Box, Button, useMediaQuery } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function BookCard(props) {
-    console.log('Received book: ', props.book);
+    // console.log('Received book: ', props.book);
     // console.log(props.post._id);
 
     const purchaseButtons =

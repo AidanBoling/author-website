@@ -1,4 +1,6 @@
 'use client';
+// import '@/main/styles/styles.css';
+
 import React, { useState, useMemo, createContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -10,7 +12,7 @@ import {
 import CssBaseline from '@mui/material/CssBaseline';
 import getDesignTokens from './theme';
 
-const ColorModeContext = createContext({ toggleColorMode: () => {} });
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function ThemeWrapper(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -59,4 +61,3 @@ function ThemeWrapper(props) {
 }
 
 export default ThemeWrapper;
-export { ColorModeContext };

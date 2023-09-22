@@ -1,7 +1,25 @@
-'use client';
-import Books from '@/main/components/mainPages/Books';
+import { Suspense } from 'react';
+import { getList } from '@/main/api/getResourceItems';
 import PageWrapper from '@/main/components/PageWrapper';
+import Books from '@/main/components/mainPages/Books';
+import BooksList from '@/main/components/BooksList';
+import { ResourcesListSkeleton } from '../../../../main/components/skeletons/LoadingResourcesListPage';
 
-export default function Page() {
-    return <PageWrapper header="Books" content={<Books />} usePaper />;
+// async function GetBooks() {
+
+//     return (
+
+//     );
+// }
+
+export default async function Page() {
+    const books = await getList('books');
+
+    return (
+        <PageWrapper header="Books">
+            <Suspense fallback={<ResourcesListSkeleton />}>
+                <Books books={books} />
+            </Suspense>
+        </PageWrapper>
+    );
 }

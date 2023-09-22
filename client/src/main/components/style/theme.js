@@ -19,18 +19,18 @@ function getDesignTokens(mode) {
                 light: '#003726',
                 dark: '#00100b',
             },
-            grey: {
-                main: grey[500],
-                light: grey[300],
-                dark: grey[700],
-            },
+
             ...(mode === 'light' && {
                 primary: {
                     main: '#00855a',
                     // contrastText: 'rgba(24,24,24,0.87)',
                     // dark: '#c89659',
                 },
-
+                grey: {
+                    main: grey[600],
+                    light: grey[400],
+                    dark: grey[800],
+                },
                 background: {
                     default: '#fcfdfc',
                     paper: 'rgba(252,255,254,0.95)',
@@ -50,7 +50,11 @@ function getDesignTokens(mode) {
                     contrastText: 'rgba(24,24,24,0.87)',
                     // dark: '#c89659',
                 },
-
+                grey: {
+                    main: grey[500],
+                    light: grey[300],
+                    dark: grey[700],
+                },
                 background: {
                     default: '#00100b',
                     paper: 'rgba(18,18,18,0.95)',

@@ -1,34 +1,17 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { getList } from '../../api/getResourceItems';
-import BookCard from '../cards/BookCard';
-import ResourceCardSkeleton from '../cards/ResourceCardSkeleton';
+import BookCard from '@/main/components/cards/BookCard';
+import NoItemsMessage from '@/main/components/NoItemsMessage';
 
-function Books() {
-    const [books, setBooks] = useState([]);
-
-    useEffect(() => {
-        async function fetchItems() {
-            const allItems = await getList('books');
-            console.log(allItems);
-            setBooks(allItems);
-            // return publishedPosts;
-        }
-        fetchItems();
-    }, []);
-
+function Books(props) {
     return (
-        <div>
-            {/* {console.log('Books: ', books)} */}
-            <Stack spacing={3}>
-                {books.length > 0 ? (
-                    books.map(book => <BookCard key={book._id} book={book} />)
-                ) : (
-                    <ResourceCardSkeleton hasMedia={true} />
-                )}
-            </Stack>
-        </div>
+        <Stack spacing={3}>
+            {props.books.length > 0 ? (
+                props.books.map(book => <BookCard key={book._id} book={book} />)
+            ) : (
+                <NoItemsMessage message={'No books found'} />
+            )}
+        </Stack>
     );
 }
 
