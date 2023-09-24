@@ -26,29 +26,29 @@ import ResourceGalleryCard from '../cards/ResourceRecentsGalleryCard';
 //     color: theme.palette.mode === 'light' && theme.palette.primary.contrastText,
 // }));
 
-function useResource(name) {
-    const [resourceList, setResource] = useState(null);
+// function useResource(name) {
+//     const [resourceList, setResource] = useState(null);
 
-    useEffect(() => {
-        async function fetchItems() {
-            const allItems = await getList(name);
-            // console.log(allItems);
-            // const sortedItems = allItems
-            //     .slice()
-            //     .sort(
-            //         (a, b) =>
-            //             new Date(b.datePublished) - new Date(a.datePublished)
-            //     )
-            //     .slice(0, 4);
-            setResource(allItems);
-        }
-        fetchItems();
-    }, []);
+//     useEffect(() => {
+//         async function fetchItems() {
+//             const allItems = await getList(name);
+//             // console.log(allItems);
+//             // const sortedItems = allItems
+//             //     .slice()
+//             //     .sort(
+//             //         (a, b) =>
+//             //             new Date(b.datePublished) - new Date(a.datePublished)
+//             //     )
+//             //     .slice(0, 4);
+//             setResource(allItems);
+//         }
+//         fetchItems();
+//     }, []);
 
-    return resourceList;
-}
+//     return resourceList;
+// }
 
-function Home() {
+function Home(props) {
     const headerImageMask = {
         xs: 'linear-gradient(to top, black, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
         md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
@@ -62,22 +62,6 @@ function Home() {
         borderRadius: '.4rem',
         padding: '2rem',
     };
-
-    function getAndSortResourceByDate(resourceName, returnMaxResults) {
-        const resourceList = useResource(resourceName);
-        if (resourceList) {
-            const sortedResourceList = resourceList
-                .sort(
-                    (a, b) =>
-                        new Date(b.datePublished) - new Date(a.datePublished)
-                )
-                .slice(0, returnMaxResults);
-            return sortedResourceList;
-        }
-    }
-
-    const posts = getAndSortResourceByDate('posts', 4);
-    const articles = getAndSortResourceByDate('articles', 4);
 
     //TODO: fetch hero book via id
     //[x] TODO: fetch articles and filter for only most recent
@@ -242,8 +226,8 @@ function Home() {
             </Container>
             <InnerPageContainer
                 sx={{ display: 'flex', flexDirection: 'column', pb: '15vh' }}>
-                {console.log(posts, articles)}
-                {articles && (
+                {console.log(props.posts, props.articles)}
+                {props.articles && (
                     <Box className="recent-articles gallery container">
                         <Typography
                             variant="h4"
@@ -253,8 +237,8 @@ function Home() {
                             Recent Articles
                         </Typography>
                         <Box sx={galleryContainerSX}>
-                            {articles.length > 0 &&
-                                articles.map(article => (
+                            {props.articles.length > 0 &&
+                                props.articles.map(article => (
                                     <ResourceGalleryCard
                                         key={article._id}
                                         resource="article"
@@ -282,7 +266,7 @@ function Home() {
                         </Box>
                     </Box>
                 )}
-                {posts && (
+                {props.posts && (
                     <Box className="home-posts preview">
                         <Typography
                             variant="h4"
@@ -292,8 +276,8 @@ function Home() {
                             Recent Posts
                         </Typography>
                         <Box sx={galleryContainerSX}>
-                            {posts.length > 0 &&
-                                posts.map(post => (
+                            {props.posts.length > 0 &&
+                                props.posts.map(post => (
                                     <ResourceGalleryCard
                                         key={post._id}
                                         resource="post"

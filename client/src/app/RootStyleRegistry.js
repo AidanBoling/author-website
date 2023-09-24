@@ -46,7 +46,7 @@ export default function RootStyleRegistry({ children }) {
     });
 
     return (
-        <ThemeProvider>
+        <ThemeProvider enableColorScheme>
             <CacheProvider value={cache}>{children}</CacheProvider>
         </ThemeProvider>
     );
