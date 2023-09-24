@@ -1,40 +1,29 @@
 'use client';
-import { Box } from '@mui/material';
+import { Box, GlobalStyles } from '@mui/material';
 import Navbar from '@/main/components/Navbar';
 import Footer from '@/main/components/Footer';
 import ThemeWrapper from '@/main/components/style/ThemeWrapper';
 import Background from '../../main/components/style/Background';
 import '@/main/styles/styles.css';
+// import ThemeRegistry from '../ThemeRegistry';
+import { css } from '@emotion/react';
+// import {
+//     lightThemeOptions,
+//     darkThemeOptions,
+// } from '@/main/components/style/theme';
+
+// ${lightThemeOptions.palette
+//     .background.default}
 
 export default function MainLayout({ children }) {
     const footerHeight = '200px';
 
     return (
         <ThemeWrapper>
-            <Box
-                component="div"
-                className="bgmountains"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: `calc(100vh - ${footerHeight})`,
-                    pb: '15vh',
-                }}>
-                <Box
-                    className="bg pattern"
-                    sx={{
-                        width: '100vw',
-                        height: '100%',
-                        position: 'fixed',
-                        backgroundAttachment: 'fixed',
-                        opacity: '.2',
-                        zIndex: '-1',
-                    }}
-                />
+            <Background>
                 <Navbar />
                 {children}
-            </Box>
-
+            </Background>
             <Footer height={footerHeight} />
         </ThemeWrapper>
     );

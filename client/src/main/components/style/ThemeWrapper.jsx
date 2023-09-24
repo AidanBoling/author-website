@@ -1,7 +1,7 @@
 'use client';
 // import '@/main/styles/styles.css';
 
-import React, { useState, useMemo, createContext } from 'react';
+import React, { useState, useEffect, useMemo, createContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
     ThemeProvider,
@@ -10,53 +10,54 @@ import {
     alpha,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import getDesignTokens from './theme';
+import getDesignTokens from '@/main/components/style/theme';
+import { darkTheme, lightTheme } from '@/main/components/style/theme';
+import { useTheme } from 'next-themes';
 
-export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+// export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function ThemeWrapper(props) {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    console.log('Prefers dark mode: ', prefersDarkMode);
+    const { resolvedTheme } = useTheme();
+    const [currentTheme, setCurrentTheme] = useState(lightTheme);
 
-    const [mode, setMode] = useState(prefersDarkMode ? 'dark' : 'light');
+    useEffect(() => {
+        resolvedTheme === 'light'
+            ? setCurrentTheme(lightTheme)
+            : setCurrentTheme(darkTheme);
+    }, [resolvedTheme]);
 
-    const colorMode = useMemo(
-        () => ({
-            toggleColorMode: () => {
-                setMode(prevMode => (prevMode === 'light' ? 'dark' : 'light'));
-            },
-        }),
-        []
-    );
+    // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    // console.log('Prefers dark mode: ', prefersDarkMode);
+    // // prefersDarkMode ? 'light' : 'dark'
+    // const [mode, setMode] = useState('dark');
 
-    let theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+    // const colorMode = useMemo(
+    //     () => ({
+    //         toggleColorMode: () => {
+    //             setMode(prevMode => (prevMode === 'light' ? 'dark' : 'light'));
+    //         },
+    //     }),
+    //     []
+    // );
 
-    theme = createTheme(theme, {
-        // Custom colors created with augmentColor go here
-        palette: {
-            lightgold: theme.palette.augmentColor({
-                color: {
-                    main: '#f3d46b',
-                },
-                name: 'lightgold',
-            }),
-            forestgreenalpha: {
-                main: alpha(theme.palette.forestgreen.main, 0.95),
-                light: alpha(theme.palette.forestgreen.light, 0.95),
-                dark: alpha(theme.palette.forestgreen.dark, 0.95),
-            },
-        },
-    });
+    // let theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
-    theme = responsiveFontSizes(theme);
+    // let lightThemeChosen = useMemo(
+    //     () => createTheme({ ...lightTheme }),
+    //     [mode]
+    // );
+    // lightThemeChosen = themeAdjust(lightThemeChosen);
+
+    // let darkThemeChosen = useMemo(() => createTheme({ ...darkTheme }), [mode]);
+    // darkThemeChosen = themeAdjust(darkThemeChosen);
 
     return (
-        <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                {props.children}
-            </ThemeProvider>
-        </ColorModeContext.Provider>
+        // <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={currentTheme}>
+            <CssBaseline />
+            {props.children}
+        </ThemeProvider>
+        // </ColorModeContext.Provider>
     );
 }
 

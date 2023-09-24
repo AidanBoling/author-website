@@ -1,7 +1,11 @@
-:root {
-    /* COLORS */
+/* :root { */
+/* body {
+        background-color: '#00100b';
+    } */
 
-    --red: rgb(245, 19, 19);
+/* COLORS */
+
+/* --red: rgb(245, 19, 19);
     --red-p: 245, 19, 19;
     --orange: rgb(245, 128, 19);
     --orange-p: 245, 128, 19;
@@ -23,25 +27,65 @@
     --grey-m: #858585;
     --forest-green-dark: #00100b;
     --forest-green: #002217;
-    --forest-green-light: #003726;
+    --forest-green-light: #003726; */
 
 
-    /* --note-bg: #fff;
+/* --note-bg: #fff;
     --note-shadow-color: #ccc;
     --note-divider-color: #aaa; */
-}
+/* } */
 
 /* Dark mode */
 
-:root {
-    /* COLORS */
+/* :root { */
+/* COLORS */
 
-    --bg: #212121;
-    --text-color: #eeeeee;
-    /* --note-bg: #eee;
+/* --bg: #212121;
+    --text-color: #eeeeee; */
+/* --note-bg: #eee;
     --note-shadow-color: rgba(170, 170, 170, .7); */
+/* } */
+
+/* [data-theme='dark'] {
+    body {
+        background-color: '#fcfdfc';
+    }
+} */
+
+/* html,
+body,
+.root { */
+/* color: #000;
+    background: #fcfdfc; */
+/* background-image: */
+/* url("https://www.transparenttextures.com/patterns/rice-paper-2.png"); */
+/* url("https://www.transparenttextures.com/patterns/light-paper-fibers.png"); */
+/* linear-gradient(to top, blue, 75%, white); */
+/* background-size: 20%;
+    width: 100vw;
+    height: 100%;
+    position: fixed;
+    background-attachment: fixed;
+    opacity: .2; */
+/* } */
+
+[data-theme='light'],
+[data-theme='light'] body {
+    color: #000;
 }
 
+[data-theme='light'] .bg-color {
+    background: #fcfdfc;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] body {
+    color: #efefef;
+}
+
+[data-theme='dark'] .bg-color {
+    background: #00100b;
+}
 
 * {
     /* padding: 0; */

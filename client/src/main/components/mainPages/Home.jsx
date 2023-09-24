@@ -50,8 +50,8 @@ function useResource(name) {
 
 function Home() {
     const headerImageMask = {
-        xs: 'linear-gradient(to top, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
-        md: 'linear-gradient(to left, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
+        xs: 'linear-gradient(to top, black, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
+        md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
     };
 
     const galleryContainerSX = {
@@ -110,6 +110,7 @@ function Home() {
                         gridRow: '1/-1',
                         gridColumn: '1/-1',
                         height: '100%',
+                        zIndex: 1,
                     }}>
                     <Typography
                         variant="h2"
@@ -137,14 +138,14 @@ function Home() {
                         gridRow: '1/-1',
                         gridColumn: '1/-1',
                         position: 'relative',
-                        zIndex: '-2',
+                        zIndex: '0',
                         maskImage: headerImageMask,
                         WebkitMaskImage: headerImageMask,
                         maskRepeat: 'no-repeat',
                     }}>
                     <Box
                         component="img"
-                        src="https://picsum.photos/800/700?random=1"
+                        src="https://picsum.photos/700/600?random=1"
                         sx={{
                             width: '100%',
                             height: '100%',
