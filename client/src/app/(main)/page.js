@@ -20,5 +20,5 @@ export default async function Page() {
     const articles = await getAndSortResource('articles', 4);
     const posts = await getAndSortResource('posts', 4);
 
-    return <Home articles={articles} posts={posts} />;
+    return <Home posts={posts} articles={articles} />;
 }

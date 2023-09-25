@@ -63,6 +63,25 @@ function Home(props) {
         padding: '2rem',
     };
 
+    // function getAndSortResourceByDate(resourceName, returnMaxResults) {
+    //     const resourceList = useResource(resourceName);
+    //     if (resourceList) {
+    //         const sortedResourceList = resourceList
+    //             .sort(
+    //                 (a, b) =>
+    //                     new Date(b.datePublished) - new Date(a.datePublished)
+    //             )
+    //             .slice(0, returnMaxResults);
+    //         return sortedResourceList;
+    //     }
+    // }
+
+    // const posts = getAndSortResourceByDate('posts', 4);
+    // const articles = getAndSortResourceByDate('articles', 4);
+
+    const posts = props.posts;
+    const articles = props.articles;
+
     //TODO: fetch hero book via id
     //[x] TODO: fetch articles and filter for only most recent
     //[x] TODO: fetch posts and filter for only most recent
@@ -226,8 +245,8 @@ function Home(props) {
             </Container>
             <InnerPageContainer
                 sx={{ display: 'flex', flexDirection: 'column', pb: '15vh' }}>
-                {console.log(props.posts, props.articles)}
-                {props.articles && (
+                {/* {console.log(posts, articles)} */}
+                {articles && (
                     <Box className="recent-articles gallery container">
                         <Typography
                             variant="h4"
@@ -237,8 +256,8 @@ function Home(props) {
                             Recent Articles
                         </Typography>
                         <Box sx={galleryContainerSX}>
-                            {props.articles.length > 0 &&
-                                props.articles.map(article => (
+                            {articles.length > 0 &&
+                                articles.map(article => (
                                     <ResourceGalleryCard
                                         key={article._id}
                                         resource="article"
@@ -266,7 +285,7 @@ function Home(props) {
                         </Box>
                     </Box>
                 )}
-                {props.posts && (
+                {posts && (
                     <Box className="home-posts preview">
                         <Typography
                             variant="h4"
@@ -276,8 +295,8 @@ function Home(props) {
                             Recent Posts
                         </Typography>
                         <Box sx={galleryContainerSX}>
-                            {props.posts.length > 0 &&
-                                props.posts.map(post => (
+                            {posts.length > 0 &&
+                                posts.map(post => (
                                     <ResourceGalleryCard
                                         key={post._id}
                                         resource="post"
