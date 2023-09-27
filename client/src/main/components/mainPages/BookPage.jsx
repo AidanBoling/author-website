@@ -4,11 +4,22 @@ import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
+import Image from 'next/image';
 
 function BookPage() {
     const params = useParams();
     // console.log(bookId);
     const [book, setBook] = useState('');
+    const coverWidth = { xs: '75vw', sm: 300 };
+    const baselineGap = '2.5rem';
+
+    const Header = () => (
+        <div className="book-header fullpage">
+            <Typography variant="h3" component="h2" mb={baselineGap}>
+                {book.title}
+            </Typography>
+        </div>
+    );
 
     useEffect(() => {
         async function fetchItem() {
@@ -20,57 +31,68 @@ function BookPage() {
     }, []);
 
     return (
-        <div className="book fullpage">
+        <>
             {book && (
-                <Box sx={{ display: 'inline' }}>
-                    <Box
-                        component="img"
-                        className="book-cover"
-                        src={book.coverImage}
-                        alt="book cover"
-                        sx={{
-                            width: 300,
-                            height: 400,
-                            borderRadius: '.25rem',
-                            mr: '1.5rem',
-                            mb: '1.5rem',
-                            flexShrink: 0,
-                            float: 'left',
-                            shapeOutside: 'margin-box',
-                        }}></Box>
-                    <div className="book-header fullpage">
-                        <Typography variant="h3" component="h2" mb="2rem">
-                            {book.title}
-                        </Typography>
-                    </div>
-                    <Box className="book-content">
-                        {book.description.long ? (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                        book.description.long
-                                    ),
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ mt: baselineGap }}>
+                        <Box
+                            sx={{
+                                width: coverWidth,
+                                aspectRatio: 0.67,
+                                borderRadius: '.25rem',
+                                ml: { xs: 'auto', sm: 0 },
+                                mr: { xs: 'auto', sm: baselineGap },
+                                mb: baselineGap,
+                                flexShrink: 0,
+                                float: { xs: 'unset', sm: 'left' },
+
+                                contain: 'content',
+                                shapeOutside: 'margin-box',
+                            }}>
+                            <Image
+                                className="book-cover"
+                                src={book.coverImage}
+                                alt="book cover"
+                                fill
+                                style={{
+                                    width: '100%',
+                                    objectFit: 'cover',
                                 }}
                             />
-                        ) : (
-                            book.description.short
+                        </Box>
+                        <Header />
+                        <Box className="book-content">
+                            {book.description.long ? (
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: DOMPurify.sanitize(
+                                            book.description.long
+                                        ),
+                                    }}
+                                />
+                            ) : (
+                                book.description.short
+                            )}
+                        </Box>
+                        {book.purchaseInfo.length > 0 && (
+                            <Box
+                                className="book-purchase"
+                                my={baselineGap}
+                                flex>
+                                {book.purchaseInfo.map(store => (
+                                    <Button
+                                        key={store._id}
+                                        variant="contained"
+                                        href={store.link}
+                                        target="_blank"
+                                        aria-label={`Go to the ${store.location} page for this book, which opens in a new tab`}>
+                                        Order on {store.location}
+                                    </Button>
+                                ))}
+                            </Box>
                         )}
                     </Box>
-                    {book.purchaseInfo.length > 0 && (
-                        <Box className="book-purchase" my="2rem" flex>
-                            {book.purchaseInfo.map(store => (
-                                <Button
-                                    key={store._id}
-                                    variant="contained"
-                                    href={store.link}
-                                    target="_blank"
-                                    aria-label={`Go to the ${store.location} page for this book, which opens in a new tab`}>
-                                    Order on {store.location}
-                                </Button>
-                            ))}
-                        </Box>
-                    )}
-                    <Box className="book-details">
+                    <Box className="book-details" sx={{ width: '100%' }}>
                         <Typography paragraph>
                             {`Published: ${new Date(
                                 book.datePublished
@@ -83,7 +105,7 @@ function BookPage() {
                     </Box>
                 </Box>
             )}
-        </div>
+        </>
     );
 }
 
