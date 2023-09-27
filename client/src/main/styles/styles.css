@@ -258,18 +258,9 @@ a { */
     text-align: center;
 }
 
-/* .main .link {
-    color: rgb(155, 190, 255);
-} */
-
 .main .link span {
     font-style: italic;
 }
-
-/* 
-.main .link:hover {
-    color: rgb(170, 200, 255);
-} */
 
 
 /* .navbar {
@@ -319,6 +310,7 @@ a { */
 
 } */
 
+
 /* Resource Cards */
 
 .resource-card.card,
@@ -351,6 +343,15 @@ a { */
 
 
 /* Forms */
+
+/* --Contact-- */
+.contactform .MuiTextField-root {
+    width: 100%;
+    /* margin: 2rem; */
+}
+
+
+
 
 /* CREATE POST/COMPOSE */
 

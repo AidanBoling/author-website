@@ -1,47 +1,50 @@
 'use client';
 // import { useState } from 'react';
-import { Box, Grid, Paper, Typography, TextField } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
+import ContactForm from '../ContactForm';
 
 function Contact() {
+    // const [formData, setField] = useState({
+    //     fName: '',
+    //     lName: '',
+    //     email: '',
+    //     message: '',
+    // });
+
+    // function handleChange(event) {
+    //     const { id, value, required } = event.target;
+    //     // console.log(event.target);
+    //     setField({ ...formData, [id]: value });
+    //     validateField(id, value, required);
+    //     // if (id === 'email' || required) {
+    //     //     validateField(id, value, required);
+    //     // }
+    // }
+
+    // function handleSubmit(event) {
+    //     event.preventDefault();
+    //     console.log('Data:\n', formData);
+    //     setSubmitted(true);
+    //     const formIsValid = validateForm();
+    //     console.log('Form is valid: ' + formIsValid);
+    //     // const validated = validateFields();
+    //     //validate email
+    //     //check email; if not valid, setIsValidEmail(false)
+    //     // if (validated) {//submit form}
+    // }
+
     return (
-        <div>
-            <Typography>Lorem ipsum dolor sit amet...</Typography>
-            <Paper>
-                <Grid container spacing={2} sx={{ p: '2rem' }}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="contactFName"
-                            label="First Name"
-                            variant="outlined"
-                            width={'100%'}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="contactLName"
-                            label="Last Name"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            id="contactEmail"
-                            label="Email"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            id="contactMessage"
-                            label="Message"
-                            multiline
-                            maxRows={8}
-                            variant="outlined"
-                        />
-                    </Grid>
-                </Grid>
+        <Box>
+            <Box mx={'2rem'}>
+                <Typography mt={'2rem'} mb={'4rem'}>
+                    Lorem ipsum dolor sit amet...
+                </Typography>
+            </Box>
+
+            <Paper sx={{ p: '2rem' }}>
+                <ContactForm />
             </Paper>
-        </div>
+        </Box>
     );
 }
 

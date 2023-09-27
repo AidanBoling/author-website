@@ -143,9 +143,6 @@ const lightThemeOptions = {
             },
         },
     },
-
-    //  ...themeBase.typography,
-    //  ...themeBase.components,
 };
 
 const darkThemeOptions = {

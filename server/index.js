@@ -103,6 +103,14 @@ app.get('/events', async (req, res) => {
     res.json(allEvents);
 });
 
+// -- Form routes
+
+app.post('/form/contact', (req, res) => {
+    console.log(req.body);
+
+    res.status(200).json({ message: 'Success' });
+});
+
 // app.get('/compose', (req, res) => {
 //     res.send(
 //         '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'
