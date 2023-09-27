@@ -14,7 +14,7 @@ export default function Background(props) {
                     display: 'flex',
                     flexDirection: 'column',
                     minHeight: `calc(100vh - ${footerHeight})`,
-                    pb: '15vh',
+                    pb: { xs: '75px', sm: '125px', lg: '175px' },
                 }}>
                 <Box
                     className="bg-color"

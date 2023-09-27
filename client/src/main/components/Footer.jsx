@@ -15,13 +15,22 @@ function Footer(props) {
                 overflowY: 'hidden',
             }}>
             <BgPatternBox height={props.height} />
-            <Container>
-                <Typography sx={{ fontSize: '14px' }}>
-                    © {new Date().getFullYear()} Lauren Hall
-                </Typography>
-                <Typography sx={{ fontSize: '14px' }}>
-                    Created by Aidan Boling
-                </Typography>
+            <Container sx={{ height: '100%' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end',
+                        height: '100%',
+                        py: '2rem',
+                    }}>
+                    <Typography sx={{ fontSize: '14px' }}>
+                        © {new Date().getFullYear()} Lauren Hall
+                    </Typography>
+                    <Typography sx={{ fontSize: '14px' }}>
+                        Created by Aidan Boling
+                    </Typography>
+                </Box>
             </Container>
         </Box>
     );

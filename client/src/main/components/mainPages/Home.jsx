@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
     Container,
     Box,
@@ -82,7 +83,7 @@ function Home(props) {
     const posts = props.posts;
     const articles = props.articles;
 
-    //TODO: fetch hero book via id
+    //TODO: fetch hero book via id (?)
     //[x] TODO: fetch articles and filter for only most recent
     //[x] TODO: fetch posts and filter for only most recent
 
@@ -146,7 +147,14 @@ function Home(props) {
                         WebkitMaskImage: headerImageMask,
                         maskRepeat: 'no-repeat',
                     }}>
-                    <Box
+                    <Image
+                        className="home-header-image"
+                        src="https://picsum.photos/700/600?random=1"
+                        alt="A random image"
+                        fill
+                        priority
+                    />
+                    {/* <Box
                         component="img"
                         src="https://picsum.photos/700/600?random=1"
                         sx={{
@@ -154,7 +162,7 @@ function Home(props) {
                             height: '100%',
                             objectFit: 'cover',
                         }}
-                    />
+                    /> */}
                 </Box>
             </Container>
 
@@ -244,7 +252,7 @@ function Home(props) {
                 </Paper>
             </Container>
             <InnerPageContainer
-                sx={{ display: 'flex', flexDirection: 'column', pb: '15vh' }}>
+                sx={{ display: 'flex', flexDirection: 'column' }}>
                 {/* {console.log(posts, articles)} */}
                 {articles && (
                     <Box className="recent-articles gallery container">
