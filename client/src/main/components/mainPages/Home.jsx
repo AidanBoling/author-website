@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -15,7 +15,7 @@ import {
 // import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
 import { getList } from '../../api/getResourceItems';
-import ResourceGalleryCard from '../cards/ResourceRecentsGalleryCard';
+import ResourceGalleryCard from '../cards/ResourceGalleryCard';
 
 // const HeroSectionPaper = styled(Paper)(({ theme }) => ({
 //     width: '100%',
@@ -48,6 +48,117 @@ import ResourceGalleryCard from '../cards/ResourceRecentsGalleryCard';
 
 //     return resourceList;
 // }
+
+function ResourcesGalleryContainer(props) {
+    const sideScroll = (element, speed, distance, step) => {
+        let scrollAmount = 0;
+        const slideTimer = setInterval(() => {
+            element.scrollLeft += step;
+            scrollAmount += Math.abs(step);
+            if (scrollAmount >= distance) {
+                clearInterval(slideTimer);
+            }
+        }, speed);
+    };
+
+    const ref = useRef(null);
+    const scrollButtonWidth = { xs: 'calc(35px + 8vw)', sm: '30px' };
+
+    const ScrollButton = props => (
+        <Button
+            onClick={() => {
+                sideScroll(ref.current, 10, 360, props.scrollStep);
+            }}
+            sx={{
+                height: '100%',
+                width: scrollButtonWidth,
+                position: 'absolute',
+                justifyContent: props.justify,
+                [props.direction]: 0,
+                zIndex: 2,
+            }}>
+            {props.children}
+        </Button>
+    );
+
+    const ScrollSpacer = () => (
+        <Box
+            sx={{
+                flexShrink: 0,
+                width: {
+                    xs: `calc(${scrollButtonWidth.xs} - 15px)`,
+                    sm: `calc(${scrollButtonWidth.sm} + 20px)`,
+                },
+            }}
+        />
+    );
+
+    return (
+        <Box>
+            <Typography
+                variant="h4"
+                component="p"
+                mt={'2.5rem'}
+                mb={'1rem'}
+                sx={{ px: { xs: '1rem', sm: 0 } }}>
+                {props.title}
+            </Typography>
+            <Paper
+                classNames="gallery-container"
+                variant="outlined"
+                sx={{
+                    display: 'flex',
+                    borderWidth: '2px',
+                    borderRadius: '.4rem',
+                    backgroundColor: 'greyAlpha.main',
+                    width: { xs: '108%', sm: 'inherit' },
+                    ml: { xs: '-4%', sm: 'inherit' },
+                    position: 'relative',
+                }}>
+                <Box
+                    ref={ref}
+                    sx={{
+                        // display: 'flex',
+                        // height: '100%',
+                        width: '100%',
+                        py: '2rem',
+                        overflowX: 'scroll',
+                        WebkitOverflowScrolling: 'touch',
+                        '&::-webkit-scrollbar': {
+                            display: 'none',
+                        },
+                    }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'nowrap',
+                            gap: '1.5rem',
+                            width: '100%',
+                            height: '100%',
+                            px: '.5rem',
+                            // mx: { xs: '13%', sm: 'calc(45px + 3vw)' },
+                        }}>
+                        <ScrollSpacer />
+                        {props.children}
+                        <ScrollSpacer />
+                    </Box>
+                </Box>
+                <ScrollButton
+                    direction={'left'}
+                    justify={'flex-end'}
+                    scrollStep={-25}>
+                    Left
+                </ScrollButton>
+                <ScrollButton
+                    direction={'right'}
+                    justify={'flex-start'}
+                    scrollStep={25}>
+                    Right
+                </ScrollButton>
+            </Paper>
+        </Box>
+    );
+}
 
 function Home(props) {
     const headerImageMask = {
@@ -194,12 +305,17 @@ function Home(props) {
                                     width: '325px',
                                     height: '400',
                                     objectFit: 'fill',
+                                    mx: { xs: 'auto' },
                                 }}
                             />
                             <Stack
                                 gap={2}
                                 className="hero content"
-                                sx={{ flexGrow: 1, ml: '3rem' }}>
+                                sx={{
+                                    flexGrow: 1,
+                                    ml: { xs: 0, sm: '3rem' },
+                                    mt: { xs: '2.5rem', sm: 0 },
+                                }}>
                                 <Typography
                                     variant="h3"
                                     component="p"
@@ -221,12 +337,6 @@ function Home(props) {
                                     et eu lorem. Mauris mollis tortor id
                                     eleifend dapibus.
                                 </Typography>
-                                {/* <Link
-                                    component={Link}
-                                    href="/"
-                                    color={'lightgold.main'}>
-                                    Click to read more
-                                </Link> */}
                                 <Box mt={'2rem'}>
                                     <Stack
                                         gap={4}
@@ -252,89 +362,74 @@ function Home(props) {
                 </Paper>
             </Container>
             <InnerPageContainer
-                sx={{ display: 'flex', flexDirection: 'column' }}>
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    px: { xs: 0 },
+                    pb: '30px',
+                }}>
                 {/* {console.log(posts, articles)} */}
                 {articles && (
-                    <Box className="recent-articles gallery container">
-                        <Typography
-                            variant="h4"
-                            component="p"
-                            px={'2rem'}
-                            mt={'4rem'}>
-                            Recent Articles
-                        </Typography>
-                        <Box sx={galleryContainerSX}>
-                            {articles.length > 0 &&
-                                articles.map(article => (
-                                    <ResourceGalleryCard
-                                        key={article._id}
-                                        resource="article"
-                                        title={article.title}
-                                        image={article.image.url}
-                                        imageAlt={article.image.altText}
-                                        published={article.datePublished}
-                                        publisher={article.publisher.name}
-                                        // created={props.article.createdAt}
-                                        mainLinkTo={
-                                            article.url
-                                                ? article.url
-                                                : `/published/articles/id/${article._id}`
-                                        }
-                                        mainLinkIsLocal={
-                                            article.url ? false : true
-                                        }
-                                        mainLinkLabel={
-                                            article.url &&
-                                            `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
-                                        }
-                                        // actions={''}
-                                    />
-                                ))}
-                        </Box>
-                    </Box>
+                    <ResourcesGalleryContainer title="Recent Articles">
+                        {articles.length > 0 &&
+                            articles.map(article => (
+                                <ResourceGalleryCard
+                                    key={article._id}
+                                    resource="article"
+                                    title={article.title}
+                                    image={article.image.url}
+                                    imageAlt={article.image.altText}
+                                    published={article.datePublished}
+                                    publisher={article.publisher.name}
+                                    // created={props.article.createdAt}
+                                    mainLinkTo={
+                                        article.url
+                                            ? article.url
+                                            : `/published/articles/id/${article._id}`
+                                    }
+                                    mainLinkIsLocal={article.url ? false : true}
+                                    mainLinkLabel={
+                                        article.url &&
+                                        `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
+                                    }
+                                    // actions={''}
+                                />
+                            ))}
+                    </ResourcesGalleryContainer>
                 )}
                 {posts && (
-                    <Box className="home-posts preview">
-                        <Typography
-                            variant="h4"
-                            component="p"
-                            px={'2rem'}
-                            mt={'2rem'}>
-                            Recent Posts
-                        </Typography>
-                        <Box sx={galleryContainerSX}>
-                            {posts.length > 0 &&
-                                posts.map(post => (
-                                    <ResourceGalleryCard
-                                        key={post._id}
-                                        resource="post"
-                                        title={post.title}
-                                        image={
-                                            post.image && post.image.url
-                                                ? post.image.url
-                                                : null
-                                        }
-                                        imageAlt={
-                                            post.image && post.image.altText
-                                                ? post.image.altText
-                                                : null
-                                        }
-                                        published={post.datePublished}
-                                        created={post.createdAt}
-                                        mainLinkIsLocal={true}
-                                        mainLinkTo={`/published/posts/id/${post._id}`}
-                                        mainLinkLabel="Read full post"
-                                        // actions={
-                                        //     <Button
-                                        //         component={Link}
-                                        //         href={`/published/posts/id/${props.post._id}`}
-                                        //         className="link">
-                                        //         ➣ Read full post
-                                        //     </Button>}
-                                    />
-                                ))}
-                        </Box>
-                    </Box>
+                    <ResourcesGalleryContainer title="Recent Posts">
+                        {posts.length > 0 &&
+                            posts.map(post => (
+                                <ResourceGalleryCard
+                                    key={post._id}
+                                    resource="post"
+                                    title={post.title}
+                                    image={
+                                        post.image && post.image.url
+                                            ? post.image.url
+                                            : null
+                                    }
+                                    imageAlt={
+                                        post.image && post.image.altText
+                                            ? post.image.altText
+                                            : null
+                                    }
+                                    published={post.datePublished}
+                                    created={post.createdAt}
+                                    mainLinkIsLocal={true}
+                                    mainLinkTo={`/published/posts/id/${post._id}`}
+                                    mainLinkLabel="Read full post"
+                                    // actions={
+                                    //     <Button
+                                    //         component={Link}
+                                    //         href={`/published/posts/id/${props.post._id}`}
+                                    //         className="link">
+                                    //         ➣ Read full post
+                                    //     </Button>}
+                                />
+                            ))}
+                    </ResourcesGalleryContainer>
                 )}
             </InnerPageContainer>
         </Container>

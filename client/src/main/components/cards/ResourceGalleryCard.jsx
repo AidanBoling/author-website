@@ -36,6 +36,8 @@ function ResourceGalleryCard(props) {
                 display: 'flex',
                 flexDirection: 'column',
                 width: '350px',
+
+                flex: '0 0 auto',
             }}>
             {props.image &&
                 (props.mainLinkTo ? (

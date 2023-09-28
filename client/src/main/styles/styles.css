@@ -290,6 +290,50 @@ a { */
     object-fit: cover;
 }
 
+
+/* div.gallery-container * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent;
+} */
+
+/* .MuiBox-root.gallery-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 400px;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    border-width: 5px !important;
+    border-color: grey !important;
+    border-radius: .4rem;
+    padding: 2rem;
+    overflow-x: scroll;
+} */
+
+/* div.gallery-container *::-webkit-scrollbar {
+    width: 25px;
+    height: 25px;
+} */
+
+/* Track */
+/* *::-webkit-scrollbar {
+    width: 25px !important;
+    height: 25px;
+
+} */
+
+/* Handle */
+/* .gallery-container::-webkit-scrollbar-thumb {
+    background: #3e3e3e;
+    border-radius: .5rem;
+} */
+
+/* Handle on hover */
+/* .gallery-container::-webkit-scrollbar-thumb:hover {
+    background: #323232;
+} */
+
+
 /* .home-headerhero-mask {
 
     --mgradient: linear-gradient(to left, black, rgba(0, 0, 0, 0.7), transparent, transparent);

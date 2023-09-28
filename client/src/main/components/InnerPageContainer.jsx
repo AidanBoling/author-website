@@ -8,7 +8,7 @@ function InnerPageContainer(props) {
         <Container
             className={props.className}
             sx={{
-                width: { xs: '100%', md: '90%', lg: '80%' },
+                width: { xs: '100%', sm: '90%', lg: '80%' },
                 maxWidth: '1000px',
                 my: '2.5vh',
                 px: props.usePaper

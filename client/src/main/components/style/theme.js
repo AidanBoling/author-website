@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const forestgreenBase = {
     main: '#002217',
@@ -39,8 +40,9 @@ const themeBase = {
             fontSize: '4rem',
         },
         h2: { fontSize: '3rem' },
-        h3: { fontSize: '2.2rem', fontWeight: '300' },
-        h4: { fontSize: '1.75rem' },
+        h3: { fontSize: '2.6rem', fontWeight: '300' },
+        h4: { fontSize: '2.2rem', fontWeight: '300' },
+        h5: { fontSize: '1.75rem' },
     },
     components: {
         MuiAppBar: {
@@ -96,7 +98,29 @@ const themeBase = {
                     }),
                 },
             ],
+            // styleOverrides: {
+            //     root: ({ ownerState, theme }) => ({
+            //         ...(ownerState.className === 'gallery-container' && {
+            //             ' ::-webkit-scrollbar': '35px',
+            //         }),
+            //     }),
+            // },
         },
+
+        // MuiCssBaseline: {
+        //     styleOverrides: {
+        //         '*': {
+        //             '&::-webkit-scrollbar': {
+        //                 width: 6,
+        //                 height: 6,
+        //                 backgroundcolor: 'transparent',
+        //             },
+        //             '&::-webkit-scrollbar-track': {
+        //                 backgroundcolor: 'transparent',
+        //             },
+        //         },
+        //     },
+        // },
     },
 };
 
@@ -185,6 +209,11 @@ function buildTheme(themeOptions) {
                 },
                 name: 'lightgold',
             }),
+            greyAlpha: {
+                main: alpha(theme.palette.grey.main, 0.1),
+                light: alpha(theme.palette.grey.light, 0.1),
+                dark: alpha(theme.palette.grey.dark, 0.1),
+            },
         },
     });
     theme = responsiveFontSizes(theme);
