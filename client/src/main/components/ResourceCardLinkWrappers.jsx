@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { Link as MuiLink, CardMedia } from '@mui/material';
+import OpenInNewSharpIcon from '@mui/icons-material/OpenInNewSharp';
+import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
 
 function linkAriaLabel(props) {
     if (props.mainLinkTo) {
@@ -32,7 +34,16 @@ function textLinkWrapper(props, content) {
                     aria-label={linkAriaLabel(props)}
                     underline="none"
                     sx={{ ':hover': { color: 'primary.dark' } }}>
-                    {content}
+                    {content}{' '}
+                    {/* <OpenInNewSharpIcon
+                        sx={{ pl: '.5rem', fontSize: '1.3rem' }}
+                    /> */}
+                    <NorthEastSharpIcon
+                        fontSize="small"
+                        sx={{
+                            color: 'primary.dark',
+                        }}
+                    />
                 </MuiLink>
             );
         }

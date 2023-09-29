@@ -11,11 +11,13 @@ import {
     Link as MuiLink,
     Button,
 } from '@mui/material';
-// import { alpha, styled } from '@mui/material/styles';
+// import { useTheme, alpha, styled } from '@mui/material/styles';
+// import useMediaQuery from '@mui/material/useMediaQuery';
 // import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
 import { getList } from '../../api/getResourceItems';
 import ResourceGalleryCard from '../cards/ResourceGalleryCard';
+import ResourcesGalleryContainer from '../HomeResourcesGalleryContainer';
 
 // const HeroSectionPaper = styled(Paper)(({ theme }) => ({
 //     width: '100%',
@@ -48,117 +50,6 @@ import ResourceGalleryCard from '../cards/ResourceGalleryCard';
 
 //     return resourceList;
 // }
-
-function ResourcesGalleryContainer(props) {
-    const sideScroll = (element, speed, distance, step) => {
-        let scrollAmount = 0;
-        const slideTimer = setInterval(() => {
-            element.scrollLeft += step;
-            scrollAmount += Math.abs(step);
-            if (scrollAmount >= distance) {
-                clearInterval(slideTimer);
-            }
-        }, speed);
-    };
-
-    const ref = useRef(null);
-    const scrollButtonWidth = { xs: 'calc(35px + 8vw)', sm: '30px' };
-
-    const ScrollButton = props => (
-        <Button
-            onClick={() => {
-                sideScroll(ref.current, 10, 360, props.scrollStep);
-            }}
-            sx={{
-                height: '100%',
-                width: scrollButtonWidth,
-                position: 'absolute',
-                justifyContent: props.justify,
-                [props.direction]: 0,
-                zIndex: 2,
-            }}>
-            {props.children}
-        </Button>
-    );
-
-    const ScrollSpacer = () => (
-        <Box
-            sx={{
-                flexShrink: 0,
-                width: {
-                    xs: `calc(${scrollButtonWidth.xs} - 15px)`,
-                    sm: `calc(${scrollButtonWidth.sm} + 20px)`,
-                },
-            }}
-        />
-    );
-
-    return (
-        <Box>
-            <Typography
-                variant="h4"
-                component="p"
-                mt={'2.5rem'}
-                mb={'1rem'}
-                sx={{ px: { xs: '1rem', sm: 0 } }}>
-                {props.title}
-            </Typography>
-            <Paper
-                classNames="gallery-container"
-                variant="outlined"
-                sx={{
-                    display: 'flex',
-                    borderWidth: '2px',
-                    borderRadius: '.4rem',
-                    backgroundColor: 'greyAlpha.main',
-                    width: { xs: '108%', sm: 'inherit' },
-                    ml: { xs: '-4%', sm: 'inherit' },
-                    position: 'relative',
-                }}>
-                <Box
-                    ref={ref}
-                    sx={{
-                        // display: 'flex',
-                        // height: '100%',
-                        width: '100%',
-                        py: '2rem',
-                        overflowX: 'scroll',
-                        WebkitOverflowScrolling: 'touch',
-                        '&::-webkit-scrollbar': {
-                            display: 'none',
-                        },
-                    }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'nowrap',
-                            gap: '1.5rem',
-                            width: '100%',
-                            height: '100%',
-                            px: '.5rem',
-                            // mx: { xs: '13%', sm: 'calc(45px + 3vw)' },
-                        }}>
-                        <ScrollSpacer />
-                        {props.children}
-                        <ScrollSpacer />
-                    </Box>
-                </Box>
-                <ScrollButton
-                    direction={'left'}
-                    justify={'flex-end'}
-                    scrollStep={-25}>
-                    Left
-                </ScrollButton>
-                <ScrollButton
-                    direction={'right'}
-                    justify={'flex-start'}
-                    scrollStep={25}>
-                    Right
-                </ScrollButton>
-            </Paper>
-        </Box>
-    );
-}
 
 function Home(props) {
     const headerImageMask = {
@@ -200,12 +91,12 @@ function Home(props) {
 
     return (
         <Container
-            className="main"
+            // className="main"
             sx={{ mb: '1rem', mt: '0' }}
             maxWidth={'xl'}
             disableGutters>
             <Container
-                className="headline"
+                // className="headline"
                 sx={{
                     display: 'grid',
                     gridTemplateRows: 'minmax(500px, 70vh)',
@@ -259,11 +150,12 @@ function Home(props) {
                         maskRepeat: 'no-repeat',
                     }}>
                     <Image
-                        className="home-header-image"
+                        // className="home-header-image"
                         src="https://picsum.photos/700/600?random=1"
                         alt="A random image"
                         fill
                         priority
+                        style={{ width: '100%', objectFit: 'cover' }}
                     />
                     {/* <Box
                         component="img"
@@ -291,7 +183,7 @@ function Home(props) {
                         <Box
                             sx={{
                                 display: 'flex',
-                                flexDirection: { xs: 'column', sm: 'row' },
+                                flexDirection: { xs: 'column', md: 'row' },
                                 p: '2rem',
                                 py: '5rem',
                                 mx: 'auto',
@@ -303,18 +195,19 @@ function Home(props) {
                                 sx={{
                                     borderRadius: '.4rem',
                                     width: '325px',
-                                    height: '400',
+                                    aspectRatio: '0.67',
+                                    // height: '400',
                                     objectFit: 'fill',
                                     mx: { xs: 'auto' },
                                 }}
                             />
                             <Stack
-                                gap={2}
+                                gap={3}
                                 className="hero content"
                                 sx={{
                                     flexGrow: 1,
-                                    ml: { xs: 0, sm: '3rem' },
-                                    mt: { xs: '2.5rem', sm: 0 },
+                                    ml: { xs: 0, md: '3rem' },
+                                    mt: { xs: '2.5rem', md: 0 },
                                 }}>
                                 <Typography
                                     variant="h3"
@@ -366,11 +259,13 @@ function Home(props) {
                     display: 'flex',
                     flexDirection: 'column',
                     px: { xs: 0 },
-                    pb: '30px',
+                    pb: '40px',
                 }}>
                 {/* {console.log(posts, articles)} */}
                 {articles && (
-                    <ResourcesGalleryContainer title="Recent Articles">
+                    <ResourcesGalleryContainer
+                        title="Recent Articles"
+                        href={'/articles'}>
                         {articles.length > 0 &&
                             articles.map(article => (
                                 <ResourceGalleryCard
@@ -398,7 +293,9 @@ function Home(props) {
                     </ResourcesGalleryContainer>
                 )}
                 {posts && (
-                    <ResourcesGalleryContainer title="Recent Posts">
+                    <ResourcesGalleryContainer
+                        title="Recent Posts"
+                        href={'/posts'}>
                         {posts.length > 0 &&
                             posts.map(post => (
                                 <ResourceGalleryCard

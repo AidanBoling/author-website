@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 const forestgreenBase = {
     main: '#002217',
     light: '#003726',
+    lightest: '#09865f',
     dark: '#00100b',
 };
 
@@ -24,6 +25,23 @@ const themeBase = {
             main: '#002217',
             light: '#003726',
             dark: '#00100b',
+        },
+
+        forestgreenAlpha10: {
+            main: alpha(forestgreenBase.main, 0.1),
+            light: alpha(forestgreenBase.light, 0.1),
+            lightest: alpha(forestgreenBase.lightest, 0.05),
+            dark: alpha(forestgreenBase.dark, 0.1),
+        },
+        forestgreenAlpha60: {
+            main: alpha(forestgreenBase.main, 0.6),
+            light: alpha(forestgreenBase.light, 0.6),
+            dark: alpha(forestgreenBase.dark, 0.6),
+        },
+        forestgreenAlpha80: {
+            main: alpha(forestgreenBase.main, 0.8),
+            light: alpha(forestgreenBase.light, 0.8),
+            dark: alpha(forestgreenBase.dark, 0.8),
         },
         error: {
             main: 'rgba(255,39,67,0.95)',
@@ -193,7 +211,7 @@ const darkThemeOptions = {
         },
         tonalOffset: {
             light: 0.4,
-            dark: 0.1,
+            dark: 0.2,
         },
     },
 };
@@ -209,10 +227,15 @@ function buildTheme(themeOptions) {
                 },
                 name: 'lightgold',
             }),
-            greyAlpha: {
+            greyAlpha10: {
                 main: alpha(theme.palette.grey.main, 0.1),
                 light: alpha(theme.palette.grey.light, 0.1),
                 dark: alpha(theme.palette.grey.dark, 0.1),
+            },
+            greyAlpha50: {
+                main: alpha(theme.palette.grey.main, 0.5),
+                light: alpha(theme.palette.grey.light, 0.5),
+                dark: alpha(theme.palette.grey.dark, 0.5),
             },
         },
     });
