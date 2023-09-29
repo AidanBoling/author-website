@@ -256,6 +256,7 @@ a { */
 
 .main h1 {
     text-align: center;
+    background-color: #00100b89;
 }
 
 .main .link span {
@@ -285,10 +286,10 @@ a { */
 
 /* --Home-- */
 
-.home-header-image {
+/* .home-header-image {
     width: 100%;
     object-fit: cover;
-}
+} */
 
 
 /* div.gallery-container * {

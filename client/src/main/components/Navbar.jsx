@@ -19,17 +19,19 @@ import {
     Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import ColorModeButton from './ColorModeButton';
+import { NavbarModeButton, MenuModeToggle } from './ColorModeToggles';
 import BgPatternBox from './style/BgPatternBox';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const pages = [
-    { name: 'Home', link: '/' },
-    { name: 'Books', link: '/published/books' },
-    { name: 'Articles', link: '/published/articles' },
-    { name: 'Blog', link: '/published/posts' },
-    { name: 'Events', link: '/events' },
-    { name: 'About', link: '/about' },
-    { name: 'Contact', link: '/contact' },
+    { name: 'HOME', link: '/' },
+    { name: 'BOOKS', link: '/published/books' },
+    { name: 'ARTICLES', link: '/published/articles' },
+    { name: 'BLOG', link: '/published/posts' },
+    { name: 'EVENTS', link: '/events' },
+    { name: 'ABOUT', link: '/about' },
+    { name: 'CONTACT', link: '/contact' },
 ];
 const title = 'Jane Austen';
 
@@ -45,6 +47,21 @@ function Navbar() {
         }
 
         setDrawerState(open);
+    };
+
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const titleFontSize = isXS && { fontSize: '3rem' };
+    const navTextStyles = {
+        fontWeight: '300',
+        fontSize: '1.1rem',
+        letterSpacing: '.02rem',
+    };
+    const menuTextStyles = {
+        ...navTextStyles,
+        fontSize: '1.3rem',
+        color: 'primary.dark',
     };
 
     return (
@@ -66,9 +83,11 @@ function Navbar() {
                             flexGrow: '1',
                             fontFamily: 'cursive',
                             textAlign: 'center',
-                            mb: { xs: '.75rem', md: '1.5rem' },
+                            my: { xs: '.5rem' },
+                            pb: { xs: '.75rem', md: '1rem' },
                             mx: 'auto',
                             zIndex: '1',
+                            ...titleFontSize,
                         }}>
                         <MuiLink
                             component={Link}
@@ -88,17 +107,17 @@ function Navbar() {
                             sx={{
                                 display: { xs: 'none', md: 'flex' },
                                 justifyContent: 'space-evenly',
-                                width: '80%',
-                                maxWidth: '700px',
+                                alignItems: 'center',
+                                width: '85%',
+                                maxWidth: '775px',
                                 mx: 'auto',
                             }}>
                             {pages.map(page => (
                                 <Typography
                                     key={page.name}
-                                    variant="h6"
                                     component="span"
                                     zIndex={1}
-                                    sx={{ fontSize: '300' }}>
+                                    sx={{ ...navTextStyles }}>
                                     <MuiLink
                                         component={Link}
                                         href={{
@@ -120,7 +139,7 @@ function Navbar() {
                         <Box
                             className="nav-settings"
                             sx={{ display: { xs: 'none', md: 'block' } }}>
-                            <ColorModeButton />
+                            <NavbarModeButton />
                         </Box>
                     </Box>
 
@@ -155,7 +174,7 @@ function Navbar() {
                             display: { xs: 'block', md: 'none' },
                         }}>
                         <Box
-                            sx={{ width: 250 }}
+                            sx={{ width: 300 }}
                             role="presentation"
                             onClick={toggleDrawer(false)}
                             onKeyDown={toggleDrawer(false)}>
@@ -166,7 +185,12 @@ function Navbar() {
                                             component={Link}
                                             href={page.link}
                                             color="inherit">
-                                            <ListItemText primary={page.name} />
+                                            <ListItemText
+                                                primary={page.name}
+                                                primaryTypographyProps={
+                                                    menuTextStyles
+                                                }
+                                            />
                                         </ListItemButton>
                                     </ListItem>
                                 ))}
@@ -174,14 +198,9 @@ function Navbar() {
                             <Divider />
                             <List>
                                 <ListItem disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <ColorModeButton />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={'Toggle color mode'}
-                                        />
-                                    </ListItemButton>
+                                    <MenuModeToggle
+                                        textStyles={menuTextStyles}
+                                    />
                                 </ListItem>
                             </List>
                         </Box>
