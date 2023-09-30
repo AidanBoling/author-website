@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
+import sanitizeHtml from 'sanitize-html';
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
@@ -33,6 +34,8 @@ const transporter = nodemailer.createTransport({
         pass: process.env.GMAIL_APP_PASSWORD,
     },
 });
+
+const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
 // function mailDetails(fromsubject, emailBody) {
 //     return ({
@@ -127,11 +130,15 @@ app.get('/events', async (req, res) => {
 app.post('/form/contact', (req, res) => {
     console.log(req.body);
 
-    const name = req.body.fName + ' ' + req.body.lName;
-    const email = req.body.email;
-    const message = req.body.message;
+    const name =
+        sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
+        ' ' +
+        sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML);
+    const email = sanitizeHtml(req.body.email, sanitizeOptionsNoHTML);
+
+    const message = sanitizeHtml(req.body.message, sanitizeOptionsNoHTML);
     const mParagraphs = message.split(/\n+/);
-    //replace above with cleaned versions, once implement html sanitizer
+    console.log(mParagraphs);
 
     const emailBodyHTML = contactEmailTemplate(name, email, mParagraphs);
 
