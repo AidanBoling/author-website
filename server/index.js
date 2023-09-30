@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import nodemailer from 'nodemailer';
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
@@ -15,6 +16,7 @@ import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
+import contactEmailTemplate from './utils/contactFormEmailTemplate.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
@@ -23,6 +25,25 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOrigin = '*';
+
+// transporter.verify().then(console.log).catch(console.error);
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+    },
+});
+
+// function mailDetails(fromsubject, emailBody) {
+//     return ({
+//     from: `${process.env.GMAIL_USER}`,
+//     to: `${process.env.GMAIL_USER}`,
+//     subject: `${subject}`,
+//     text: `${body}`
+// });
+// }
 
 // app.use(session(sesh));
 // app.use(passport.initialize());
@@ -107,9 +128,93 @@ app.get('/events', async (req, res) => {
 
 app.post('/form/contact', (req, res) => {
     console.log(req.body);
+    // let name;
+    // if (req.body.lname) {name = req.body.fname + req.body.lname}
+    // else {name = req.body.fname}
+    const name = req.body.fName + ' ' + req.body.lName;
+    const email = req.body.email;
+    const message = req.body.message;
+    //replace above with cleaned versions, once implement html sanitizer
 
-    res.status(200).json({ message: 'Success' });
+    // const emailBodyHTML = contactEmailTemplate(name, email, message);
+
+    const mailDetails = {
+        from: `${process.env.GMAIL_USER}`,
+        to: `${process.env.GMAIL_USER}`,
+        subject: `New contact form response, from: ${name}`,
+        // html: emailBodyHTML,
+        text: message,
+    };
+
+    transporter.sendMail(mailDetails, (err, info) => {
+        if (err) {
+            console.log('Error: ', err);
+            res.status(500).json({ error: `Error: \n${err}` });
+        } else {
+            console.log('Email sent successfully');
+            console.log('SMTP response: \n', info.response);
+            res.status(200).json({ message: 'Success' });
+        }
+    });
+
+    // res.status(200).json({ message: 'Success' });
 });
+
+// ADMIN APP
+
+// -- POSTS routes
+
+// create one
+app.post('/admin/posts', postController.create);
+
+// get a list
+app.get('/admin/posts', postController.fetch);
+
+// get one
+app.get('/admin/posts/:id', postController.get);
+
+// update one
+app.put('/admin/posts/:id', postController.update);
+
+// delete one
+app.delete('/admin/posts/:id', postController.delete);
+
+// -- BOOKS routes
+
+app.post('/admin/books', bookController.create);
+app.get('/admin/books', bookController.fetch);
+app.get('/admin/books/:id', bookController.get);
+app.put('/admin/books/:id', bookController.update);
+app.delete('/admin/books/:id', bookController.delete);
+
+// -- ARTICLES routes
+
+app.post('/admin/articles', articleController.create);
+app.get('/admin/articles', articleController.fetch);
+app.get('/admin/articles/:id', articleController.get);
+app.put('/admin/articles/:id', articleController.update);
+app.delete('/admin/articles/:id', articleController.delete);
+
+// -- EVENTS routes
+
+app.post('/admin/events', eventController.create);
+app.get('/admin/events', eventController.fetch);
+app.get('/admin/events/:id', eventController.get);
+app.put('/admin/events/:id', eventController.update);
+app.delete('/admin/events/:id', eventController.delete);
+
+mongoose
+    .connect(
+        `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
+    )
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Listening on port ${PORT}`);
+        });
+    });
+
+// const allBooks = await Book.find();
+// console.log(allBooks);
 
 // app.get('/compose', (req, res) => {
 //     res.send(
@@ -138,86 +243,3 @@ app.post('/form/contact', (req, res) => {
 //             res.json('Project not created');
 //         });
 // }
-
-// ADMIN APP
-
-// -- POSTS routes
-
-// create one
-app.post('/admin/posts', postController.create);
-
-// get a list
-app.get('/admin/posts', postController.fetch);
-
-// get one
-app.get('/admin/posts/:id', postController.get);
-
-// update one
-app.put('/admin/posts/:id', postController.update);
-
-// delete one
-app.delete('/admin/posts/:id', postController.delete);
-
-// -- BOOKS routes
-
-// create one
-app.post('/admin/books', bookController.create);
-
-// get a list
-app.get('/admin/books', bookController.fetch);
-
-// get one
-app.get('/admin/books/:id', bookController.get);
-
-// update one
-app.put('/admin/books/:id', bookController.update);
-
-// delete one
-app.delete('/admin/books/:id', bookController.delete);
-
-// -- ARTICLES routes
-
-// create one
-app.post('/admin/articles', articleController.create);
-
-// get a list
-app.get('/admin/articles', articleController.fetch);
-
-// get one
-app.get('/admin/articles/:id', articleController.get);
-
-// update one
-app.put('/admin/articles/:id', articleController.update);
-
-// delete one
-app.delete('/admin/articles/:id', articleController.delete);
-
-// -- EVENTS routes
-
-// create one
-app.post('/admin/events', eventController.create);
-
-// get a list
-app.get('/admin/events', eventController.fetch);
-
-// get one
-app.get('/admin/events/:id', eventController.get);
-
-// update one
-app.put('/admin/events/:id', eventController.update);
-
-// delete one
-app.delete('/admin/events/:id', eventController.delete);
-
-mongoose
-    .connect(
-        `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
-    )
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Listening on port ${PORT}`);
-        });
-    });
-
-// const allBooks = await Book.find();
-// console.log(allBooks);
