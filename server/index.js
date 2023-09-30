@@ -26,8 +26,6 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOrigin = '*';
 
-// transporter.verify().then(console.log).catch(console.error);
-
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -128,21 +126,21 @@ app.get('/events', async (req, res) => {
 
 app.post('/form/contact', (req, res) => {
     console.log(req.body);
-    // let name;
-    // if (req.body.lname) {name = req.body.fname + req.body.lname}
-    // else {name = req.body.fname}
+
     const name = req.body.fName + ' ' + req.body.lName;
     const email = req.body.email;
     const message = req.body.message;
+    const mParagraphs = message.split(/\n+/);
     //replace above with cleaned versions, once implement html sanitizer
 
-    // const emailBodyHTML = contactEmailTemplate(name, email, message);
+    const emailBodyHTML = contactEmailTemplate(name, email, mParagraphs);
 
     const mailDetails = {
-        from: `${process.env.GMAIL_USER}`,
+        from: `"Post Service" <${process.env.GMAIL_USER}>`,
         to: `${process.env.GMAIL_USER}`,
+        replyTo: email,
         subject: `New contact form response, from: ${name}`,
-        // html: emailBodyHTML,
+        html: emailBodyHTML,
         text: message,
     };
 
