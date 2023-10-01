@@ -45,15 +45,22 @@ export default function ResourcesGalleryContainer(props) {
         const currentScrollLeft = element.scrollLeft;
 
         if (disableButton.left === true && currentScrollLeft > 0) {
+            // console.log('Setting LEFT button disabled = false');
             setDisableButton({ ...disableButton, left: false });
         }
         if (disableButton.left === false && currentScrollLeft === 0) {
+            // console.log('Setting LEFT button disabled = true');
             setDisableButton({ ...disableButton, left: true });
         }
-        if (disableButton.right === false && currentScrollLeft === scrollMax) {
+        if (
+            disableButton.right === false &&
+            currentScrollLeft >= scrollMax - 5
+        ) {
+            // console.log('Setting RIGHT button disabled = true');
             setDisableButton({ ...disableButton, right: true });
         }
         if (disableButton.right === true && currentScrollLeft < scrollMax) {
+            // console.log('Setting RIGHT button disabled = false');
             setDisableButton({ ...disableButton, right: false });
         }
     };
