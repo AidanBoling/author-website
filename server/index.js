@@ -1,12 +1,15 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import mailchimp from '@mailchimp/mailchimp_marketing';
 import nodemailer from 'nodemailer';
 import sanitizeHtml from 'sanitize-html';
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
 import eventController from './controllers/eventController.js';
+import contactFormController from './controllers/contactFormController.js';
+import subscribeMailingListController from './controllers/subscribeController.js';
 
 // import session from 'express-session';
 // import passport from 'passport';
@@ -35,16 +38,19 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+mailchimp.setConfig({
+    apiKey: process.env.MAILCHIMP_API_KEY,
+    server: process.env.MAILCHIMP_API_SERVER,
+});
 
-// function mailDetails(fromsubject, emailBody) {
-//     return ({
-//     from: `${process.env.GMAIL_USER}`,
-//     to: `${process.env.GMAIL_USER}`,
-//     subject: `${subject}`,
-//     text: `${body}`
-// });
+// async function pingMC() {
+//     const response = await mailchimp.ping.get();
+//     console.log(response);
 // }
+
+// pingMC();
+
+const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
 // app.use(session(sesh));
 // app.use(passport.initialize());
@@ -128,41 +134,44 @@ app.get('/events', async (req, res) => {
 // -- Form routes
 
 app.post('/form/contact', (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
-    const name =
-        sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
-        ' ' +
-        sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML);
-    const email = sanitizeHtml(req.body.email, sanitizeOptionsNoHTML);
-
-    const message = sanitizeHtml(req.body.message, sanitizeOptionsNoHTML);
-    const mParagraphs = message.split(/\n+/);
-    console.log(mParagraphs);
-
-    const emailBodyHTML = contactEmailTemplate(name, email, mParagraphs);
-
-    const mailDetails = {
-        from: `"Post Service" <${process.env.GMAIL_USER}>`,
-        to: `${process.env.GMAIL_USER}`,
-        replyTo: email,
-        subject: `New contact form response, from: ${name}`,
-        html: emailBodyHTML,
-        text: message,
+    const data = {
+        name:
+            sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
+            ' ' +
+            sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
+        email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
+        messageArray: sanitizeHtml(
+            req.body.message,
+            sanitizeOptionsNoHTML
+        ).split(/\n+/),
     };
 
-    transporter.sendMail(mailDetails, (err, info) => {
-        if (err) {
-            console.log('Error: ', err);
-            res.status(500).json({ error: `Error: \n${err}` });
-        } else {
-            console.log('Email sent successfully');
-            console.log('SMTP response: \n', info.response);
-            res.status(200).json({ message: 'Success' });
-        }
-    });
+    const emailInvariants = {
+        from: `"Post Service" <${process.env.GMAIL_USER}>`,
+        to: `${process.env.GMAIL_USER}`,
+    };
+
+    // const mParagraphs = data.message.split(/\n+/);
+    console.log(data);
+
+    contactFormController(data, emailInvariants, transporter, res);
 
     // res.status(200).json({ message: 'Success' });
+});
+
+app.post('/form/subscribe', (req, res) => {
+    console.log(req.body);
+
+    const listId = process.env.MAILCHIMP_AUDIENCE_ID;
+    const subscriber = {
+        firstName: sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML),
+        lastName: sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
+        email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
+    };
+
+    subscribeMailingListController(listId, subscriber, mailchimp, res);
 });
 
 // ADMIN APP

@@ -1,17 +1,18 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Box, Paper, Typography, TextField, Button } from '@mui/material';
+// import Link from 'next/link';
+// import Image from 'next/image';
+import { Box, Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { sendFormData } from '../api/sendFormData';
-import greenCheckmark from '../../assets/check_mark_green.png';
+import FormSubmitSuccessScreen from '@/main/components/FormSubmitSuccessScreen';
 
 export default function ContactForm() {
     const [sendSuccessful, setSendSuccessful] = useState(false);
     const [sendError, setSendError] = useState(false);
+
     const formContext = useForm({
         // defaultValues: {
         //     name: '',
@@ -117,25 +118,13 @@ export default function ContactForm() {
                     </Grid>
                 </FormContainer>
             ) : (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        py: '15vh',
-                    }}>
-                    <Image
-                        src={greenCheckmark}
-                        width={100}
-                        height={100}
-                        alt="a green checkmark"
-                    />
-
-                    <Typography component="p" variant="h3" sx={{ my: '2rem' }}>
-                        Thank you!
-                    </Typography>
-                </Box>
+                <FormSubmitSuccessScreen
+                    imgSize={100}
+                    mainMessage={'Thank you!'}
+                    mainMessageVariant={'h3'}
+                    messageMY={'2rem'}
+                    py={'15vh'}
+                />
             )}
         </>
     );

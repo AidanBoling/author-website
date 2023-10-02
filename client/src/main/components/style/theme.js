@@ -61,6 +61,7 @@ const themeBase = {
         h3: { fontSize: '2.6rem', fontWeight: '300' },
         h4: { fontSize: '2.2rem', fontWeight: '300' },
         h5: { fontSize: '1.75rem' },
+        h6: { fontSize: '1.4rem' },
     },
     components: {
         MuiAppBar: {

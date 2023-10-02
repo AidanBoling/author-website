@@ -157,15 +157,6 @@ function Home(props) {
                         priority
                         style={{ width: '100%', objectFit: 'cover' }}
                     />
-                    {/* <Box
-                        component="img"
-                        src="https://picsum.photos/700/600?random=1"
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                        }}
-                    /> */}
                 </Box>
             </Container>
 
@@ -263,39 +254,62 @@ function Home(props) {
                 }}>
                 {/* {console.log(posts, articles)} */}
                 {articles && (
-                    <ResourcesGalleryContainer
-                        title="Recent Articles"
-                        href={'/articles'}>
-                        {articles.length > 0 &&
-                            articles.map(article => (
-                                <ResourceGalleryCard
-                                    key={article._id}
-                                    resource="article"
-                                    title={article.title}
-                                    image={article.image.url}
-                                    imageAlt={article.image.altText}
-                                    published={article.datePublished}
-                                    publisher={article.publisher.name}
-                                    // created={props.article.createdAt}
-                                    mainLinkTo={
-                                        article.url
-                                            ? article.url
-                                            : `/published/articles/id/${article._id}`
-                                    }
-                                    mainLinkIsLocal={article.url ? false : true}
-                                    mainLinkLabel={
-                                        article.url &&
-                                        `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
-                                    }
-                                    // actions={''}
-                                />
-                            ))}
-                    </ResourcesGalleryContainer>
+                    <>
+                        <ResourcesGalleryContainer
+                            title="Recent Articles"
+                            mainPage={'/published/articles'}>
+                            {articles.length > 0 &&
+                                articles.map(article => (
+                                    <ResourceGalleryCard
+                                        key={article._id}
+                                        resource="article"
+                                        title={article.title}
+                                        image={article.image.url}
+                                        imageAlt={article.image.altText}
+                                        published={article.datePublished}
+                                        publisher={article.publisher.name}
+                                        // created={props.article.createdAt}
+                                        mainLinkTo={
+                                            article.url
+                                                ? article.url
+                                                : `/published/articles/id/${article._id}`
+                                        }
+                                        mainLinkIsLocal={
+                                            article.url ? false : true
+                                        }
+                                        mainLinkLabel={
+                                            article.url &&
+                                            `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
+                                        }
+                                        // actions={''}
+                                    />
+                                ))}
+                        </ResourcesGalleryContainer>
+                        {/* <Button
+                            component={Link}
+                            href={'/articles'}
+                            size={'large'}
+                            sx={{
+                                flexShrink: 0,
+                                transitionDuration: '50ms',
+                                pl: '1.5rem',
+                                backgroundColor: 'transparent',
+                                '&:hover': {
+                                    color: 'primary.light',
+                                    backgroundColor: 'greyAlpha10.main',
+                                },
+                            }}>
+                            More
+                            <ArrowRightAltIcon
+                                sx={{ pl: '.25rem', fontSize: '2rem' }}
+                            />
+                        </Button> */}
+                    </>
                 )}
                 {posts && (
                     <ResourcesGalleryContainer
                         title="Recent Posts"
-                        href={'/posts'}>
+                        mainPage={'/published/posts'}>
                         {posts.length > 0 &&
                             posts.map(post => (
                                 <ResourceGalleryCard

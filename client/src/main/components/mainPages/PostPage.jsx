@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { Box, Typography, Divider } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
+import NewsletterForm from '../NewsletterForm';
+import AboutAuthorMini from '../AboutAuthorMini';
 
 function PostPage() {
     const params = useParams();
@@ -25,8 +27,8 @@ function PostPage() {
     }, []);
 
     return (
-        <div>
-            {post && (
+        post && (
+            <>
                 <Box className="post-header fullpage" mb={2}>
                     <Typography variant="h2" component="h2">
                         {post.title}
@@ -46,14 +48,14 @@ function PostPage() {
                     {/* <Typography variant="subheading1" component="p" color='text.secondary'>Updated on {post.updatedAt}</Typography> */}
                     <Divider mt={2} />
                 </Box>
-            )}
-            {post && post.image && (
-                <div className="image fullpage">
-                    <img src={post.image.url} alt={post.image.altText} />
-                </div>
-            )}
-            {post && (
-                <div className="post-content">
+
+                {post.image && (
+                    <div className="image fullpage">
+                        <img src={post.image.url} alt={post.image.altText} />
+                    </div>
+                )}
+
+                <Box className="post-content">
                     {post.content.richText ? (
                         <div
                             dangerouslySetInnerHTML={{
@@ -67,9 +69,22 @@ function PostPage() {
                             <p key={index + 1}>{paragraph}</p>
                         ))
                     )}
-                </div>
-            )}
-        </div>
+                </Box>
+                <Divider
+                    sx={{
+                        width: '95%',
+                        maxWidth: '800px',
+                        my: '3rem',
+                        mx: 'auto',
+                    }}
+                />
+
+                <Box>
+                    <AboutAuthorMini />
+                    <NewsletterForm />
+                </Box>
+            </>
+        )
     );
 }
 

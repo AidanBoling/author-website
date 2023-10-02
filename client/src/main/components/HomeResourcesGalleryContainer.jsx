@@ -209,7 +209,7 @@ export default function ResourcesGalleryContainer(props) {
                         {props.children}
                         <Button
                             component={Link}
-                            href={props.href}
+                            href={props.mainPage}
                             size={'large'}
                             sx={{
                                 flexShrink: 0,
