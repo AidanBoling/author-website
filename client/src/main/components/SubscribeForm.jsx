@@ -47,7 +47,7 @@ export default function SubscribeForm(props) {
                 <FormContainer
                     formContext={formContext}
                     onSuccess={data => handleSubmit(data)}>
-                    <Grid className="contactform" container spacing={3}>
+                    <Grid className="contactform" container spacing={2}>
                         <Grid xs={12}>
                             <TextFieldElement
                                 name="fName"
@@ -61,6 +61,7 @@ export default function SubscribeForm(props) {
                                 name="lName"
                                 label="Last Name"
                                 variant="outlined"
+                                size="small"
                             />
                         </Grid>
                         <Grid xs={12}>
@@ -69,6 +70,7 @@ export default function SubscribeForm(props) {
                                 label="Email"
                                 type="email"
                                 variant="outlined"
+                                size="small"
                                 autoCapitalize="off"
                                 autoCorrect="off"
                                 required
@@ -89,6 +91,7 @@ export default function SubscribeForm(props) {
                                     flexShrink: 0,
                                     // width: '100%',
                                     width: '125px',
+                                    mt: '1rem',
                                 }}>
                                 Subscribe
                             </Button>

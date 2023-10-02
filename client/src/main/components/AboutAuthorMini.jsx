@@ -17,7 +17,7 @@ export default function AboutAuthorMini() {
     );
 
     const authorDescription = (
-        <Typography sx={{ ml: { xs: spacing, sm: 0 }, mt: '1.2rem' }}>
+        <Typography sx={{ ml: { xs: spacing, sm: 0 }, mt: '1rem' }}>
             A description about the author...
         </Typography>
     );
@@ -28,7 +28,8 @@ export default function AboutAuthorMini() {
                 width: '100%',
                 display: 'flex',
                 flexDirection: { xs: 'column', sm: 'row' },
-                my: '4rem',
+                p: '1rem',
+                my: '2rem',
             }}>
             <Box
                 sx={{
@@ -37,8 +38,8 @@ export default function AboutAuthorMini() {
                 <Image
                     src="https://picsum.photos/200/200?random=1"
                     alt="image of the author"
-                    height={100}
-                    width={100}
+                    height={120}
+                    width={120}
                     style={{
                         objectFit: 'cover',
                         borderRadius: '50%',

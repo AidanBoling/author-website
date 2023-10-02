@@ -20,7 +20,6 @@ import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
-import contactEmailTemplate from './utils/contactFormEmailTemplate.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
