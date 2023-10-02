@@ -3,7 +3,7 @@ import PostPage from '@/main/components/mainPages/PostPage';
 
 export default function Page() {
     return (
-        <PageWrapper usePaper>
+        <PageWrapper>
             <PostPage />
         </PageWrapper>
     );

@@ -8,16 +8,24 @@ export default function AboutAuthorMini() {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const spacing = '2rem';
+    const breakpoint = 'sm';
     // const authorAvatar = <Image />;
 
     const authorName = (
-        <Typography component="p" variant="h5">
+        <Typography
+            component="p"
+            variant="h5"
+            sx={{
+                ml: { xs: spacing, [breakpoint]: 0 },
+                display: 'flex',
+                alignItems: 'center',
+            }}>
             <i>Jane Austen</i>
         </Typography>
     );
 
     const authorDescription = (
-        <Typography sx={{ ml: { xs: spacing, sm: 0 }, mt: '1rem' }}>
+        <Typography sx={{ mt: '1rem' }}>
             A description about the author, interdum et malesuada fames ac ante
             ipsum primis in faucibus. Nulla tempor lectus sed nunc laoreet
             euismod. Pellentesque viverra ligula ac neque congue tristique.
@@ -29,13 +37,17 @@ export default function AboutAuthorMini() {
             sx={{
                 width: '100%',
                 display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
+                flexDirection: { xs: 'column', [breakpoint]: 'row' },
                 p: '1rem',
                 my: '2rem',
             }}>
             <Box
                 sx={{
-                    display: 'inline',
+                    display: { xs: 'flex', [breakpoint]: 'inline' },
+                    justifyContent: {
+                        xs: 'flex-start',
+                        [breakpoint]: 'flex-start',
+                    },
                 }}>
                 <Image
                     src="https://picsum.photos/200/200?random=1"
@@ -49,7 +61,11 @@ export default function AboutAuthorMini() {
                 />
                 {isXS && authorName}
             </Box>
-            <Box sx={{ ml: { sm: spacing }, mt: { xs: spacing, sm: 0 } }}>
+            <Box
+                sx={{
+                    ml: { xs: 0, [breakpoint]: spacing },
+                    mt: { xs: '1rem', [breakpoint]: 0 },
+                }}>
                 {!isXS && authorName}
                 {authorDescription}
             </Box>

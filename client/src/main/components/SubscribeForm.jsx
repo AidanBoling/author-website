@@ -47,7 +47,7 @@ export default function SubscribeForm(props) {
                 <FormContainer
                     formContext={formContext}
                     onSuccess={data => handleSubmit(data)}>
-                    <Grid className="contactform" container spacing={2}>
+                    <Grid className="contactform" container spacing={1}>
                         <Grid xs={12}>
                             <TextFieldElement
                                 name="fName"

@@ -1,47 +1,13 @@
 'use client';
-// import { useState } from 'react';
 import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 import ResponsiveImageContainer from '@/main/components/ResponsiveImageContainer';
-
-// function ResponsiveImageContainer(props) {
-//     const marginXSX = { xs: 0, [props.breakpoint]: props.marginSize };
-//     const marginSide = props.floatSide
-//         ? props.floatSide === 'right'
-//             ? 'ml'
-//             : 'mr'
-//         : 'mx';
-
-//     const margin = {
-//         [marginSide]: marginXSX,
-//         mb: props.marginSize,
-//         mt: '.5rem',
-//     };
-//     const floatSX = props.floatSide
-//         ? { xs: 'unset', [props.breakpoint]: props.floatSide }
-//         : 'unset';
-
-//     return (
-//         <Box
-//             sx={{
-//                 ...margin,
-//                 display: { xs: 'flex', [props.breakpoint]: 'inline block' },
-//                 justifyContent: 'center',
-//                 float: floatSX,
-//                 shapeOutside: 'margin-box',
-//             }}>
-//             {props.children}
-//         </Box>
-//     );
-// }
 
 function About() {
     return (
         <Box
             sx={{
                 width: '100%',
-                pt: '1.5rem',
-                pb: { xs: '2rem', md: '4rem' },
             }}>
             <ResponsiveImageContainer
                 marginSize="2rem"

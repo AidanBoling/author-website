@@ -9,7 +9,9 @@ function PageWrapper(props) {
     // const marginXSm = '.5rem';
 
     return (
-        <Container className="main" sx={{ my: '1.5rem', flexGrow: 0 }}>
+        <Container
+            className="main"
+            sx={{ my: '1.5rem', pb: { md: '3rem' }, flexGrow: 0 }}>
             {props.header && <PageTitle title={props.header} />}
             <InnerPageContainer className="content">
                 {props.children}
