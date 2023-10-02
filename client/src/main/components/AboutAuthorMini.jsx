@@ -18,7 +18,9 @@ export default function AboutAuthorMini() {
 
     const authorDescription = (
         <Typography sx={{ ml: { xs: spacing, sm: 0 }, mt: '1rem' }}>
-            A description about the author...
+            A description about the author, interdum et malesuada fames ac ante
+            ipsum primis in faucibus. Nulla tempor lectus sed nunc laoreet
+            euismod. Pellentesque viverra ligula ac neque congue tristique.
         </Typography>
     );
 

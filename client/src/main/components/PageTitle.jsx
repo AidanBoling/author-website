@@ -4,7 +4,7 @@ import { Box, Typography, Divider } from '@mui/material';
 function PageTitle(props) {
     return (
         <Box
-            mb={'1.5rem'}
+            mb={'3rem'}
             sx={{
                 display: 'flex',
                 flexDirection: 'column',

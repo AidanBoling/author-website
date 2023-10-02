@@ -37,7 +37,13 @@ function Contact() {
         <Box>
             <Box mx={'2rem'}>
                 <Typography mt={'2rem'} mb={'4rem'}>
-                    Lorem ipsum dolor sit amet...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Donec mollis mauris scelerisque, varius sapien in, eleifend
+                    magna. Mauris nulla dui, varius at pretium vitae, malesuada
+                    id nisl. Fusce venenatis odio tellus, egestas porta velit
+                    vehicula nec. Proin condimentum ultricies sem, eget molestie
+                    metus accumsan eu. In venenatis erat mattis nibh iaculis
+                    ornare.
                 </Typography>
             </Box>
 

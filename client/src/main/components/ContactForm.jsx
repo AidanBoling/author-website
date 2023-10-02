@@ -55,7 +55,7 @@ export default function ContactForm() {
                         className="contactform"
                         // component="form"
                         container
-                        spacing={3}
+                        spacing={2}
                         // onSubmit={handleSubmit}
                     >
                         <Grid xs={12} sm={6}>
@@ -63,6 +63,7 @@ export default function ContactForm() {
                                 name="fName"
                                 label="First Name"
                                 variant="outlined"
+                                size="small"
                                 required
                             />
                         </Grid>
@@ -71,6 +72,7 @@ export default function ContactForm() {
                                 name="lName"
                                 label="Last Name"
                                 variant="outlined"
+                                size="small"
                             />
                         </Grid>
                         <Grid xs={12}>
@@ -79,6 +81,7 @@ export default function ContactForm() {
                                 label="Email"
                                 type="email"
                                 variant="outlined"
+                                size="small"
                                 required
                             />
                         </Grid>
@@ -86,9 +89,10 @@ export default function ContactForm() {
                             <TextFieldElement
                                 name="message"
                                 label="Message"
+                                variant="outlined"
+                                size="small"
                                 multiline
                                 rows={8}
-                                variant="outlined"
                                 required
                             />
                         </Grid>

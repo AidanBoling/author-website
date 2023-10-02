@@ -8,6 +8,7 @@ import { getById } from '@/main/api/getResourceItems';
 import NewsletterForm from '../NewsletterForm';
 import AboutAuthorMini from '../AboutAuthorMini';
 import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
+import ResponsiveImageContainer from '../ResponsiveImageContainer';
 
 function PostPage(props) {
     const params = useParams();
@@ -56,21 +57,7 @@ function PostPage(props) {
                     </Box>
                     <Box mt={'2rem'}>
                         {post.image && (
-                            <Box
-                                sx={{
-                                    display: { xs: 'flex', md: 'inline block' },
-                                    justifyContent: {
-                                        xs: 'center',
-                                        md: 'flex-start',
-                                    },
-                                    float: { xs: 'unset', sm: 'left' },
-                                    p: '2rem',
-                                    pt: '.5rem',
-                                    pl: { md: 0 },
-                                    width: { xs: '100%', md: 'min-content' },
-
-                                    shapeOutside: 'margin-box',
-                                }}>
+                            <ResponsiveImageContainer float="left">
                                 <Image
                                     src={post.image.url}
                                     alt={post.image.altText}
@@ -83,7 +70,7 @@ function PostPage(props) {
                                         // mx: { xs: 'auto', md: 0 },
                                     }}
                                 />
-                            </Box>
+                            </ResponsiveImageContainer>
                         )}
 
                         <Box className="post-content">
