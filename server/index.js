@@ -10,7 +10,7 @@ import articleController from './controllers/articleController.js';
 import eventController from './controllers/eventController.js';
 import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
-
+import getFilteredResourceList from './utils/getFilteredResourceList.js';
 // import session from 'express-session';
 // import passport from 'passport';
 // import passportLocalMongoose from 'passport-local-mongoose';
@@ -73,10 +73,22 @@ app.get('/', (req, res) => {
 
 // -- Posts routes
 
-app.get('/posts', async (req, res) => {
-    const allPosts = await Post.find().where('published').equals('true');
-    // console.log(allPosts);
-    res.json(allPosts);
+// app.get('/posts', async (req, res) => {
+//     const allPosts = await Post.find().where('published').equals('true');
+//     // console.log(allPosts);
+//     res.json(allPosts);
+// });
+
+app.get('/posts', (req, res) => {
+    const overrides = { filter: { published: true } };
+    const defaultSort = { datePublished: -1 };
+
+    try {
+        getFilteredResourceList(Post, req, res, defaultSort, overrides);
+    } catch (error) {
+        res.status(500).send(error);
+        console.log(error);
+    }
 });
 
 app.get('/posts/id/:id', async (req, res) => {
@@ -91,9 +103,19 @@ app.get('/posts/id/:id', async (req, res) => {
 // -- Books routes
 
 app.get('/books', async (req, res) => {
-    const allBooks = await Book.find();
-    // console.log(allBooks);
-    res.json(allBooks);
+    // const overrides = null;
+    const defaultSort = { datePublished: -1 };
+
+    try {
+        getFilteredResourceList(Book, req, res, defaultSort);
+    } catch (error) {
+        res.status(500).send(error);
+        console.log(error);
+    }
+
+    // const allBooks = await Book.find();
+    // // console.log(allBooks);
+    // res.json(allBooks);
 });
 
 app.get('/books/id/:id', async (req, res) => {
@@ -108,9 +130,19 @@ app.get('/books/id/:id', async (req, res) => {
 // -- Articles routes
 
 app.get('/articles', async (req, res) => {
-    const allArticles = await Article.find();
-    // console.log(allArticles);
-    res.json(allArticles);
+    const overrides = { filter: { published: true } };
+    const defaultSort = { datePublished: -1 };
+
+    try {
+        getFilteredResourceList(Article, req, res, defaultSort, overrides);
+    } catch (error) {
+        res.status(500).send(error);
+        console.log(error);
+    }
+
+    // const allArticles = await Article.find();
+    // // console.log(allArticles);
+    // res.json(allArticles);
 });
 
 app.get('/articles/id/:id', async (req, res) => {
