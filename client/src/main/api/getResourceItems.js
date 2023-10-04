@@ -1,7 +1,17 @@
 import { BASE_URL } from './config';
 
-export async function getList(resource) {
-    return await fetch(`${BASE_URL}/${resource}`).then(response => {
+export async function getList(resource, params) {
+    let query = '';
+    if (params) {
+        const queryString = new URLSearchParams(params).toString();
+        // console.log(queryString);
+        // const queryString = Object.keys(params)
+        //     .map(key => key + '=' + params[key])
+        //     .join('&');
+        query = `?${queryString}`;
+    }
+
+    return await fetch(`${BASE_URL}/${resource}${query}`).then(response => {
         return response.json();
     });
 }

@@ -14,13 +14,15 @@ import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 //     );
 // }
 
-export default async function Page() {
-    const queryResults = await getList('posts');
+export default async function Page({ searchParams }) {
+    const queryResults = await getList('posts', searchParams);
+    const { items, ...pageInfo } = queryResults;
+    console.log('Posts page results: ', pageInfo);
 
     return (
-        <PageWrapper header="Posts">
+        <PageWrapper header="Posts" pagination={pageInfo}>
             <Suspense fallback={<ResourceCardSkeleton hasMedia />}>
-                <Posts posts={queryResults.items} />
+                <Posts posts={items} />
             </Suspense>
         </PageWrapper>
     );

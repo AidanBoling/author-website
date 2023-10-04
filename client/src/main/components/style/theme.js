@@ -84,12 +84,6 @@ const themeBase = {
                         color: theme.palette.primary.contrastText,
                     }),
                 },
-                {
-                    props: { variant: 'darkbg' },
-                    style: ({ ownerState, theme }) => ({
-                        color: theme.palette.primary.contrastText,
-                    }),
-                },
             ],
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({

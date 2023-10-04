@@ -120,10 +120,7 @@ function Navbar() {
                                     sx={{ ...navTextStyles }}>
                                     <MuiLink
                                         component={Link}
-                                        href={{
-                                            pathname: page.link,
-                                            query: { name: 'test' },
-                                        }}
+                                        href={page.link}
                                         underline="none"
                                         color="inherit"
                                         sx={{

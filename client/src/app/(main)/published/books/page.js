@@ -12,13 +12,15 @@ import { ResourcesListSkeleton } from '../../../../main/components/skeletons/Loa
 //     );
 // }
 
-export default async function Page() {
-    const queryResults = await getList('books');
+export default async function Page({ searchParams }) {
+    const queryResults = await getList('books', searchParams);
+    const { items, ...pageInfo } = queryResults;
+    // console.log('Articles page results: ', pageInfo);
 
     return (
         <PageWrapper header="Books">
             <Suspense fallback={<ResourcesListSkeleton />}>
-                <Books books={queryResults.items} />
+                <Books books={items} />
             </Suspense>
         </PageWrapper>
     );

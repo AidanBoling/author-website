@@ -1,12 +1,40 @@
 'use client';
-import { Container, Paper } from '@mui/material';
+import { useState, useCallback } from 'react';
+import { Box, Container, Paper } from '@mui/material';
 import PageTitle from './PageTitle';
 import InnerPageContainer, { pagePaddingX } from './InnerPageContainer';
+import Pagination from '@mui/material/Pagination';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 function PageWrapper(props) {
-    // const paddingXMd = '2rem';
-    // const paddingXSm = '1rem';
-    // const marginXSm = '.5rem';
+    const [page, setPage] = useState(
+        props.pagination ? Number(props.pagination.page) : ''
+    );
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const createQueryString = useCallback(
+        (name, value) => {
+            const params = new URLSearchParams(searchParams);
+            params.set(name, value);
+
+            return params.toString();
+        },
+        [searchParams]
+    );
+
+    function handleChange(event, value) {
+        // console.log('Page: ' + value);
+        const url = pathname + '?' + createQueryString('page', value);
+        setPage(value);
+        // the "#listtop" is a janky workaround to get it to scroll to top of results list.
+        router.push(url + '#listtop');
+        router.replace(url);
+        console.log(url);
+        // router.push(`${pathname}?${searchParams}`, { scroll: false })
+    }
 
     return (
         <Container
@@ -15,17 +43,21 @@ function PageWrapper(props) {
             {props.header && <PageTitle title={props.header} />}
             <InnerPageContainer className="content">
                 {props.children}
-                {/* {props.usePaper ? (
-                    <Paper
-                        elevation={1}
+                {props.pagination && (
+                    <Box
                         sx={{
-                            p: { xs: pagePaddingX.sm, md: pagePaddingX.md },
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mt: '4rem',
                         }}>
-                        {props.children}
-                    </Paper>
-                ) : (
-                    props.children
-                )} */}
+                        <Pagination
+                            count={props.pagination.totalPages}
+                            page={page}
+                            size="medium"
+                            onChange={handleChange}
+                        />
+                    </Box>
+                )}
             </InnerPageContainer>
         </Container>
     );

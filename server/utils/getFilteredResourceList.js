@@ -6,7 +6,7 @@ async function getFilteredResourceList(
     overrides
 ) {
     const { page = 1, limit = 10, ...query } = req.query;
-    const skip = (parseInt(page) - 1) * limit;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
     const filter =
         overrides && overrides.filter
             ? { ...query, ...overrides.filter }
@@ -26,12 +26,13 @@ async function getFilteredResourceList(
 
     if (items) {
         console.log(items);
-        const count = items.length;
+        const count = await model.estimatedDocumentCount(filter);
+        // const count = items.length;
         const results = {
             total: count,
             pageLimit: limit,
             page: page,
-            totalPages: Math.ceil(count / limit),
+            totalPages: Math.ceil(count / parseInt(limit)),
             items: items,
         };
         res.status(200).json(results);

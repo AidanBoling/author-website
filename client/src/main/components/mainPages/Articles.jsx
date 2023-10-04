@@ -7,6 +7,8 @@ import NoItemsMessage from '@/main/components/NoItemsMessage';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 
 function Articles(props) {
+    // const { items, ...pageData } = props.pageData;
+    // console.log(pageData);
     return (
         <Stack spacing={3}>
             {/* {console.log('Articles: ', props.articles)} */}

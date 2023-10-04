@@ -14,13 +14,16 @@ import ArticlesList from '@/main/components/ArticlesList';
 //     );
 // }
 
-export default async function Page() {
-    const queryResults = await getList('articles');
+export default async function Page({ searchParams }) {
+    // console.log(searchParams);
+    const queryResults = await getList('articles', searchParams);
+    const { items, ...pageInfo } = queryResults;
+    console.log('Articles page results: ', pageInfo);
 
     return (
-        <PageWrapper header="Articles">
+        <PageWrapper header="Articles" pagination={pageInfo}>
             <Suspense fallback={<ResourceCardSkeleton hasMedia />}>
-                <Articles articles={queryResults.items} />
+                <Articles articles={items} />
             </Suspense>
         </PageWrapper>
     );
