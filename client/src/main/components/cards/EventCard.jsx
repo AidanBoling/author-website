@@ -43,12 +43,12 @@ function EventCard(props) {
                         py: '.5rem',
                         textAlign: 'center',
                     }}>
-                    <Typography variant="h6" component="p">
+                    <Typography variant="h6" component="p" m={0}>
                         {new Date(props.event.date.start)
                             .toLocaleDateString('en-us', { month: 'short' })
                             .toUpperCase()}
                     </Typography>
-                    <Typography variant="h6" component="p">
+                    <Typography variant="h6" component="p" mt={'-.2rem'}>
                         {new Date(props.event.date.start).toLocaleDateString(
                             'en-us',
                             { day: 'numeric' }

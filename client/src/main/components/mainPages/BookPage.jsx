@@ -10,7 +10,9 @@ function BookPage() {
     const params = useParams();
     // console.log(bookId);
     const [book, setBook] = useState('');
-    const coverWidth = { xs: '75vw', sm: 300 };
+
+    const breakpoint = 'md';
+    const coverWidth = { xs: '75vw', sm: 400, [breakpoint]: 300 };
     const baselineGap = '2.5rem';
 
     const Header = () => (
@@ -40,11 +42,11 @@ function BookPage() {
                                 width: coverWidth,
                                 aspectRatio: 0.67,
                                 borderRadius: '.25rem',
-                                ml: { xs: 'auto', sm: 0 },
-                                mr: { xs: 'auto', sm: baselineGap },
+                                ml: { xs: 'auto', [breakpoint]: 0 },
+                                mr: { xs: 'auto', [breakpoint]: baselineGap },
                                 mb: baselineGap,
                                 flexShrink: 0,
-                                float: { xs: 'unset', sm: 'left' },
+                                float: { xs: 'unset', [breakpoint]: 'left' },
 
                                 contain: 'content',
                                 shapeOutside: 'margin-box',

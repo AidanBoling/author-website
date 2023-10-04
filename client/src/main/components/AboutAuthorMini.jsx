@@ -39,6 +39,7 @@ export default function AboutAuthorMini() {
                 display: 'flex',
                 flexDirection: { xs: 'column', [breakpoint]: 'row' },
                 p: '1rem',
+                pl: { [breakpoint]: 0 },
                 my: '2rem',
             }}>
             <Box

@@ -15,11 +15,12 @@ import ArticlesList from '@/main/components/ArticlesList';
 // }
 
 export default async function Page() {
-    const articles = await getList('articles');
+    const queryResults = await getList('articles');
+
     return (
         <PageWrapper header="Articles">
             <Suspense fallback={<ResourceCardSkeleton hasMedia />}>
-                <Articles articles={articles} />
+                <Articles articles={queryResults.items} />
             </Suspense>
         </PageWrapper>
     );

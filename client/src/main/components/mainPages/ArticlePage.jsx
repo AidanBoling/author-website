@@ -3,6 +3,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { getById } from '@/main/api/getResourceItems';
+import PeriodicalsHeading from '@/main/components/PeriodicalsHeading';
+import PeriodicalsBody from '../PeriodicalsBody';
+// import Link from 'next/link';
+import { Box, Typography, Link } from '@mui/material';
+import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
 
 function ArticlePage(props) {
     const params = useParams();
@@ -21,12 +26,15 @@ function ArticlePage(props) {
     }, []);
 
     return (
-        <div className="main">
+        <>
             {article && (
-                <div className="article fullpage">
+                <>
                     {/* {console.log(article)} */}
-
-                    <div className="article-header fullpage header">
+                    <PeriodicalsHeading
+                        title={article.title}
+                        published={article.datePublished}
+                    />
+                    {/* <Box className="article-header fullpage header">
                         <h1>{article.title}</h1>
                         <p>
                             Published{' '}
@@ -39,8 +47,12 @@ function ArticlePage(props) {
                                 }
                             )}
                         </p>
-                    </div>
-                    <div className="article-cover fullpage image">
+                    </Box> */}
+                    <PeriodicalsBody
+                        periodical={article}
+                        content={article.content}
+                        contentFallback={article.descriptionShort}>
+                        {/* <div className="article-cover fullpage image">
                         <img
                             src={article.image.url}
                             alt={article.image.altText}></img>
@@ -55,26 +67,55 @@ function ArticlePage(props) {
                         ) : (
                             article.descriptionShort
                         )}
-                    </div>
-                    {article.publisher.name > 0 && (
-                        <div className="article details">
-                            {/* TODO: - Make sure links open in new tab */}
-                            <p>
-                                Publisher:
-                                <a href={article.publisher.website}>
-                                    {article.publisher.name}
-                                </a>
-                            </p>
-                            <p>
-                                <a href={article.url}>
-                                    See article in external site
-                                </a>
-                            </p>
-                        </div>
-                    )}
-                </div>
+                    </div> */}
+                        {article.publisher.name && (
+                            <Box
+                                className="article details"
+                                sx={{ mt: '4rem' }}>
+                                {/* TODO: - Make sure links open in new tab */}
+                                <Typography>
+                                    Publisher:{' '}
+                                    <Link
+                                        href={article.publisher.website}
+                                        target="_blank"
+                                        aria-label={`Link to publisher's website, which opens in a new tab`}
+                                        underline="none"
+                                        sx={{
+                                            ':hover': { color: 'primary.dark' },
+                                        }}>
+                                        {article.publisher.name}{' '}
+                                        <NorthEastSharpIcon
+                                            fontSize="xsmall"
+                                            sx={{
+                                                color: 'primary.dark',
+                                            }}
+                                        />
+                                    </Link>
+                                </Typography>
+                                <Typography>
+                                    <Link
+                                        href={article.url}
+                                        target="_blank"
+                                        aria-label={`Link to article on publisher's website, which opens in a new tab`}
+                                        sx={{
+                                            ':hover': { color: 'primary.dark' },
+                                        }}>
+                                        See article in external site
+                                        <NorthEastSharpIcon
+                                            fontSize="xsmall"
+                                            sx={{
+                                                ml: '.3rem',
+                                                color: 'primary.dark',
+                                            }}
+                                        />
+                                    </Link>
+                                </Typography>
+                            </Box>
+                        )}
+                    </PeriodicalsBody>
+                </>
             )}
-        </div>
+        </>
     );
 }
 

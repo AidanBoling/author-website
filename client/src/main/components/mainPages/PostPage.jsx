@@ -1,14 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
-import DOMPurify from 'dompurify';
+// import Image from 'next/image';
+// import DOMPurify from 'dompurify';
 import { Box, Typography, Divider } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
-import NewsletterForm from '../NewsletterForm';
-import AboutAuthorMini from '../AboutAuthorMini';
-import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
-import ResponsiveImageContainer from '../ResponsiveImageContainer';
+import NewsletterForm from '@/main/components/NewsletterForm';
+import AboutAuthorMini from '@/main/components/AboutAuthorMini';
+// import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
+import PeriodicalsHeading from '@/main/components/PeriodicalsHeading';
+import PeriodicalsBody from '@/main/components/PeriodicalsBody';
 
 function PostPage(props) {
     const params = useParams();
@@ -33,29 +34,23 @@ function PostPage(props) {
         <>
             {post && (
                 <>
-                    <Box className="post-header fullpage" mb={2}>
-                        <Typography variant="h3" component="h2">
-                            {post.title}
-                        </Typography>
-                        <Typography
-                            variant="subheading1"
-                            component="p"
-                            color={'grey.main'}
-                            mb={2}>
-                            <i>Published on </i>
-                            {new Date(publishedDate).toLocaleDateString(
-                                'en-US',
-                                {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                }
-                            )}
-                        </Typography>
-                        {/* <Typography variant="subheading1" component="p" color='text.secondary'>Updated on {post.updatedAt}</Typography> */}
-                        <Divider mt={2} />
-                    </Box>
-                    <Box mt={'2rem'}>
+                    <PeriodicalsHeading
+                        title={post.title}
+                        published={publishedDate}
+                    />
+                    <PeriodicalsBody
+                        periodical={post}
+                        imageFloat="left"
+                        content={richText}
+                        contentFallback={
+                            post.content.plain &&
+                            post.content.plain.length > 0 &&
+                            post.content.plain.map((paragraph, index) => (
+                                <p key={index + 1}>{paragraph}</p>
+                            ))
+                        }
+                    />
+                    {/* <Box mt={'2rem'}>
                         {post.image && (
                             <ResponsiveImageContainer float="left">
                                 <Image
@@ -81,11 +76,7 @@ function PostPage(props) {
                                     }}
                                 />
                             ) : (
-                                post.content.plain &&
-                                post.content.plain.length > 0 &&
-                                post.content.plain.map((paragraph, index) => (
-                                    <p key={index + 1}>{paragraph}</p>
-                                ))
+                                contentFallback
                             )}
                         </Box>
                     </Box>
@@ -96,8 +87,7 @@ function PostPage(props) {
                             mt: '5rem',
                             mx: 'auto',
                         }}
-                    />
-
+                    /> */}
                     <Box>
                         <AboutAuthorMini />
                         <NewsletterForm />

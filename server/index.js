@@ -129,12 +129,12 @@ app.get('/books/id/:id', async (req, res) => {
 
 // -- Articles routes
 
-app.get('/articles', async (req, res) => {
-    const overrides = { filter: { published: true } };
+app.get('/articles', (req, res) => {
+    // const overrides = { filter: { published: true } };
     const defaultSort = { datePublished: -1 };
 
     try {
-        getFilteredResourceList(Article, req, res, defaultSort, overrides);
+        getFilteredResourceList(Article, req, res, defaultSort);
     } catch (error) {
         res.status(500).send(error);
         console.log(error);

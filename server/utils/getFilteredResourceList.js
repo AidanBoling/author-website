@@ -13,26 +13,26 @@ async function getFilteredResourceList(
             : { ...query };
     const sort = defaultSort;
 
-    // console.log(`Initial query: \n`, query);
-    // console.log(`Skip: ${skip}\nLimit: ${limit}`);
-    // console.log('Filter: ', filter);
+    console.log(`Initial query: \n`, query);
+    console.log(`Skip: ${skip}\nLimit: ${limit}`);
+    console.log('Filter: ', filter);
 
-    const posts = await model
+    const items = await model
         .find(filter)
         .sort(sort)
         .skip(skip)
         .limit(limit)
         .exec();
 
-    if (posts) {
-        // console.log(posts);
-        const count = posts.length;
+    if (items) {
+        console.log(items);
+        const count = items.length;
         const results = {
             total: count,
             pageLimit: limit,
             page: page,
             totalPages: Math.ceil(count / limit),
-            posts: posts,
+            items: items,
         };
         res.status(200).json(results);
     }
