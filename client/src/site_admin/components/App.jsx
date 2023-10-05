@@ -7,7 +7,7 @@ import {
     defaultTheme,
 } from 'react-admin';
 import { customLightTheme, customDarkTheme } from './themeCustom';
-import '../css/styles.css';
+import '@/admin/styles/styles.css';
 import BookIcon from '@mui/icons-material/Book';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
