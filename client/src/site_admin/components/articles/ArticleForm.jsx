@@ -8,9 +8,11 @@ import {
     ArrayInput,
     SimpleFormIterator,
     FormGroupContextProvider,
+    Labeled,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';
+import TagsListEdit from '../TagsListEdit';
 
 function ArticleForm() {
     return (
@@ -30,14 +32,17 @@ function ArticleForm() {
                 <TextInput
                     source="image.altText"
                     className="form"
-                    label="Image description (accessibility)"
+                    label="Image Description (accessibility)"
                 />
                 <TextInput
                     source="descriptionShort"
                     multiline
                     rows={4}
-                    className="form"
+                    className="form input-outlined"
                     label="Teaser"
+                    InputProps={{
+                        sx: { border: '2px solid lightgrey' },
+                    }}
                 />
 
                 <DateInput source="datePublished" />
@@ -59,6 +64,14 @@ function ArticleForm() {
                         <TextInput source="publisher.website" fullWidth />
                     </Grid>
                 </Grid>
+                <Labeled
+                    label="Tags"
+                    sx={{
+                        fontSize: '1.25rem',
+                        pl: '.5rem',
+                    }}>
+                    <TagsListEdit resource="articles" />
+                </Labeled>
                 {/* <ReferenceInput source="tagId" reference="tags" /> */}
             </TabbedForm.Tab>
             <TabbedForm.Tab label="Content">

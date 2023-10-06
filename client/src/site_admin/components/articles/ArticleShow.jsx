@@ -7,8 +7,10 @@ import {
     DateField,
     ImageField,
     UrlField,
+    Labeled,
 } from 'react-admin';
 import ArticleTitle from './ArticlePageTitle';
+import TagsListEdit from '../TagsListEdit';
 
 function ArticleShow() {
     return (
@@ -25,6 +27,14 @@ function ArticleShow() {
                         label="Last Updated"
                         showTime
                     />
+                    <Labeled
+                        label="Tags"
+                        sx={{
+                            fontSize: '1.25rem',
+                            pl: '.5rem',
+                        }}>
+                        <TagsListEdit resource="articles" />
+                    </Labeled>
                     {/* <ReferenceField source="tagsId" reference="tags" /> */}
                 </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab label="content">

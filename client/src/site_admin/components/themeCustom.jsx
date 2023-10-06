@@ -19,6 +19,54 @@ export const customThemeInvariants = {
         contrastThreshold: 3,
         tonalOffset: 0.2,
     },
+    components: {
+        ...defaultTheme.components,
+        MuiTextField: {
+            defaultProps: {
+                variant: 'standard',
+                // InputLabelProps: {
+                //     sx: {
+                //         fontSize: '1.25rem',
+                //         ml: '.5rem',
+                //         transform: 'translate(0, -8px) scale(.75)',
+                //     },
+                // },
+            },
+            // styleOverrides: {
+            //     root: ({ ownerState }) => ({
+            //         ...(ownerState.multiline && {}),
+            //     }),
+            // },
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: ({ ownerState }) => ({
+                    ...(ownerState.variant === 'standard' && {
+                        fontSize: '1.25rem',
+                        fontStyle: 'italic',
+                        // paddingLeft: '.5rem',
+                        paddingRight: '.5rem',
+                        transform: 'translate(.5rem, -.6rem) scale(.75)',
+                    }),
+                }),
+            },
+        },
+        MuiInputBase: {
+            defaultProps: {
+                sx: { ml: '.5rem' },
+            },
+            styleOverrides: {
+                root: ({ ownerState }) => ({
+                    ...(ownerState.multiline && {
+                        border: '2px solid lightgrey',
+                        borderRadius: '.2rem',
+                        padding: '.5rem',
+                        marginLeft: 0,
+                    }),
+                }),
+            },
+        },
+    },
     // components: {
     //     ...defaultTheme.components,
     //     RaDatagrid: {
