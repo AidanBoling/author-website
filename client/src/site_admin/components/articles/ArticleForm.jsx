@@ -67,6 +67,7 @@ function ArticleForm() {
                 <Labeled
                     label="Tags"
                     sx={{
+                        fontStyle: 'italic',
                         fontSize: '1.25rem',
                         pl: '.5rem',
                     }}>

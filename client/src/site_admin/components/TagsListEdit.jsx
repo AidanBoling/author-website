@@ -246,11 +246,6 @@ export default function TagsListEdit(props) {
             },
             {
                 mutationMode: 'optimistic',
-
-                //    onSuccess: () => {
-                //         redirect('/comments');
-                //        notify('Comment approved');
-                //     }
             }
         );
     }

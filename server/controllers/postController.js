@@ -1,8 +1,13 @@
 import Post from '../model/Post.js';
 
-async function sendResponse(model, dbCollection, data, res, code) {
-    const count = await model.find().estimatedDocumentCount();
-    console.log(data, count);
+async function sendResponse(model, dbCollection, data, res, code, filter = {}) {
+    let count;
+    if (Object.keys(filter).length) {
+        count = await model.countDocuments(filter);
+    } else {
+        count = await model.estimatedDocumentCount(filter);
+    }
+    console.log('Found: ', count);
     res.set('Content-Range', `${dbCollection} 0-20/${count}`)
         .status(code)
         .send(data);
@@ -14,7 +19,7 @@ async function sendResponse(model, dbCollection, data, res, code) {
 // res.send(categories);
 
 const postController = {
-    //# create a note
+    // Create a post
     create: async (request, response) => {
         const post = request.body;
         let contentPlain = post.content.plain;
@@ -47,22 +52,25 @@ const postController = {
         }
     },
 
-    //#get the list of notes
+    // Get the list of posts
     fetch: async (req, res) => {
-        try {
-            const posts = await Post.find({});
-            sendResponse(Post, 'posts', posts, res, 200);
+        const queryFilter = JSON.parse(req.query.filter);
+        const range = JSON.parse(req.query.range);
+        const limit = range[1];
+        const skip = range[0];
 
-            // const postCount = await Post.find().estimatedDocumentCount();
-            // response.header('Content-Range', `posts 0-10/${postCount}`);
-            // response.code(200).send(posts);
-        } catch (e) {
+        try {
+            const posts = await Post.find(queryFilter).sort([
+                JSON.parse(req.query.sort),
+            ]);
+            sendResponse(Post, 'posts', posts, res, 200, queryFilter);
+        } catch (error) {
             console.log('Error getting posts: ', error);
-            response.status(500).send(e);
+            response.status(500).send(error);
         }
     },
 
-    //#get a single note
+    // Get a single post
     get: async (request, response) => {
         try {
             const postId = request.params.id;
@@ -72,12 +80,12 @@ const postController = {
             // const postCount = await Post.find().estimatedDocumentCount();
             // response.header('Content-Range', `posts 0-10/${postCount}`);
             // response.code(200).send(post);
-        } catch (e) {
-            response.status(500).send(e);
+        } catch (error) {
+            response.status(500).send(error);
         }
     },
 
-    //#update a note
+    // Update a post
     update: async (request, response) => {
         const postId = request.params.id;
         let updates = { ...request.body, updatedAt: new Date() };
@@ -99,7 +107,7 @@ const postController = {
         }
     },
 
-    //#delete a note
+    // Delete a post
     delete: async (request, response) => {
         try {
             const postId = request.params.id;
@@ -110,8 +118,8 @@ const postController = {
             //   const postCount = await Post.find().estimatedDocumentCount();
             //   response.header('Content-Range', `posts 0-10/${postCount}`);
             //   response.code(200).send({ data: postToDelete });
-        } catch (e) {
-            response.status(500).send(e);
+        } catch (error) {
+            response.status(500).send(error);
         }
     },
 };

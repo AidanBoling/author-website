@@ -10,9 +10,11 @@ import {
     ReferenceArrayField,
     Labeled,
     useRecordContext,
+    useListContext,
     Pagination,
 } from 'react-admin';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const relatedResources = [
     { name: 'articles', label: 'Articles' },
@@ -49,20 +51,51 @@ function TagColorCircle() {
     );
 }
 
+const LinkToRelatedRecords = () => {
+    const record = useRecordContext();
+    // const translate = useTranslate();
+    return record ? (
+        <Button
+            color="primary"
+            component={Link}
+            to={{
+                pathname: '/posts',
+                search: `filter=${JSON.stringify({ tags: record._id })}`,
+            }}>
+            All posts with the tag {record.name} ;
+        </Button>
+    ) : null;
+};
+
 function HasTag({ refName, refLabel }) {
-    // const record = useRecordContext();
-    return (
+    const record = useRecordContext();
+    return record ? (
         <ReferenceArrayField
             label={refLabel}
             reference={refName}
             target="tags"
-            perPage={5}
-            pagination={<Pagination />}>
-            <Datagrid>
+            // perPage={5}
+            // pagination={<Pagination />}
+        >
+            <RefResultsList />
+            {/* <Datagrid>
                 <TextField source="title" />
                 <DateField source="datePublished" />
-            </Datagrid>
+            </Datagrid> */}
         </ReferenceArrayField>
+    ) : null;
+}
+
+function RefResultsList() {
+    const recordList = useListContext();
+    if (recordList.length === 0) {
+        console.log('No results');
+    }
+    return (
+        <Datagrid>
+            <TextField source="title" />
+            <DateField source="datePublished" />
+        </Datagrid>
     );
 }
 
@@ -82,6 +115,7 @@ function TagShow() {
                         sx={{ fontSize: '1.75rem' }}
                     />
                 </Box>
+                <LinkToRelatedRecords />
                 {relatedResources.map(resource => (
                     <Box>
                         <Typography variant="h5" component="p">
