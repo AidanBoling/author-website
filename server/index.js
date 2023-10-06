@@ -8,6 +8,7 @@ import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
 import eventController from './controllers/eventController.js';
+import tagController from './controllers/tagController.js';
 import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
 import getFilteredResourceList from './utils/getFilteredResourceList.js';
@@ -247,6 +248,14 @@ app.get('/admin/events', eventController.fetch);
 app.get('/admin/events/:id', eventController.get);
 app.put('/admin/events/:id', eventController.update);
 app.delete('/admin/events/:id', eventController.delete);
+
+// -- TAGS routes
+
+app.post('/admin/tags', tagController.create);
+app.get('/admin/tags', tagController.fetch);
+app.get('/admin/tags/:id', tagController.get);
+app.put('/admin/tags/:id', tagController.update);
+app.delete('/admin/tags/:id', tagController.delete);
 
 mongoose
     .connect(

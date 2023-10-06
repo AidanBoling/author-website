@@ -33,6 +33,8 @@ import EventList from './events/EventList';
 import EventShow from './events/EventShow';
 import EventCreate from './events/EventCreate';
 import EventEdit from './events/EventEdit';
+import TagList from './tags/TagList';
+import TagShow from './tags/TagShow';
 
 // import authProvider from './authProvider';
 
@@ -80,6 +82,8 @@ function AdminApp() {
                 edit={EventEdit}
                 icon={CalendarMonthIcon}
             />
+            <Resource name="tags" list={TagList} show={TagShow} />
+
             {/* <Resource name="users" list={UserList} show={UserShow} recordRepresentation="name" icon={UserIcon} /> */}
         </Admin>
     );
