@@ -8,9 +8,10 @@ import {
     ChipField,
     FunctionField,
     useRecordContext,
+    WithRecord,
 } from 'react-admin';
 import { Box, Chip } from '@mui/material';
-import TagField from '../TagField';
+import TagField, { TagChip } from '../TagField';
 
 export default function TagList() {
     const record = useRecordContext();
@@ -37,7 +38,7 @@ export default function TagList() {
     }
 
     return (
-        <List>
+        <List sort={{ field: 'name', order: 'ASC' }}>
             {/* <SimpleList
                 primaryText={record => (
                     <Chip
@@ -69,24 +70,12 @@ export default function TagList() {
                 // )}
             // /> */}
             <Datagrid rowClick="show">
-                <TagField outlined />
-                {/* <FunctionField
-                    source="name"
+                {/* <TagField outlined /> */}
+                <FunctionField
                     label="Name"
-                    sortBy="name"
-                    render={record => (
-                        <Chip
-                            label={record.name}
-                            variant="outlined"
-                            size="large"
-                            sx={{
-                                borderColor: record.color,
-                                borderWidth: '2px',
-                                // backgroundColor: record.color
-                            }}
-                        />
-                    )}
-                /> */}
+                    source="name"
+                    render={record => <TagChip outlined />}
+                />
                 {/* <TagColor />
                 <TextField source="name" /> */}
                 {/* <TextField source="name" /> */}

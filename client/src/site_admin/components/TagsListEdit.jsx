@@ -59,6 +59,7 @@ function ColorPickerButton({ color, handleClick, selected }) {
 }
 
 function CreateTagDialog({ resource, isOpen, setOpen }) {
+    const record = useRecordContext();
     const [disabled, setDisabled] = useState(false);
     const [newTagName, setNewTagName] = useState('');
     const [newTagColor, setNewTagColor] = useState(tagColors[0]);
@@ -74,6 +75,8 @@ function CreateTagDialog({ resource, isOpen, setOpen }) {
         setOpen(false);
         setDisabled(false);
         setError(null);
+        setNewTagName('');
+        setNewTagColor(tagColors[0]);
     }
 
     function handleCreateTag(event) {
@@ -87,27 +90,27 @@ function CreateTagDialog({ resource, isOpen, setOpen }) {
                     update(
                         resource,
                         {
-                            id: record.id,
-                            data: { tags: [...record.tags, tag.id] },
+                            id: record._id,
+                            data: { tags: [...record.tags, tag._id] },
                             previousData: record,
                         },
                         {
                             onSuccess: () => {
-                                setNewTagName('');
-                                setNewTagColor(tagColors[0]);
-                                handleCloseDialog;
+                                handleCloseDialog();
                             },
                             onError: error => {
                                 setError(
-                                    "Tag created, but not added to article. Close this dialog, then select tag from tag list (via 'Add tag' button)"
+                                    "Tag created, but not added to record. Close this dialog, then select tag from tag list (via 'Add tag' button)"
                                 );
+                                setNewTagName('');
+                                setNewTagColor(tagColors[0]);
                                 console.log(error);
                             },
                         }
                     );
                 },
                 onError: error => {
-                    setError(
+                    setDialogError(
                         "Couldn't create tag; try saving again. Contact admin if you continue to get this error."
                     );
                     console.log(error);
@@ -283,17 +286,19 @@ export default function TagsListEdit(props) {
 
     return (
         <>
-            {tags.map(tag => (
-                <Box mt={1} mb={1} key={tag._id}>
-                    <Chip
-                        size="small"
-                        variant="outlined"
-                        label={tag.name}
-                        style={{ backgroundColor: tag.color, border: 0 }}
-                        onDelete={() => handleDeleteTag(tag._id)}
-                    />
-                </Box>
-            ))}
+            <Box display="flex">
+                {tags.map(tag => (
+                    <Box m={0.5} key={tag._id}>
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            label={tag.name}
+                            style={{ backgroundColor: tag.color, border: 0 }}
+                            onDelete={() => handleDeleteTag(tag._id)}
+                        />
+                    </Box>
+                ))}
+            </Box>
             <Box mt={1}>
                 <Chip
                     icon={<ControlPointIcon />}

@@ -12,8 +12,12 @@ import {
     useRecordContext,
     useListContext,
     Pagination,
+    ListBase,
+    WithListContext,
+    SimpleList,
+    WithRecord,
 } from 'react-admin';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const relatedResources = [
@@ -51,62 +55,60 @@ function TagColorCircle() {
     );
 }
 
-const LinkToRelatedRecords = () => {
-    const record = useRecordContext();
-    // const translate = useTranslate();
-    return record ? (
-        <Button
-            color="primary"
-            component={Link}
-            to={{
-                pathname: '/posts',
-                search: `filter=${JSON.stringify({ tags: record._id })}`,
-            }}>
-            All posts with the tag {record.name} ;
-        </Button>
-    ) : null;
-};
-
-function HasTag({ refName, refLabel }) {
+function LinkedRecordsList({ refName }) {
     const record = useRecordContext();
     return record ? (
-        <ReferenceArrayField
-            label={refLabel}
-            reference={refName}
-            target="tags"
-            // perPage={5}
-            // pagination={<Pagination />}
-        >
-            <RefResultsList />
-            {/* <Datagrid>
-                <TextField source="title" />
-                <DateField source="datePublished" />
-            </Datagrid> */}
-        </ReferenceArrayField>
-    ) : null;
-}
+        <>
+            <ListBase resource={refName} filter={{ tags: record._id }}>
+                <WithListContext
+                    render={({ isLoading, data, total, defaultTitle }) =>
+                        !isLoading &&
+                        total > 0 && (
+                            <Box>
+                                <Box display="flex" alignItems="center">
+                                    <Typography
+                                        variant="h5"
+                                        component="p"
+                                        mr={1}>
+                                        {defaultTitle}
+                                    </Typography>
+                                    <Typography variant="h5" component="p">
+                                        ({total})
+                                    </Typography>
+                                </Box>
+                                <Datagrid
+                                    rowClick="show"
+                                    bulkActionButtons={false}
+                                    sx={{
+                                        '& .RaDatagrid-headerCell': {
+                                            color: 'grey',
+                                            fontStyle: 'italic',
+                                        },
+                                    }}>
+                                    <TextField source="title" />
+                                </Datagrid>
+                                {/* <SimpleList
 
-function RefResultsList() {
-    const recordList = useListContext();
-    if (recordList.length === 0) {
-        console.log('No results');
-    }
-    return (
-        <Datagrid>
-            <TextField source="title" />
-            <DateField source="datePublished" />
-        </Datagrid>
-    );
+                                    primaryText={record => record.title}
+                                    linkType="show"
+                                /> */}
+                                {/* {data.map(record => (
+                                    
+                                ))} */}
+                            </Box>
+                        )
+                    }
+                />
+            </ListBase>
+        </>
+    ) : null;
 }
 
 function TagShow() {
     const record = useRecordContext();
-    // const articlesList = <HasTag refName="articles" refLabel="Articles" />
     return (
         <Show title={<PageTitle />} emptyWhileLoading>
             <SimpleShowLayout>
-                {/* <ReferenceManyField source="userId" reference="users" /> */}
-
                 <Box display="flex" alignItems={'center'} mb="2rem">
                     <TagColorCircle />
                     <TextField
@@ -115,18 +117,11 @@ function TagShow() {
                         sx={{ fontSize: '1.75rem' }}
                     />
                 </Box>
-                <LinkToRelatedRecords />
-                {relatedResources.map(resource => (
-                    <Box>
-                        <Typography variant="h5" component="p">
-                            {resource.label}
-                        </Typography>
-                        <HasTag
-                            refName={resource.name}
-                            refLabel={resource.label}
-                        />
-                    </Box>
-                ))}
+                <Stack gap={4}>
+                    {relatedResources.map(resource => (
+                        <LinkedRecordsList refName={resource.name} />
+                    ))}
+                </Stack>
             </SimpleShowLayout>
         </Show>
     );

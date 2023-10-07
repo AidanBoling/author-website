@@ -18,7 +18,7 @@ function ArticleList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
     return (
-        <List>
+        <List sort={{ field: 'datePublished', order: 'DESC' }}>
             {isMobile ? (
                 <SimpleList
                     primaryText={record => record.title}
@@ -34,43 +34,13 @@ function ArticleList() {
                     <UrlField source="url" />
                     <TextField source="publisher.name" />
                     <DateField source="datePublished" />
-                    <TextField source="descriptionShort" />
+                    {/* <TextField source="descriptionShort" /> */}
                     <ReferenceArrayField
                         label="Tags"
                         reference="tags"
                         source="tags">
                         <SingleFieldList linkType={false}>
                             <TagField />
-                        </SingleFieldList>
-                    </ReferenceArrayField>
-                    <ReferenceArrayField
-                        label="Tags"
-                        reference="tags"
-                        source="tags">
-                        <SingleFieldList linkType={false}>
-                            <FunctionField
-                                source="name"
-                                label="Name"
-                                sortBy="name"
-                                render={record => (
-                                    <Chip
-                                        label={record.name}
-                                        variant="outlined"
-                                        size="large"
-                                        sx={{
-                                            borderColor: record.color,
-                                            borderWidth: '2px',
-                                            // backgroundColor: record.color
-                                        }}
-                                    />
-                                )}
-                            />
-                            {/* <ChipField
-                                source="name"
-                                size="small"
-                                backgroundColor="color"
-                                style={{ backgroundColor: 'color', border: 0 }}
-                            /> */}
                         </SingleFieldList>
                     </ReferenceArrayField>
                     <EditButton />

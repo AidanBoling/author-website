@@ -29,11 +29,12 @@ function ArticleShow() {
                     />
                     <Labeled
                         label="Tags"
-                        sx={{
-                            fontStyle: 'italic',
-                            fontSize: '1.25rem',
-                            pl: '.5rem',
-                        }}>
+                        // sx={{
+                        //     fontStyle: 'italic',
+                        //     fontSize: '1.25rem',
+                        //     pl: '.5rem',
+                        // }}
+                    >
                         <TagsListEdit resource="articles" />
                     </Labeled>
                     {/* <ReferenceField source="tagsId" reference="tags" /> */}
