@@ -18,6 +18,7 @@ const myDataProvider = {
             range: JSON.stringify([rangeStart, rangeEnd]),
             filter: JSON.stringify(params.filter),
         };
+
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
         const options =
             countHeader === 'Content-Range'

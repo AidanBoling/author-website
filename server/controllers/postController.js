@@ -1,22 +1,8 @@
 import Post from '../model/Post.js';
-
-async function sendResponse(model, dbCollection, data, res, code, filter = {}) {
-    let count;
-    if (Object.keys(filter).length) {
-        count = await model.countDocuments(filter);
-    } else {
-        count = await model.estimatedDocumentCount(filter);
-    }
-    console.log('Found: ', count);
-    res.set('Content-Range', `${dbCollection} 0-20/${count}`)
-        .status(code)
-        .send(data);
-}
-
-// const categories = await Category.find({});
-// res.setHeader('Access-Control-Expose-Headers', 'Content-Range');
-// res.setHeader('Content-Range', posts 0-15/${categories.length});
-// res.send(categories);
+import {
+    sendResponse,
+    transformAdminGetList,
+} from '../utils/sharedControllerFunctions.js';
 
 const postController = {
     // Create a post
@@ -52,21 +38,16 @@ const postController = {
         }
     },
 
-    // Get the list of posts
+    // Get a list of posts
     fetch: async (req, res) => {
-        const queryFilter = JSON.parse(req.query.filter);
-        const range = JSON.parse(req.query.range);
-        const limit = range[1];
-        const skip = range[0];
+        const { queryFilter, options } = transformAdminGetList(req);
 
         try {
-            const posts = await Post.find(queryFilter).sort([
-                JSON.parse(req.query.sort),
-            ]);
+            const posts = await Post.find(queryFilter, null, options);
             sendResponse(Post, 'posts', posts, res, 200, queryFilter);
         } catch (error) {
             console.log('Error getting posts: ', error);
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 
@@ -76,10 +57,6 @@ const postController = {
             const postId = request.params.id;
             const post = await Post.findById(postId);
             sendResponse(Post, 'posts', post, response, 200);
-
-            // const postCount = await Post.find().estimatedDocumentCount();
-            // response.header('Content-Range', `posts 0-10/${postCount}`);
-            // response.code(200).send(post);
         } catch (error) {
             response.status(500).send(error);
         }
@@ -98,10 +75,6 @@ const postController = {
             const postToUpdate = await Post.findByIdAndUpdate(postId, updates);
             // const postToUpdate = await Post.findById(postId);
             sendResponse(Post, 'posts', { data: postToUpdate }, response, 200);
-
-            // const postCount = await Post.find().estimatedDocumentCount();
-            // response.header('Content-Range', `posts 0-10/${postCount}`);
-            // response.code(200).send({ data: postToUpdate });
         } catch (e) {
             response.status(500).send(e);
         }
@@ -114,10 +87,6 @@ const postController = {
             const postToDelete = await Post.findById(postId);
             await Post.findByIdAndDelete(postId);
             sendResponse(Post, 'posts', { data: postToDelete }, response, 200);
-
-            //   const postCount = await Post.find().estimatedDocumentCount();
-            //   response.header('Content-Range', `posts 0-10/${postCount}`);
-            //   response.code(200).send({ data: postToDelete });
         } catch (error) {
             response.status(500).send(error);
         }

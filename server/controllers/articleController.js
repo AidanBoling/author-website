@@ -1,17 +1,8 @@
 import Article from '../model/Article.js';
-
-async function sendResponse(model, dbCollection, data, res, code, filter = {}) {
-    let count;
-    if (Object.keys(filter).length) {
-        count = await model.countDocuments(filter);
-    } else {
-        count = await model.estimatedDocumentCount(filter);
-    }
-    // console.log('Found: ', count);
-    res.set('Content-Range', `${dbCollection} 0-20/${count}`)
-        .status(code)
-        .send(data);
-}
+import {
+    sendResponse,
+    transformAdminGetList,
+} from '../utils/sharedControllerFunctions.js';
 
 const articleController = {
     // Create an article
@@ -34,21 +25,15 @@ const articleController = {
         }
     },
 
-    // Get the list of articles
+    // Get a list of articles
     fetch: async (req, res) => {
-        const queryFilter = JSON.parse(req.query.filter);
-        const range = JSON.parse(req.query.range);
-        const limit = range[1];
-        const skip = range[0];
-
+        const { queryFilter, options } = transformAdminGetList(req);
         try {
-            const articles = await Article.find(queryFilter).sort([
-                JSON.parse(req.query.sort),
-            ]);
+            const articles = await Article.find(queryFilter, null, options);
             sendResponse(Article, 'articles', articles, res, 200, queryFilter);
-        } catch (e) {
-            console.log('Error getting posts: ', error);
-            response.status(500).send(e);
+        } catch (error) {
+            console.log('Error getting articles: ', error);
+            res.status(500).send(error);
         }
     },
 

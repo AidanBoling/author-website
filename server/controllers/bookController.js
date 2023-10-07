@@ -1,17 +1,8 @@
 import Book from '../model/Book.js';
-
-async function sendResponse(model, dbCollection, data, res, code, filter = {}) {
-    let count;
-    if (Object.keys(filter).length) {
-        count = await model.countDocuments(filter);
-    } else {
-        count = await model.estimatedDocumentCount(filter);
-    }
-    console.log('Found: ', count);
-    res.set('Content-Range', `${dbCollection} 0-20/${count}`)
-        .status(code)
-        .send(data);
-}
+import {
+    sendResponse,
+    transformAdminGetList,
+} from '../utils/sharedControllerFunctions.js';
 
 const bookController = {
     // Create a book
@@ -35,19 +26,14 @@ const bookController = {
 
     // Get the list of books
     fetch: async (req, res) => {
-        const queryFilter = JSON.parse(req.query.filter);
-        const range = JSON.parse(req.query.range);
-        const limit = range[1];
-        const skip = range[0];
+        const { queryFilter, options } = transformAdminGetList(req);
 
         try {
-            const books = await Book.find(queryFilter).sort([
-                JSON.parse(req.query.sort),
-            ]);
+            const books = await Book.find(queryFilter, null, options);
             sendResponse(Book, 'books', books, res, 200, queryFilter);
-        } catch (e) {
+        } catch (error) {
             console.log('Error getting posts: ', error);
-            response.status(500).send(e);
+            res.status(500).send(error);
         }
     },
 
