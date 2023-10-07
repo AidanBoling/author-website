@@ -10,6 +10,7 @@ import {
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function BookForm() {
     return (
@@ -50,14 +51,15 @@ function BookForm() {
             </Grid>
 
             {/* <ImageInput source="coverImageUrl" className="form" /> */}
-
             <ArrayInput source="purchaseInfo">
                 <SimpleFormIterator inline>
                     <TextInput source="location" helperText={false} />
                     <TextInput source="link" helperText={false} />
                 </SimpleFormIterator>
             </ArrayInput>
-            {/* <ReferenceInput source="tagId" reference="tags" /> */}
+            <RecordTagsFieldLabel>
+                <TagsListEdit resource="books" />
+            </RecordTagsFieldLabel>
         </SimpleForm>
     );
 }

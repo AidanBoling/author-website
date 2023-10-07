@@ -1,14 +1,15 @@
 import {
     Datagrid,
     List,
-    ReferenceField,
+    ReferenceArrayField,
+    SingleFieldList,
     TextField,
     TextInput,
-    ReferenceInput,
     EditButton,
     DateField,
     BooleanInput,
 } from 'react-admin';
+import TagField from '../TagField';
 
 const postFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -21,13 +22,19 @@ function PostList() {
     return (
         <List
             filters={postFilters}
-            filterDefaultValues={{ is_published: true }}>
+            filterDefaultValues={{ is_published: true }}
+            sort={{ field: 'datePublished', order: 'DESC' }}>
             <Datagrid rowClick="show">
                 <DateField source="createdAt" />
-
-                {/* <TextField source="id" /> */}
                 <TextField source="title" />
-                {/* <ReferenceField source="userId" reference="users" link="show" /> */}
+                <ReferenceArrayField
+                    label="Tags"
+                    reference="tags"
+                    source="tags">
+                    <SingleFieldList linkType={false}>
+                        <TagField />
+                    </SingleFieldList>
+                </ReferenceArrayField>
                 <EditButton />
             </Datagrid>
         </List>

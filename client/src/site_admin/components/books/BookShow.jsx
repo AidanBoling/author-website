@@ -10,6 +10,7 @@ import {
 import { Grid } from '@mui/material';
 
 import PageTitle from '../PageTitle';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function BookShow() {
     return (
@@ -28,7 +29,9 @@ function BookShow() {
                             label="Description"
                         />
                         {/* Category */}
-                        {/* <ReferenceField source="tagsId" reference="tags" /> */}
+                        <RecordTagsFieldLabel>
+                            <TagsListEdit resource="books" />
+                        </RecordTagsFieldLabel>
                     </SimpleShowLayout>
                 </Grid>
             </Grid>

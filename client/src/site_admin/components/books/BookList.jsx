@@ -2,19 +2,21 @@ import {
     List,
     Datagrid,
     SimpleList,
-    ReferenceField,
+    ReferenceArrayField,
+    SingleFieldList,
     TextField,
     TextInput,
     EditButton,
     DateField,
 } from 'react-admin';
 import { useMediaQuery } from '@mui/material';
+import TagField from '../TagField';
 
 function BookList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
     return (
-        <List>
+        <List sort={{ field: 'datePublished', order: 'DESC' }}>
             {isMobile ? (
                 <SimpleList
                     primaryText={record => record.title}
@@ -29,6 +31,14 @@ function BookList() {
                     <TextField source="title" />
                     <DateField source="datePublished" />
                     <TextField source="description.short" />
+                    <ReferenceArrayField
+                        label="Tags"
+                        reference="tags"
+                        source="tags">
+                        <SingleFieldList linkType={false}>
+                            <TagField />
+                        </SingleFieldList>
+                    </ReferenceArrayField>
                     <EditButton />
                 </Datagrid>
             )}

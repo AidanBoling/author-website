@@ -9,10 +9,11 @@ import {
     SimpleFormIterator,
     FormGroupContextProvider,
     Labeled,
+    FunctionField,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';
-import TagsListEdit from '../TagsListEdit';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function ArticleForm() {
     return (
@@ -64,16 +65,9 @@ function ArticleForm() {
                         <TextInput source="publisher.website" fullWidth />
                     </Grid>
                 </Grid>
-                <Labeled
-                    label="Tags"
-                    sx={{
-                        fontStyle: 'italic',
-                        fontSize: '1.25rem',
-                        pl: '.5rem',
-                    }}>
+                <RecordTagsFieldLabel>
                     <TagsListEdit resource="articles" />
-                </Labeled>
-                {/* <ReferenceInput source="tagId" reference="tags" /> */}
+                </RecordTagsFieldLabel>
             </TabbedForm.Tab>
             <TabbedForm.Tab label="Content">
                 <RichTextInput

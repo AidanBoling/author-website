@@ -3,6 +3,7 @@ import { RichTextInput } from 'ra-input-rich-text';
 import PostForm from './PostForm';
 import PostTitle from './PostPageTitle';
 import PostEditDraftElement from './PostEditDraftElement';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function PostEdit() {
     return (
@@ -15,6 +16,9 @@ function PostEdit() {
                     label="Content"
                 />
                 <PostEditDraftElement />
+                <RecordTagsFieldLabel>
+                    <TagsListEdit resource="posts" />
+                </RecordTagsFieldLabel>
             </SimpleForm>
         </Edit>
     );

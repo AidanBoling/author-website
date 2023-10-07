@@ -10,7 +10,7 @@ import {
     Labeled,
 } from 'react-admin';
 import ArticleTitle from './ArticlePageTitle';
-import TagsListEdit from '../TagsListEdit';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function ArticleShow() {
     return (
@@ -27,22 +27,13 @@ function ArticleShow() {
                         label="Last Updated"
                         showTime
                     />
-                    <Labeled
-                        label="Tags"
-                        // sx={{
-                        //     fontStyle: 'italic',
-                        //     fontSize: '1.25rem',
-                        //     pl: '.5rem',
-                        // }}
-                    >
+                    <RecordTagsFieldLabel>
                         <TagsListEdit resource="articles" />
-                    </Labeled>
-                    {/* <ReferenceField source="tagsId" reference="tags" /> */}
+                    </RecordTagsFieldLabel>
                 </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab label="content">
                     <ImageField source="image.url" label={false} />
                     <RichTextField source="content" label={false} />
-                    {/* <ReferenceField source="tagsId" reference="tags" /> */}
                 </TabbedShowLayout.Tab>
             </TabbedShowLayout>
         </Show>

@@ -13,6 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import {
+    Labeled,
     useGetMany,
     useRecordContext,
     useUpdate,
@@ -39,24 +40,38 @@ const tagColors = [
     '#d0d0d0',
 ];
 
-function ColorPickerButton({ color, handleClick, selected }) {
+export function RecordTagsFieldLabel(props) {
     return (
-        <Box
-            component="button"
-            type="button"
+        <Labeled
+            label="Tags"
             sx={{
-                bgcolor: color,
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                border: selected ? '3px solid lightgrey' : 'none',
-                display: 'inline-block',
-                margin: 1.25,
-            }}
-            onClick={handleClick}
-        />
+                fontStyle: 'italic',
+                fontSize: '1.25rem',
+                pl: '.5rem',
+            }}>
+            {props.children}
+        </Labeled>
     );
 }
+
+// function ColorPickerButton({ color, handleClick, selected }) {
+//     return (
+//         <Box
+//             component="button"
+//             type="button"
+//             sx={{
+//                 bgcolor: color,
+//                 width: 30,
+//                 height: 30,
+//                 borderRadius: 15,
+//                 border: selected ? '3px solid lightgrey' : 'none',
+//                 display: 'inline-block',
+//                 margin: 1.25,
+//             }}
+//             onClick={handleClick}
+//         />
+//     );
+// }
 
 function CreateTagDialog({ resource, isOpen, setOpen }) {
     const record = useRecordContext();
@@ -221,7 +236,7 @@ function CreateTagDialog({ resource, isOpen, setOpen }) {
 export default function TagsListEdit(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [recordTags, setrecordTags] = useState();
+    // const [recordTags, setRecordTags] = useState();
     const record = useRecordContext();
     const [update] = useUpdate();
 

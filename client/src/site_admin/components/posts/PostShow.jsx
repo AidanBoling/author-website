@@ -11,7 +11,7 @@ import {
 import { Typography } from '@mui/material';
 import PostTitle from './PostPageTitle';
 import PostContentField from './postContentField';
-import TagsListEdit from '../TagsListEdit';
+import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 function PostShow() {
     return (
@@ -37,15 +37,9 @@ function PostShow() {
                     }}
                 />
                 <PostContentField source="content" />
-                <Labeled
-                    label="Tags"
-                    sx={{
-                        fontStyle: 'italic',
-                        fontSize: '1.25rem',
-                        pl: '.5rem',
-                    }}>
+                <RecordTagsFieldLabel>
                     <TagsListEdit resource="posts" />
-                </Labeled>
+                </RecordTagsFieldLabel>
             </SimpleShowLayout>
         </Show>
     );
