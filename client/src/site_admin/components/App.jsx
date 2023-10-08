@@ -82,7 +82,12 @@ function AdminApp() {
                 edit={EventEdit}
                 icon={CalendarMonthIcon}
             />
-            <Resource name="tags" list={TagList} show={TagShow} />
+            <Resource
+                name="tags"
+                list={TagList}
+                show={TagShow}
+                recordRepresentation="name"
+            />
 
             {/* <Resource name="users" list={UserList} show={UserShow} recordRepresentation="name" icon={UserIcon} /> */}
         </Admin>
