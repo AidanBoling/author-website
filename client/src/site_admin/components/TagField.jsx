@@ -15,6 +15,7 @@ import { Chip } from '@mui/material';
 
 export function TagChip(props) {
     const record = useRecordContext();
+    if (!record) return null;
     return (
         <Chip
             label={record.name}

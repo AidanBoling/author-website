@@ -21,10 +21,26 @@ const tagController = {
 
     // Get the list of tags
     fetch: async (req, res) => {
-        const { queryFilter, options } = transformAdminGetList(req);
+        console.log('Started get list for tags');
+        let { queryFilter, options } = transformAdminGetList(req);
 
         try {
-            const tags = await Tag.find(queryFilter, null, options);
+            let tags;
+            if (queryFilter.name) {
+                const autocompleteQuery = {
+                    autocomplete: {
+                        path: 'name',
+                        query: queryFilter.name,
+                    },
+                };
+                tags = await Tag.aggregate().search(autocompleteQuery);
+                console.log('Autocomplete query results: ', tags);
+                const tagNames = tags.map(tag => tag.name);
+                queryFilter = { name: { $in: tagNames } };
+                // console.log(queryFilter);
+            } else {
+                tags = await Tag.find(queryFilter, null, options);
+            }
             sendResponse(Tag, 'tags', tags, res, 200, queryFilter);
         } catch (error) {
             console.log('Error getting tags: ', error);
@@ -34,6 +50,7 @@ const tagController = {
 
     // Get a single tag
     get: async (req, res) => {
+        console.log('Started getID for a tag');
         try {
             const tagId = req.params.id;
             const tag = await Tag.findById(tagId);

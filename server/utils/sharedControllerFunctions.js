@@ -13,6 +13,7 @@ export async function sendResponse(
         count = await model.estimatedDocumentCount(filter);
     }
     console.log(`${dbCollection} found: `, count);
+
     res.set('Content-Range', `${dbCollection} 0-20/${count}`)
         .status(code)
         .send(data);
@@ -35,7 +36,8 @@ export function transformAdminGetList(request) {
     if (sort) {
         sort = JSON.parse(request.query.sort);
         options = { ...options, sort: { [sort[0]]: sort[1] } };
-        console.log(options);
+        // console.log(options);
     }
+
     return { queryFilter, options };
 }

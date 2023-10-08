@@ -40,6 +40,7 @@ const postController = {
 
     // Get a list of posts
     fetch: async (req, res) => {
+        console.log('Started getting list of posts...');
         const { queryFilter, options } = transformAdminGetList(req);
 
         try {
@@ -53,6 +54,7 @@ const postController = {
 
     // Get a single post
     get: async (request, response) => {
+        console.log('Started fetching a single post...');
         try {
             const postId = request.params.id;
             const post = await Post.findById(postId);
