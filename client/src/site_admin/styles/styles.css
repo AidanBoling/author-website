@@ -7,6 +7,11 @@ body {
     margin: 0
 }
 
+.RaAppBar-title {
+    display: flex;
+    justify-content: center;
+}
+
 .RaLayout-content>* {
     width: 90%;
     align-self: center;
@@ -27,6 +32,7 @@ body {
 .RaShow-main,
 .RaList-main {
     min-width: calc(80vw - 200px);
+    margin-top: 1rem;
 }
 
 .RaShow-main>* {

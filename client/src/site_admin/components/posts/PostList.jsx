@@ -13,7 +13,7 @@ import TagField from '../TagField';
 
 const postFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
-    <BooleanInput label="Published" source="is_published" alwaysOn />,
+    <BooleanInput label="Published" source="published" alwaysOn />,
 ];
 
 //TODO: troubleshoot how to get search filter field to show search button...
@@ -22,7 +22,7 @@ function PostList() {
     return (
         <List
             filters={postFilters}
-            filterDefaultValues={{ is_published: true }}
+            filterDefaultValues={{ published: true }}
             sort={{ field: 'datePublished', order: 'DESC' }}>
             <Datagrid rowClick="show">
                 <DateField source="createdAt" />

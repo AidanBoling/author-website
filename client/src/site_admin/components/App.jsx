@@ -1,18 +1,27 @@
+'use client';
 import {
     Admin,
     Resource,
+    Layout,
+    CustomRoutes,
     ListGuesser,
     EditGuesser,
     ShowGuesser,
     defaultTheme,
 } from 'react-admin';
+import { Route } from 'react-router-dom';
 import { customLightTheme, customDarkTheme } from './themeCustom';
 import '@/admin/styles/styles.css';
 import BookIcon from '@mui/icons-material/Book';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
+import LabelIcon from '@mui/icons-material/Label';
+
 import myDataProvider from '../dataProvider';
+
+import CustomMenu from './CustomMenu';
+import CustomAppBar from './CustomAppBar';
 
 import Dashboard from './Dashboard';
 // import { UserList } from './UserList';
@@ -35,16 +44,22 @@ import EventCreate from './events/EventCreate';
 import EventEdit from './events/EventEdit';
 import TagList from './tags/TagList';
 import TagShow from './tags/TagShow';
+import SecuritySettings from './user/SecuritySettings';
 
 // import authProvider from './authProvider';
 
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
 
+function CustomLayout(props) {
+    return <Layout {...props} layout={CustomAppBar} />;
+}
+
 function AdminApp() {
     return (
         <Admin
             basename="/admin"
+            layout={CustomLayout}
             dataProvider={myDataProvider}
             //   authProvider={authProvider}
             theme={customLightTheme}
@@ -86,10 +101,12 @@ function AdminApp() {
                 name="tags"
                 list={TagList}
                 show={TagShow}
+                icon={LabelIcon}
                 recordRepresentation="name"
             />
-
-            {/* <Resource name="users" list={UserList} show={UserShow} recordRepresentation="name" icon={UserIcon} /> */}
+            <CustomRoutes>
+                <Route path="/user/security" element={<SecuritySettings />} />
+            </CustomRoutes>
         </Admin>
     );
 }

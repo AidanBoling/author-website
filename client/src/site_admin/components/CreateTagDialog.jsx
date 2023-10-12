@@ -33,6 +33,11 @@ const tagColors = [
     '#d0d0d0',
 ];
 
+function randomColor() {
+    randomIndex = Math.floor(Math.random() * tagColors.length);
+    return tagColors[index];
+}
+
 export default function CreateTagDialog({
     resource,
     isOpen,
@@ -44,7 +49,7 @@ export default function CreateTagDialog({
         ? useCreateSuggestionContext()
         : {};
     const [newTagName, setNewTagName] = useState((newRecord && filter) || '');
-    const [newTagColor, setNewTagColor] = useState(tagColors[0]);
+    const [newTagColor, setNewTagColor] = useState(randomColor);
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState(null);
 
@@ -61,7 +66,7 @@ export default function CreateTagDialog({
         setDisabled(false);
         setError(null);
         setNewTagName('');
-        setNewTagColor(tagColors[0]);
+        setNewTagColor(randomColor);
     }
 
     function handleCreateTag(event) {
@@ -107,7 +112,7 @@ export default function CreateTagDialog({
                             "Tag created, but not added to record. Close this dialog, then select tag from tag list (via 'Add tag' button)"
                         );
                         setNewTagName('');
-                        setNewTagColor(tagColors[0]);
+                        setNewTagColor(randomColor);
                         console.log(error);
                     },
                 }
