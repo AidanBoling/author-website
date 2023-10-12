@@ -4,6 +4,12 @@ import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import nodemailer from 'nodemailer';
 import sanitizeHtml from 'sanitize-html';
+import { body, validationResult, matchedData } from 'express-validator';
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+// import session from 'express-session';
+import { passportStrategy } from './services/passport.js';
+
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
@@ -12,15 +18,13 @@ import tagController from './controllers/tagController.js';
 import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
 import getFilteredResourceList from './utils/getFilteredResourceList.js';
-// import session from 'express-session';
-// import passport from 'passport';
-// import passportLocalMongoose from 'passport-local-mongoose';
 
 import mongoose, { isObjectIdOrHexString, Types } from 'mongoose';
 import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
+import { authController } from './controllers/authController.js';
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
@@ -28,7 +32,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const corsOrigin = '*';
+const corsOrigin =
+    process.env.NODE_ENV !== 'production' ? '*' : 'process.env.CLIENT_URL';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -63,6 +68,9 @@ app.use(
     cors({
         origin: corsOrigin,
         exposedHeaders: 'Content-Range,X-Total-Count',
+        methods: 'GET,POST',
+        // allowedHeaders: 'Content-Type,Authorization',
+        credentials: true,
     })
 );
 
@@ -165,6 +173,7 @@ app.get('/events', async (req, res) => {
 
 // -- Form routes
 
+//TODO (later): see if can split the following function into two functions --> sanitize middleware, controller.
 app.post('/form/contact', (req, res) => {
     // console.log(req.body);
 
@@ -193,6 +202,7 @@ app.post('/form/contact', (req, res) => {
     // res.status(200).json({ message: 'Success' });
 });
 
+//TODO (later): see if can split the following function into two functions --> sanitize middleware, controller.
 app.post('/form/subscribe', (req, res) => {
     console.log(req.body);
 
@@ -256,6 +266,47 @@ app.get('/admin/tags', tagController.fetch);
 app.get('/admin/tags/:id', tagController.get);
 app.put('/admin/tags/:id', tagController.update);
 app.delete('/admin/tags/:id', tagController.delete);
+
+// -- USER routes
+
+// Session setup (will be moved))
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: false,
+//     saveUninitialized: false,
+//     store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
+//   }));
+//   app.use(passport.authenticate('session'));
+
+// User Registration?? (--> user account pwd set):
+
+//middleware -> validate+sanitize: email, password
+app.post(
+    '/admin/register',
+    body('email').notEmpty().escape(),
+    body('password').notEmpty().escape(),
+    authController.register
+);
+
+// User Login (name, pwd):
+
+passport.use(
+    'login',
+    new LocalStrategy(
+        {
+            usernameField: 'email',
+            // passwordField: 'password',
+            passReqToCallback: true,
+        },
+        passportStrategy.login
+    )
+);
+
+app.post('/admin/login/password', authController.login);
+
+// User MFA enable, setup, etc...
+
+// User Password Reset -> /admin/passwordreset
 
 mongoose
     .connect(
