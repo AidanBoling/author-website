@@ -7,6 +7,7 @@ import sanitizeHtml from 'sanitize-html';
 import { body, validationResult, matchedData } from 'express-validator';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
+import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
 // import session from 'express-session';
 import { passportStrategy } from './services/passport.js';
 
@@ -287,6 +288,7 @@ app.post(
     body('password').notEmpty().escape(),
     authController.register
 );
+// TODO: ^improve validation
 
 // User Login (name, pwd):
 
@@ -295,16 +297,65 @@ passport.use(
     new LocalStrategy(
         {
             usernameField: 'email',
-            // passwordField: 'password',
             passReqToCallback: true,
         },
         passportStrategy.login
     )
 );
 
-app.post('/admin/login/password', authController.login);
+app.post('/admin/login/password', authController.login); //--> TODO: Add validation
+
+const jwtStrategyOptions = {
+    algorithms: [process.env.JWT_ALG],
+    issuer: process.env.JWT_ISS,
+    secretOrKey: process.env.JWT_SECRET,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+};
+
+passport.use(
+    'loginJwt',
+    new jwtStrategy(
+        {
+            ...jwtStrategyOptions,
+            audience: process.env.JWT_MFA_AUD,
+            jsonWebTokenOptions: { maxAge: '5m' },
+        },
+        passportStrategy.loginJwt
+    )
+);
+
+app.post(
+    '/admin/login/mfa',
+    passport.authenticate('loginJwt', { session: false }),
+    authController.loginMFA
+); //--> TODO: Add validation (OTPcode)
+
+// User auth
+passport.use(
+    'jwt',
+    new jwtStrategy(
+        {
+            ...jwtStrategyOptions,
+            audience: process.env.JWT_AUTH_AUD,
+        },
+        passportStrategy.jwt
+    )
+);
+
+app.use('/admin/auth', passport.authenticate('jwt', { session: false }));
+
+app.get('/admin/auth/protectedroute', authController.jwtAuth);
 
 // User MFA enable, setup, etc...
+app.get(
+    '/admin/auth/settings/mfa/generate-2fa-secret',
+    // passport.authenticate('jwt', { session: false }),
+    authController.generateMfaSecret
+);
+
+app.post('/admin/auth/settings/mfa/verify-otp', authController.verifyOTP);
+
+app.get('/admin/auth/settings/mfa/disable-mfa', authController.disableMfa);
 
 // User Password Reset -> /admin/passwordreset
 

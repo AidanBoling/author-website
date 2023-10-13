@@ -55,5 +55,29 @@ export const passportStrategy = {
             return done(error);
         }
     },
+    jwt: async (token, done) => {
+        try {
+            const user = await User.findOne({ email: token.user?.email });
+            return done(null, {
+                // name: user.name,
+                email: user.email,
+                mfaEnabled: user.mfaEnabled,
+            });
+        } catch (error) {
+            return done(error);
+        }
+    },
+
+    loginJwt: async (token, done) => {
+        try {
+            const user = await User.findOne({
+                email: token.loginPasswordVerified?.email,
+            });
+            return done(null, { ...user, loginPasswordVerifiedToken: token });
+        } catch (error) {
+            console.log(error.message);
+            return done(error);
+        }
+    },
 };
 // Passport verify password middleware configure

@@ -17,7 +17,7 @@ const userSchema = new Schema(
         },
         password: { type: String },
         mfaEnabled: { type: Boolean, default: false },
-        secretKey: String,
+        mfaAppSecret: String,
         permissionLevel: {
             type: String,
             default: 'user',
