@@ -44,27 +44,24 @@ export const passportStrategy = {
 
             const user = await User.authenticate(valEmail, valPassword);
 
-            // const user = await User.findOne({ email: data.email });
-
-            // if (!user) {
-            //     await argon2.hash(process.env.DUMMY_PWD, {
-            //         memoryCost: 2 ** 14,
-            //         parallelism: 3,
-            //     });
-            //     console.log('Invalid email');
-            //     return done(null, false, {
-            //         message: 'Invalid email or password',
-            //     });
-            // }
-
-            // const isValid = await argon2.verify(user.password, password);
-
             if (user)
                 return done(null, user, { message: 'Logged in successfully' });
 
             return done(null, false, { message: 'Invalid email or password' });
         } catch (error) {
             console.log(error);
+            return done(error);
+        }
+    },
+
+    loginJwt: async (payload, done) => {
+        try {
+            const user = await User.findOne({
+                email: payload.loginPasswordVerified?.email,
+            });
+            return done(null, user);
+        } catch (error) {
+            console.log(error.message);
             return done(error);
         }
     },
@@ -88,17 +85,5 @@ export const passportStrategy = {
     //         return done(error);
     //     }
     // },
-
-    loginJwt: async (payload, done) => {
-        try {
-            const user = await User.findOne({
-                email: payload.loginPasswordVerified?.email,
-            });
-            return done(null, user);
-        } catch (error) {
-            console.log(error.message);
-            return done(error);
-        }
-    },
 };
 // Passport verify password middleware configure

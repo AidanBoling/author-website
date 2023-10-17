@@ -27,7 +27,7 @@ const userSchema = new Schema(
             default: () => Date.now(),
             // immutable: true,
         },
-        lastLogin: Date,
+        lastLogin: [Date],
     },
     {
         timestamps: true,
@@ -82,22 +82,14 @@ userSchema.static('authenticate', async (username, plainTextPassword) => {
     return false;
 });
 
-// passport.use(User.createStrategy());
-
-// // passport.serializeUser(User.serializeUser());
-// // passport.deserializeUser(User.deserializeUser());
-
-// passport.serializeUser(function(user, cb) {
-//     process.nextTick(function() {
-//         cb(null, { id: user.id, username: user.username });
-//     });
-// });
-
-// passport.deserializeUser(function(user, cb) {
-//     process.nextTick(function() {
-//         return cb(null, user);
-//     });
-// });
+userSchema.static('saveLogin', user => {
+    user.lastLogin.unshift(Date.now());
+    if (user.lastLogin.length > 2) {
+        user.lastLogin.pop();
+    }
+    user.save();
+    console.log('Login list: ', user.lastLogin);
+});
 
 const User = model('User', userSchema);
 export default User;

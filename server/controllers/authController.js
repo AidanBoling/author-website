@@ -30,6 +30,7 @@ export const passportAuthenticate = {
                 // If user doesn't have mfa set up/enabled, complete login & return auth token
                 if (!user.mfaEnabled) {
                     req.login(user, next); // Call passport login function (to set req.user and send to session)
+                    User.saveLogin(user);
                 } else {
                     // if mfa enabled, send temp token that confirms authorized to go to step 2
                     return res.json({
@@ -59,6 +60,7 @@ export const passportAuthenticate = {
                 const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
 
                 if (authenticator.check(token, user.mfaAppSecret)) {
+                    User.saveLogin(user);
                     req.login(user, next); // Call passport login function (to set req.user and send to session)
                 } else {
                     return res.status(401).json({
@@ -69,51 +71,6 @@ export const passportAuthenticate = {
         )(req, res, next);
     },
 };
-
-// export const passportAuthCallback = {
-//     passwordLogin: async (error, user, info) => {
-//         if (error || !user) {
-//             // TODO: probably want to separate error response from !user response. Check OWASP
-//             console.log('Message: ', info);
-//             return res.status(401).json({
-//                 message: 'Invalid email or password',
-//             });
-//         }
-
-//         // If user doesn't have mfa set up/enabled, complete login & return auth token
-//         if (!user.mfaEnabled) {
-//             req.login(user, next); // Call passport login function (to set req.user and send to session)
-//         } else {
-//             // if mfa enabled, send temp token that confirms authorized to go to step 2
-//             return res.json({
-//                 message: 'Please complete 2-factor authentication',
-//                 mfaEnabled: user.mfaEnabled,
-//                 loginPasswordVerifiedToken: getMFALoginToken(user),
-//             });
-//         }
-//     },
-
-//     mfaLogin: async (error, user, info) => {
-//         if (!user)
-//             return res.status(401).json({
-//                 message: 'Invalid or expired token',
-//             });
-//         if (error)
-//             return res.status(500).json({
-//                 message: 'Error',
-//             });
-
-//         const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
-
-//         if (authenticator.check(token, req.user.mfaAppSecret)) {
-//             req.login(user, next); // Call passport login function (to set req.user and send to session)
-//         }
-
-//         return res.status(401).json({
-//             message: 'Invalid or expired token',
-//         });
-//     },
-// };
 
 export const authController = {
     register: async (req, res) => {

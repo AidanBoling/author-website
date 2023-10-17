@@ -101,6 +101,8 @@ app.use(
             collectionName: 'sessions',
             // ttl: 60,
             autoRemove: 'native',
+            touchAfter: 600,
+            crypto: { secret: process.env.SESSION_STORE_SECRET },
         }),
     })
 );
