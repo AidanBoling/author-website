@@ -5,6 +5,115 @@ import qrcode from 'qrcode';
 import mongoose from 'mongoose';
 import User from '../model/User.js';
 import passport from 'passport';
+import {
+    getAuthToken,
+    getFingerprint,
+    getFingerprintHash,
+    getMFALoginToken,
+    FPT_COOKIE_OPTIONS,
+} from '../utils/authUtilities.js';
+
+export const passportAuthenticate = {
+    passwordLogin: (req, res, next) => {
+        passport.authenticate(
+            'login',
+            { failureMessage: true },
+            async (error, user, info) => {
+                if (error || !user) {
+                    // TODO: probably want to separate error response from !user response. Check OWASP
+                    console.log('Message: ', info);
+                    return res.status(401).json({
+                        message: 'Invalid email or password',
+                    });
+                }
+
+                // If user doesn't have mfa set up/enabled, complete login & return auth token
+                if (!user.mfaEnabled) {
+                    req.login(user, next); // Call passport login function (to set req.user and send to session)
+                } else {
+                    // if mfa enabled, send temp token that confirms authorized to go to step 2
+                    return res.json({
+                        message: 'Please complete 2-factor authentication',
+                        mfaEnabled: user.mfaEnabled,
+                        loginPasswordVerifiedToken: getMFALoginToken(user),
+                    });
+                }
+            }
+        )(req, res, next);
+    },
+
+    mfaLogin: (req, res, next) => {
+        passport.authenticate(
+            'loginJwt',
+            { failureMessage: true },
+            async (error, user, info) => {
+                if (!user)
+                    return res.status(401).json({
+                        message: 'Invalid or expired token',
+                    });
+                if (error)
+                    return res.status(500).json({
+                        message: 'Error',
+                    });
+
+                const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+
+                if (authenticator.check(token, user.mfaAppSecret)) {
+                    req.login(user, next); // Call passport login function (to set req.user and send to session)
+                } else {
+                    return res.status(401).json({
+                        message: 'Invalid or expired token',
+                    });
+                }
+            }
+        )(req, res, next);
+    },
+};
+
+// export const passportAuthCallback = {
+//     passwordLogin: async (error, user, info) => {
+//         if (error || !user) {
+//             // TODO: probably want to separate error response from !user response. Check OWASP
+//             console.log('Message: ', info);
+//             return res.status(401).json({
+//                 message: 'Invalid email or password',
+//             });
+//         }
+
+//         // If user doesn't have mfa set up/enabled, complete login & return auth token
+//         if (!user.mfaEnabled) {
+//             req.login(user, next); // Call passport login function (to set req.user and send to session)
+//         } else {
+//             // if mfa enabled, send temp token that confirms authorized to go to step 2
+//             return res.json({
+//                 message: 'Please complete 2-factor authentication',
+//                 mfaEnabled: user.mfaEnabled,
+//                 loginPasswordVerifiedToken: getMFALoginToken(user),
+//             });
+//         }
+//     },
+
+//     mfaLogin: async (error, user, info) => {
+//         if (!user)
+//             return res.status(401).json({
+//                 message: 'Invalid or expired token',
+//             });
+//         if (error)
+//             return res.status(500).json({
+//                 message: 'Error',
+//             });
+
+//         const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+
+//         if (authenticator.check(token, req.user.mfaAppSecret)) {
+//             req.login(user, next); // Call passport login function (to set req.user and send to session)
+//         }
+
+//         return res.status(401).json({
+//             message: 'Invalid or expired token',
+//         });
+//     },
+// };
 
 export const authController = {
     register: async (req, res) => {
@@ -15,11 +124,17 @@ export const authController = {
         // TEMP (simple):
         let status;
         try {
+            //TODO: Change for security:
+            // Do email as step 1,
+            // Then verify email by sending email with step 2 token (vague message like: 'if email is valid to register, email will be sent to you...',
+            // Then they can click link, enter new password.
+            // (also, log registration attempts)
+
             // Check if user already exists
             let user = await User.findOne({ email: data.email });
             if (!user) {
                 status = 401;
-                throw new Error('Email not in system');
+                throw new Error('Invalid.');
             }
             console.log(user);
 
@@ -42,117 +157,122 @@ export const authController = {
             }
         } catch (error) {
             console.log(error);
-            res.status(status || 500).json({ error: error.message });
-        }
-
-        // TODO (later): Update this^. Probably want to add email verification before allow create password.
-        // How to allow registration only if already in the db?
-        // And/or create temporary password that is emailed to admin, required to change when login...
-    },
-
-    login: async (req, res, next) => {
-        passport.authenticate(
-            'login',
-            { session: false },
-            async (error, user, info) => {
-                // console.log('Message: ', info);
-                if (error || !user) {
-                    console.log('Message: ', info);
-                    return res.status(401).json({
-                        message: 'Invalid email or password',
-                    });
-                }
-                // if user doesn't have mfa set up/enabled, complete login, return auth token
-                if (!user.mfaEnabled) {
-                    return res.json({
-                        message: info.message,
-                        mfaEnabled: false,
-                        token: jwt.sign(
-                            { user: { email: user.email } },
-                            process.env.JWT_SECRET,
-                            {
-                                algorithm: process.env.JWT_ALG,
-                                issuer: process.env.JWT_ISS,
-                                audience: process.env.JWT_AUTH_AUD,
-                            }
-                        ),
-                    });
-                } else {
-                    // if mfa enabled, send temp token that confirms authorized to go to step 2
-                    return res.json({
-                        message: 'Please complete 2-factor authentication',
-                        mfaEnabled: true,
-                        loginPasswordVerifiedToken: jwt.sign(
-                            {
-                                // This must be *different* from final authentication token,
-                                // given once correct 2nd factor code received.
-                                loginPasswordVerified: { email: user.email },
-                            },
-                            process.env.JWT_SECRET,
-                            {
-                                algorithm: process.env.JWT_ALG,
-                                issuer: process.env.JWT_ISS,
-                                audience: process.env.JWT_MFA_AUD,
-                                expiresIn: '5m',
-                            }
-                        ),
-                    });
-                }
+            if (status) {
+                res.status(status).json({ error: 'Invalid' });
+            } else {
+                res.status(500).json({ error: error.message });
             }
-        )(req, res, next);
-    },
-
-    loginMFA: async (req, res) => {
-        console.log(req.body);
-        console.log(req.user.loginPasswordVerifiedToken);
-        // let loginPasswordVerifiedToken = null;
-        // try {
-        //     loginPasswordVerifiedToken = jwt.verify(
-        //         req.user.loginPasswordVerifiedToken,
-        //         process.env.JWT_SECRET
-        //     );
-        // } catch (error) {
-        //     return res.status(401).json({
-        //         message: 'You are not authorized to perform login step-2',
-        //     });
-        // }
-
-        const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
-        const user = await User.findOne({
-            email: req.user.loginPasswordVerifiedToken.loginPasswordVerified
-                .email,
-        });
-        if (!authenticator.check(token, user.mfaAppSecret)) {
-            return res.status(400).json({
-                message: 'OTP verification failed: Invalid token',
-            });
-        } else {
-            return res.json({
-                message: 'OTP verification successful',
-                token: jwt.sign(
-                    {
-                        user: { email: user.email },
-                    },
-                    process.env.JWT_SECRET,
-                    {
-                        algorithm: process.env.JWT_ALG,
-                        issuer: process.env.JWT_ISS,
-                        audience: process.env.JWT_AUTH_AUD,
-                    }
-                ),
-            });
         }
+
+        // TODO (later): Update this^.
+        // [x] How to allow registration only if already in the db?
+        // Q: ...Create temporary password that is emailed to admin, required to change when login...?
     },
 
-    jwtAuth: async (req, res) => {
+    login: (req, res) => {
+        // This is reached only if user fully authenticated and session created (whether mfa enabled or not)
+        console.log(
+            `User ${req.user.email} was logged in to session ID: `,
+            req.sessionID
+        );
+        console.log(req.session);
+
         return res.json({
             message: 'Success',
-            user: req.user,
+            user: req.user.email,
+            mfaEnabled: req.user.mfaEnabled,
+            // sessionID: req.session.id(?) // FOR TESTING ONLY -- remove.
         });
     },
+
+    // loginJWTAuth: async (req, res, next) => {
+    //     passport.authenticate(
+    //         'login',
+    //         { session: false },
+    //         async (error, user, info) => {
+    //             if (error || !user) {
+    //                 console.log('Message: ', info);
+    //                 return res.status(401).json({
+    //                     message: 'Invalid email or password',
+    //                 });
+    //             }
+
+    //             const fingerprint = getFingerprint();
+    //             const fingerprintHash = getFingerprintHash(fingerprint);
+
+    //             // if user doesn't have mfa set up/enabled, complete login & return auth token
+    //             if (!user.mfaEnabled) {
+    //                 // NOTE: change cookie name "fpt" to __Secure-Fpt in production
+
+    //                 return res
+    //                     .cookie('Fpt', fingerprint, FPT_COOKIE_OPTIONS)
+    //                     .json({
+    //                         message: info.message,
+    //                         mfaEnabled: false,
+    //                         token: getAuthToken(user, fingerprintHash),
+    //                     });
+    //             } else {
+    //                 // if mfa enabled, send temp token that confirms authorized to go to step 2
+    //                 return res.json({
+    //                     message: 'Please complete 2-factor authentication',
+    //                     mfaEnabled: true,
+    //                     loginPasswordVerifiedToken: getMFALoginToken(user),
+    //                 });
+    //             }
+    //         }
+    //     )(req, res, next);
+    // },
+
+    // loginMfaJwtAuth: async (req, res) => {
+    //     console.log(req.body);
+    //     // console.log(req.user.loginPasswordVerifiedToken);
+    //     // let loginPasswordVerifiedToken = null;
+    //     // try {
+    //     //     loginPasswordVerifiedToken = jwt.verify(
+    //     //         req.user.loginPasswordVerifiedToken,
+    //     //         process.env.JWT_SECRET
+    //     //     );
+    //     // } catch (error) {
+    //     //     return res.status(401).json({
+    //     //         message: 'You are not authorized to perform login step-2',
+    //     //     });
+    //     // }
+    //     // const user = await User.findOne({
+    //     //     email: req.user.loginPasswordVerifiedToken.loginPasswordVerified
+    //     //         .email,
+    //     // });
+
+    //     // User passed jwt (temp token) auth, now check OTP code
+
+    //     const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+
+    //     if (!authenticator.check(token, req.user.mfaAppSecret)) {
+    //         return res.status(400).json({
+    //             message: 'OTP verification failed: Invalid token',
+    //         });
+    //     } else {
+    //         const fingerprint = getFingerprint();
+    //         const fingerprintHash = getFingerprintHash(fingerprint);
+
+    //         // NOTE: change cookie name "fpt" to __Secure-Fpt in production
+    //         return res.cookie('Fpt', fingerprint, FPT_COOKIE_OPTIONS).json({
+    //             message: 'OTP verification successful',
+    //             token: getAuthToken(req.user),
+    //         });
+    //     }
+    // },
+
+    // jwtAuth: async (req, res) => {
+    //     return res.json({
+    //         message: 'Success',
+    //         user: req.user,
+    //     });
+    // },
 
     generateMfaSecret: async (req, res) => {
         const user = await User.findOne({ email: req.user.email });
+
+        //TODO: add require password input and verification before enable
 
         // Check mfa enabled status - don't generate if already set up
         // TODO(?): Add "if mfaEnabled && mfaAppSecret", and send along the existing app secret?
@@ -209,6 +329,7 @@ export const authController = {
     },
 
     disableMfa: async (req, res) => {
+        //TODO: add require password input and verification before disable
         try {
             const user = await User.findOne({ email: req.user.email });
             user.mfaEnabled = false;
@@ -225,5 +346,30 @@ export const authController = {
                 message: 'Error disabling 2FA',
             });
         }
+    },
+
+    logout: (req, res) => {
+        console.log(
+            `User ${req.user.email} is logging out of session: `,
+            req.sessionID
+        );
+        req.logout(error => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('User logged out');
+                // req.session.destroy(function (err) {
+                //     console.log(error);
+                // });
+                res.json({
+                    message: 'Logged out',
+                });
+            }
+        });
+
+        // return res.clearCookie('Fpt').json({
+        //     message: 'Logged out',
+        //     user: req.user,
+        // });
     },
 };

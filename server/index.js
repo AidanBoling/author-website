@@ -5,11 +5,13 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import nodemailer from 'nodemailer';
 import sanitizeHtml from 'sanitize-html';
 import { body, validationResult, matchedData } from 'express-validator';
+import session from 'express-session';
 import passport from 'passport';
-import LocalStrategy from 'passport-local';
-import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
+// import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
 // import session from 'express-session';
-import { passportStrategy } from './services/passport.js';
+// import { passportStrategy } from './services/passport.js';
+import { initializePassport } from './utils/passportHelper.js';
+import cookieParser from 'cookie-parser';
 
 import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
@@ -20,21 +22,27 @@ import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
 import getFilteredResourceList from './utils/getFilteredResourceList.js';
 
-import mongoose, { isObjectIdOrHexString, Types } from 'mongoose';
+import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
-import { authController } from './controllers/authController.js';
+import {
+    authController,
+    passportAuthenticate,
+} from './controllers/authController.js';
+// import processCookies from './services/parseCookies.js';
 
-if (process.env.NODE_ENV !== 'production') {
+const isDev = process.env.NODE_ENV !== 'production';
+
+if (isDev) {
     dotenv.config();
 }
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const corsOrigin =
-    process.env.NODE_ENV !== 'production' ? '*' : 'process.env.CLIENT_URL';
+const corsOrigin = isDev ? '*' : 'process.env.CLIENT_URL';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -57,14 +65,14 @@ mailchimp.setConfig({
 // pingMC();
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
-
-// app.use(session(sesh));
-// app.use(passport.initialize());
-// app.use(passport.session());
+mongoose.connect(
+    `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
+);
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(
     cors({
         origin: corsOrigin,
@@ -74,6 +82,36 @@ app.use(
         credentials: true,
     })
 );
+app.use(
+    session({
+        name: 'id',
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        rolling: true,
+        cookie: {
+            path: '/admin',
+            httpOnly: true,
+            secure: !isDev,
+            maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE),
+            sameSite: 'Strict',
+        },
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+            collectionName: 'sessions',
+            // ttl: 60,
+            autoRemove: 'native',
+        }),
+    })
+);
+app.use('/admin/auth', passport.session(), (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        res.status(401).json({ message: 'Not authorized' });
+    } else {
+        next();
+    }
+});
+initializePassport(app, passport);
 
 // MAIN APP
 
@@ -270,15 +308,6 @@ app.delete('/admin/tags/:id', tagController.delete);
 
 // -- USER routes
 
-// Session setup (will be moved))
-// app.use(session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: false,
-//     store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
-//   }));
-//   app.use(passport.authenticate('session'));
-
 // User Registration?? (--> user account pwd set):
 
 //middleware -> validate+sanitize: email, password
@@ -292,61 +321,33 @@ app.post(
 
 // User Login (name, pwd):
 
-passport.use(
-    'login',
-    new LocalStrategy(
-        {
-            usernameField: 'email',
-            passReqToCallback: true,
-        },
-        passportStrategy.login
-    )
-);
-
-app.post('/admin/login/password', authController.login); //--> TODO: Add validation
-
-const jwtStrategyOptions = {
-    algorithms: [process.env.JWT_ALG],
-    issuer: process.env.JWT_ISS,
-    secretOrKey: process.env.JWT_SECRET,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-};
-
-passport.use(
-    'loginJwt',
-    new jwtStrategy(
-        {
-            ...jwtStrategyOptions,
-            audience: process.env.JWT_MFA_AUD,
-            jsonWebTokenOptions: { maxAge: '5m' },
-        },
-        passportStrategy.loginJwt
-    )
-);
+app.post(
+    '/admin/login/password',
+    passportAuthenticate.passwordLogin,
+    authController.login
+); //--> TODO: Add validation
 
 app.post(
     '/admin/login/mfa',
-    passport.authenticate('loginJwt', { session: false }),
-    authController.loginMFA
-); //--> TODO: Add validation (OTPcode)
+    passportAuthenticate.mfaLogin,
+    authController.login
+);
+//--> ^TODO: Add validation (OTPcode)
 
 // User auth
-passport.use(
-    'jwt',
-    new jwtStrategy(
-        {
-            ...jwtStrategyOptions,
-            audience: process.env.JWT_AUTH_AUD,
-        },
-        passportStrategy.jwt
-    )
-);
 
-app.use('/admin/auth', passport.authenticate('jwt', { session: false }));
-
-app.get('/admin/auth/protectedroute', authController.jwtAuth);
+// TODO: Add validation for session cookie...
+app.get('/admin/auth/protectedroute', (req, res) => {
+    console.log('session ID: ', req.sessionID);
+    console.log(req.session);
+    console.log('Authenticated: ', req.isAuthenticated());
+    res.send('<h1>Protected Page</h1>');
+});
 
 // User MFA enable, setup, etc...
+
+// TODO: User re-enters password for all of below actions (mfa setting, password reset)
+// Use jwt, with short expiry, like with mfa login?
 app.get(
     '/admin/auth/settings/mfa/generate-2fa-secret',
     // passport.authenticate('jwt', { session: false }),
@@ -359,43 +360,10 @@ app.get('/admin/auth/settings/mfa/disable-mfa', authController.disableMfa);
 
 // User Password Reset -> /admin/passwordreset
 
-mongoose
-    .connect(
-        `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
-    )
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Listening on port ${PORT}`);
-        });
-    });
+// User logout
 
-// const allBooks = await Book.find();
-// console.log(allBooks);
+app.get('/admin/logout', authController.logout);
 
-// app.get('/compose', (req, res) => {
-//     res.send(
-//         '<form action="/compose" method="POST"><input type="text" name="title" /><textarea type="text" name="content" rows="3"></textarea><button type="submit" name="postPublished" value="true">Publish</button></form>'
-//     );
-// });
-
-// app.post('/compose', (req, res) => {
-//     createPost(req.body.title, req.body.content.plain, req.body.published, res);
-//     //Send response back to client-side confirming success?
-//     // res.json(newPost);
-// });
-
-// async function createPost(title, content, published, res) {
-//     await Post.create({
-//         title: title,
-//         content: content.split('\n\n'),
-//         published: published,
-//     })
-//         .then(newPost => {
-//             console.log('Created post:\n' + newPost);
-//             res.json(newPost);
-//         })
-//         .catch(err => {
-//             console.log('Project not created: ' + err);
-//             res.json('Project not created');
-//         });
-// }
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+});

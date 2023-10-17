@@ -61,6 +61,27 @@ userSchema.pre('save', function (next) {
     next();
 });
 
+userSchema.static('authenticate', async (username, plainTextPassword) => {
+    const user = await User.findOne({ email: username });
+
+    if (!user) {
+        await argon2.hash(process.env.DUMMY_PWD, {
+            memoryCost: 2 ** 14,
+            parallelism: 3,
+        });
+
+        console.log('Invalid email');
+
+        // return done(null, false, {
+        //     message: 'Invalid email or password',
+        // });
+    }
+    if (user && (await argon2.verify(user.password, plainTextPassword)))
+        return user;
+
+    return false;
+});
+
 // passport.use(User.createStrategy());
 
 // // passport.serializeUser(User.serializeUser());

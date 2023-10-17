@@ -27,53 +27,74 @@ export const passportStrategy = {
     // },
 
     login: async (req, email, password, done) => {
-        let data = req.body;
-        console.log(data);
+        // let data = req.body;
+        const valEmail = req.body.email;
+        const valPassword = req.body.password;
+
+        // [-] TODO: Refactor for security --> should take ~same time if user not in system as when user is
+        // So either do hashing of attempted password first, then search user, then compare emails
+        // Or, figure out some way to normalize the time, like a timer...?, so always takes same time...
+        // --> Update: Changed to hash a dummy password if user not found. CHECK to see if any security reasons not to do this.
+
+        // console.log(data);
+
         try {
-            console.log('email: ', email);
-            const user = await User.findOne({ email: data.email });
+            console.log('email: ', valEmail);
+            console.log('password: ', valPassword);
 
-            if (!user) {
-                console.log('Invalid email');
-                return done(null, false, {
-                    message: 'Invalid email',
-                });
-            }
+            const user = await User.authenticate(valEmail, valPassword);
 
-            const isValid = await argon2.verify(user.password, password);
+            // const user = await User.findOne({ email: data.email });
 
-            if (!isValid) {
-                console.log('Invalid password');
-                return done(null, false, {
-                    message: 'Invalid password',
-                });
-            }
+            // if (!user) {
+            //     await argon2.hash(process.env.DUMMY_PWD, {
+            //         memoryCost: 2 ** 14,
+            //         parallelism: 3,
+            //     });
+            //     console.log('Invalid email');
+            //     return done(null, false, {
+            //         message: 'Invalid email or password',
+            //     });
+            // }
 
-            return done(null, user, { message: 'Logged in successfully' });
+            // const isValid = await argon2.verify(user.password, password);
+
+            if (user)
+                return done(null, user, { message: 'Logged in successfully' });
+
+            return done(null, false, { message: 'Invalid email or password' });
         } catch (error) {
             console.log(error);
             return done(error);
         }
     },
-    jwt: async (token, done) => {
-        try {
-            const user = await User.findOne({ email: token.user?.email });
-            return done(null, {
-                // name: user.name,
-                email: user.email,
-                mfaEnabled: user.mfaEnabled,
-            });
-        } catch (error) {
-            return done(error);
-        }
-    },
 
-    loginJwt: async (token, done) => {
+    // jwt: async (req, payload, done) => {
+    //     console.log('Jwt fingerprint: ', payload.fingerprint);
+    //     const fingerprintVerified =
+    //         payload.fingerprint && payload.fingerprint === req.cookies.Fpt;
+
+    //     if (!fingerprintVerified) return done(null, false);
+
+    //     try {
+    //         const user = await User.findOne({ email: payload.user?.email });
+
+    //         return done(null, {
+    //             // name: user.name,
+    //             email: user.email,
+    //             mfaEnabled: user.mfaEnabled,
+    //         });
+    //     } catch (error) {
+    //         return done(error);
+    //     }
+    // },
+
+    loginJwt: async (payload, done) => {
         try {
             const user = await User.findOne({
-                email: token.loginPasswordVerified?.email,
+                email: payload.loginPasswordVerified?.email,
             });
-            return done(null, { ...user, loginPasswordVerifiedToken: token });
+            return done(null, user);
         } catch (error) {
             console.log(error.message);
             return done(error);
