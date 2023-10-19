@@ -21,10 +21,10 @@ export function initializePassport(app, passport) {
             {
                 algorithms: [process.env.JWT_ALG],
                 issuer: process.env.JWT_ISS,
-                secretOrKey: process.env.JWT_SECRET,
-                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 audience: process.env.JWT_MFA_AUD,
+                secretOrKey: process.env.JWT_SECRET,
                 jsonWebTokenOptions: { maxAge: '5m' },
+                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             },
             passportStrategy.loginJwt
         )

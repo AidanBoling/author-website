@@ -45,11 +45,23 @@ import EventEdit from './events/EventEdit';
 import TagList from './tags/TagList';
 import TagShow from './tags/TagShow';
 import SecuritySettings from './user/SecuritySettings';
+import MyLoginPage from './MFALoginPage';
 
-// import authProvider from './authProvider';
-
+import { authProvider } from '../authProvider';
+import { API_URL } from '../api/config';
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
+
+// const httpClient = (url, options = {}) => {
+//     if (!options.headers) {
+//         options.headers = new Headers({ Accept: 'application/json' });
+//     }
+//     const { token } = JSON.parse(localStorage.getItem('auth'));
+//     options.headers.set('Authorization', `Bearer ${token}`);
+//     return fetchUtils.fetchJson(url, options);
+// };
+
+// const dataProvider = myDataProvider(API_URL, httpClient)
 
 function CustomLayout(props) {
     return <Layout {...props} layout={CustomAppBar} />;
@@ -61,10 +73,13 @@ function AdminApp() {
             basename="/admin"
             layout={CustomLayout}
             dataProvider={myDataProvider}
-            //   authProvider={authProvider}
+            authProvider={authProvider}
             theme={customLightTheme}
             darkTheme={customDarkTheme}
-            dashboard={Dashboard}>
+            // loginPage={MyLoginPage}
+            authCallbackPage={MyLoginPage}
+            dashboard={Dashboard}
+            requireAuth>
             <Resource
                 name="posts"
                 list={PostList}
@@ -106,6 +121,7 @@ function AdminApp() {
             />
             <CustomRoutes>
                 <Route path="/user/security" element={<SecuritySettings />} />
+                {/* <Route path="/login-mfa" element={<MyLoginPage />} /> */}
             </CustomRoutes>
         </Admin>
     );

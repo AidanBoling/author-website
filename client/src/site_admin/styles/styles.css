@@ -24,6 +24,10 @@ body {
     padding: 0;
 }
 
+.MuiContainer-root.login {
+    margin-top: 0
+}
+
 .MuiContainer-root>* {
     padding: 0;
 }

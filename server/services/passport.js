@@ -28,6 +28,8 @@ export const passportStrategy = {
 
     login: async (req, email, password, done) => {
         // let data = req.body;
+        // TODO: test if need to use req.email, req.password for validated values, or if
+        // validated values are passed through as email, password variables
         const valEmail = req.body.email;
         const valPassword = req.body.password;
 
@@ -37,6 +39,26 @@ export const passportStrategy = {
         // --> Update: Changed to hash a dummy password if user not found. CHECK to see if any security reasons not to do this.
 
         // console.log(data);
+
+        //check for existing cookie name "id" -
+
+        // Clear out any existing sessions
+        // console.log('Cleaning old sessions');
+        // try {
+        //     if (req.isAuthenticated()) {
+        //         console.log(
+        //             'Session is authenticated: ',
+        //             req.isAuthenticated()
+        //         );
+        //         console.log('Session found at login: ', req.sessionID);
+        //         // console.log('Session: ', req.session);
+
+        //         console.log('Logging out user found in session');
+        //         req.logout();
+        //     }
+        // } catch (err) {
+        //     console.log(err);
+        // }
 
         try {
             console.log('email: ', valEmail);
@@ -55,6 +77,8 @@ export const passportStrategy = {
     },
 
     loginJwt: async (payload, done) => {
+        console.log('Checking JWT token...');
+        console.log('Token: ', payload);
         try {
             const user = await User.findOne({
                 email: payload.loginPasswordVerified?.email,

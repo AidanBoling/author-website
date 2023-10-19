@@ -1,9 +1,27 @@
 import { stringify } from 'query-string';
 import { fetchUtils } from 'ra-core';
+import { API_URL } from './api/config';
 
-const apiUrl = 'http://localhost:8000/admin';
-const httpClient = fetchUtils.fetchJson;
+const apiUrl = API_URL;
+// Example of updating the httpClient so that auth tokens are sent in request header:
+// const httpClient =
+const httpClient = (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+    if (localStorage.getItem('mfa')) {
+        const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
+        console.log('Sending preAuthToken: ', preAuthToken);
+        options.headers.set('Authorization', `Bearer ${preAuthToken}`);
+    }
+    options.credentials = 'include';
+
+    console.log('Request URL: ', url);
+    console.log('Request options: ', options);
+    return fetchUtils.fetchJson(url, options);
+};
 const countHeader = 'Content-Range';
+const baseOptions = { credentials: 'include' };
 
 const myDataProvider = {
     getList: (resource, params) => {
@@ -23,6 +41,7 @@ const myDataProvider = {
         const options =
             countHeader === 'Content-Range'
                 ? {
+                      //   ...baseOptions,
                       // Chrome doesn't return `Content-Range` header if no `Range` is provided in the request.
                       headers: new Headers({
                           Range: `${resource}=${rangeStart}-${rangeEnd}`,
@@ -50,16 +69,19 @@ const myDataProvider = {
     },
 
     getOne: (resource, params) =>
-        httpClient(`${apiUrl}/${resource}/${params.id}`).then(({ json }) => ({
-            data: { ...json, id: json._id },
-        })),
+        httpClient(`${apiUrl}/${resource}/${params.id}`, baseOptions).then(
+            ({ json }) => ({
+                data: { ...json, id: json._id },
+            })
+        ),
 
     getMany: (resource, params) => {
         const query = {
             filter: JSON.stringify({ id: params.ids }),
         };
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
-        return httpClient(url).then(({ json }) => ({
+
+        return httpClient(url, baseOptions).then(({ json }) => ({
             data: json.map(resource => ({ ...resource, id: resource._id })),
         }));
     },

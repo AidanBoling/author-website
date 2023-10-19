@@ -12,6 +12,7 @@ import {
     getMFALoginToken,
     FPT_COOKIE_OPTIONS,
 } from '../utils/authUtilities.js';
+import cookieParser from 'cookie-parser';
 
 export const passportAuthenticate = {
     passwordLogin: (req, res, next) => {
@@ -19,13 +20,16 @@ export const passportAuthenticate = {
             'login',
             { failureMessage: true },
             async (error, user, info) => {
-                if (error || !user) {
-                    // TODO: probably want to separate error response from !user response. Check OWASP
+                if (!user) {
                     console.log('Message: ', info);
                     return res.status(401).json({
                         message: 'Invalid email or password',
                     });
                 }
+                if (error)
+                    return res.status(500).json({
+                        message: 'Error',
+                    });
 
                 // If user doesn't have mfa set up/enabled, complete login & return auth token
                 if (!user.mfaEnabled) {
@@ -35,8 +39,12 @@ export const passportAuthenticate = {
                     // if mfa enabled, send temp token that confirms authorized to go to step 2
                     return res.json({
                         message: 'Please complete 2-factor authentication',
+                        user: user.email,
                         mfaEnabled: user.mfaEnabled,
-                        loginPasswordVerifiedToken: getMFALoginToken(user),
+                        challenge: 'MFA',
+                        preAuthToken: getMFALoginToken(user),
+                        // ^TODO?: May want to implement user fingerprint, so have way to invalidate token
+                        // from server side (deleting the cookie)?
                     });
                 }
             }
@@ -48,14 +56,22 @@ export const passportAuthenticate = {
             'loginJwt',
             { failureMessage: true },
             async (error, user, info) => {
-                if (!user)
+                if (!user) {
+                    console.log('No user returned -> Invalid or expired token');
                     return res.status(401).json({
                         message: 'Invalid or expired token',
                     });
-                if (error)
+                }
+                if (error) {
+                    console.log('Some error occurred with checking token');
+
                     return res.status(500).json({
                         message: 'Error',
                     });
+                }
+
+                // JWT verified, now check OTP code:
+                console.log('JWT verified, checking OTP code...');
 
                 const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
 
@@ -63,6 +79,8 @@ export const passportAuthenticate = {
                     User.saveLogin(user);
                     req.login(user, next); // Call passport login function (to set req.user and send to session)
                 } else {
+                    // TODO (maybe/later): Add mechanism to allow certain number of tries,
+                    // reduced by one here on each failed attempt, before denying?
                     return res.status(401).json({
                         message: 'Invalid or expired token',
                     });
@@ -306,22 +324,28 @@ export const authController = {
     },
 
     logout: (req, res) => {
-        console.log(
-            `User ${req.user.email} is logging out of session: `,
-            req.sessionID
-        );
-        req.logout(error => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('User logged out');
-                // req.session.destroy(function (err) {
-                //     console.log(error);
-                // });
-                res.json({
-                    message: 'Logged out',
-                });
-            }
+        if (req.user) {
+            console.log(
+                `User ${req.user.email} is logging out of session: `,
+                req.sessionID
+            );
+            req.session.cookie.maxAge = 1;
+            req.logout(error => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('User logged out');
+                    req.session.regenerate(function (err) {
+                        console.log(error);
+                    });
+                }
+            });
+        } else {
+            console.log('Logout initiated, but no user to be logged out.');
+        }
+
+        res.json({
+            message: 'Logged out',
         });
 
         // return res.clearCookie('Fpt').json({

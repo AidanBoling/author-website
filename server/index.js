@@ -32,6 +32,7 @@ import {
     authController,
     passportAuthenticate,
 } from './controllers/authController.js';
+import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -42,7 +43,8 @@ if (isDev) {
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const corsOrigin = isDev ? '*' : 'process.env.CLIENT_URL';
+const corsOrigin = 'http://app.localhost:3000';
+// const corsOrigin = process.env.CLIENT_URL;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -82,16 +84,19 @@ app.use(
         credentials: true,
     })
 );
+
 app.use(
     session({
         name: 'id',
         secret: process.env.SESSION_SECRET,
-        resave: false,
+        resave: true,
         saveUninitialized: false,
         rolling: true,
         cookie: {
+            domain: '.app.localhost', //Remove in Production
             path: '/admin',
             httpOnly: true,
+            // secure: true,
             secure: !isDev,
             maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE),
             sameSite: 'Strict',
@@ -99,21 +104,55 @@ app.use(
         store: MongoStore.create({
             client: mongoose.connection.getClient(),
             collectionName: 'sessions',
-            // ttl: 60,
+            // ttl: 7200, // 2 hours
             autoRemove: 'native',
-            touchAfter: 600,
             crypto: { secret: process.env.SESSION_STORE_SECRET },
         }),
     })
 );
-app.use('/admin/auth', passport.session(), (req, res, next) => {
+// Checks sessions for user object; if not found then not authenticated, routing process halted
+// app.use('/admin', passport.session());
+app.use('/admin/auth', passport.session(), checkAuth);
+initializePassport(app, passport);
+
+function checkAuth(req, res, next) {
+    console.log('Auth route was called');
+    console.log('Session is authenticated: ', req.isAuthenticated());
     if (!req.isAuthenticated()) {
         res.status(401).json({ message: 'Not authorized' });
     } else {
+        console.log('session ID: ', req.sessionID);
+        console.log('user object: ', req.session.passport);
+        console.log('Cookie expires: ', req.session.cookie._expires);
         next();
     }
-});
-initializePassport(app, passport);
+}
+
+function cleanSession(req, res, next) {
+    try {
+        if (req.isAuthenticated() && req.user) {
+            console.log('Session found at login: ', req.sessionID);
+            console.log(req.session);
+
+            console.log('Clearing cookie, destroying old session, ...');
+            req.session.cookie.maxAge = 1;
+            req.logout(error => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('User logged out');
+                }
+            });
+            next();
+            // req.session.destroy(() => next());
+        } else {
+            next();
+        }
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+}
 
 // MAIN APP
 
@@ -261,6 +300,8 @@ app.post('/form/subscribe', (req, res) => {
 
 // -- POSTS routes
 
+app.use('/admin/posts', checkAuth);
+
 // create one
 app.post('/admin/posts', postController.create);
 
@@ -278,6 +319,8 @@ app.delete('/admin/posts/:id', postController.delete);
 
 // -- BOOKS routes
 
+app.use('/admin/books', passport.session(), checkAuth);
+
 app.post('/admin/books', bookController.create);
 app.get('/admin/books', bookController.fetch);
 app.get('/admin/books/:id', bookController.get);
@@ -285,6 +328,8 @@ app.put('/admin/books/:id', bookController.update);
 app.delete('/admin/books/:id', bookController.delete);
 
 // -- ARTICLES routes
+
+app.use('/admin/articles', passport.session(), checkAuth);
 
 app.post('/admin/articles', articleController.create);
 app.get('/admin/articles', articleController.fetch);
@@ -294,6 +339,8 @@ app.delete('/admin/articles/:id', articleController.delete);
 
 // -- EVENTS routes
 
+app.use('/admin/events', passport.session(), checkAuth);
+
 app.post('/admin/events', eventController.create);
 app.get('/admin/events', eventController.fetch);
 app.get('/admin/events/:id', eventController.get);
@@ -301,6 +348,8 @@ app.put('/admin/events/:id', eventController.update);
 app.delete('/admin/events/:id', eventController.delete);
 
 // -- TAGS routes
+
+app.use('/admin/tags', passport.session(), checkAuth);
 
 app.post('/admin/tags', tagController.create);
 app.get('/admin/tags', tagController.fetch);
@@ -325,6 +374,8 @@ app.post(
 
 app.post(
     '/admin/login/password',
+    passport.session(),
+    cleanSession,
     passportAuthenticate.passwordLogin,
     authController.login
 ); //--> TODO: Add validation
@@ -342,8 +393,18 @@ app.post(
 app.get('/admin/auth/protectedroute', (req, res) => {
     console.log('session ID: ', req.sessionID);
     console.log(req.session);
+    console.log('MaxAge: ', req.session.cookie.maxAge);
     console.log('Authenticated: ', req.isAuthenticated());
     res.send('<h1>Protected Page</h1>');
+});
+
+app.post('/admin/auth/checkAuth', (req, res) => {
+    console.log('Check auth route was called');
+    console.log('session ID: ', req.sessionID);
+    console.log(req.session);
+    console.log('MaxAge: ', req.session.cookie.maxAge);
+    console.log('Authenticated: ', req.isAuthenticated());
+    res.json({ message: 'Authenticated' });
 });
 
 // User MFA enable, setup, etc...
@@ -364,7 +425,7 @@ app.get('/admin/auth/settings/mfa/disable-mfa', authController.disableMfa);
 
 // User logout
 
-app.get('/admin/logout', authController.logout);
+app.post('/admin/logout', authController.logout);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
