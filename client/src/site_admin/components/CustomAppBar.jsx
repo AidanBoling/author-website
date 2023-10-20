@@ -9,16 +9,18 @@ import {
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import { Box, MenuItem, ListItemIcon, IconButton } from '@mui/material';
-
-// const SettingsButton = () => (
-//     <IconButton color="inherit">
-//         <SettingsIcon />
-//     </IconButton>
-// );
+import {
+    Box,
+    MenuItem,
+    MenuList,
+    ListItemIcon,
+    ListItemText,
+    IconButton,
+} from '@mui/material';
+import { Link } from 'react-router-dom';
 
 // It's important to pass the ref to allow Material UI to manage the keyboard navigation
-const AccountSecurityMenuItem = React.forwardRef((props, ref) => {
+const AccountPageMenuItem = React.forwardRef((props, ref) => {
     // We are not using MenuItemLink so we retrieve the onClose function from the UserContext
     const { onClose } = useUserMenu();
     return (
@@ -26,13 +28,13 @@ const AccountSecurityMenuItem = React.forwardRef((props, ref) => {
             onClick={onClose}
             ref={ref}
             component={Link}
-            to="/user/security"
+            to="/user"
             // It's important to pass the props to allow Material UI to manage the keyboard navigation
             {...props}>
             <ListItemIcon>
                 <SettingsIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Security</ListItemText>
+            <ListItemText>Account</ListItemText>
         </MenuItem>
     );
 });
@@ -43,11 +45,11 @@ export default function CustomAppBar() {
             color="primary"
             userMenu={
                 <UserMenu>
-                    <AccountSecurityMenuItem />
+                    <AccountPageMenuItem />
                     <Logout />
                 </UserMenu>
             }>
-            <TitlePortal />
+            <TitlePortal sx={{ display: 'flex', justifyContent: 'center' }} />
         </AppBar>
     );
 }

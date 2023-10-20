@@ -7,11 +7,6 @@ body {
     margin: 0
 }
 
-.RaAppBar-title {
-    display: flex;
-    justify-content: center;
-}
-
 .RaLayout-content>* {
     width: 90%;
     align-self: center;

@@ -24,7 +24,7 @@ export default function CustomMenu() {
                 primaryText="Posts"
                 leftIcon={<FeedIcon />}
             />
-            <Menu.ResourceItem name="posts" />
+            {/* <Menu.ResourceItem name="posts" /> */}
 
             <Menu.ResourceItem name="books" />
             <Menu.ResourceItem name="articles" />

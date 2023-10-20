@@ -21,7 +21,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import myDataProvider from '../dataProvider';
 
 import CustomMenu from './CustomMenu';
-import CustomAppBar from './CustomAppBar';
+import CustomAppBar, { MyAppBar } from './CustomAppBar';
 
 import Dashboard from './Dashboard';
 // import { UserList } from './UserList';
@@ -46,25 +46,15 @@ import TagList from './tags/TagList';
 import TagShow from './tags/TagShow';
 import SecuritySettings from './user/SecuritySettings';
 import MyLoginPage from './MFALoginPage';
+import AccountPage from './user/AccountPage';
 
 import { authProvider } from '../authProvider';
-import { API_URL } from '../api/config';
+
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
 
-// const httpClient = (url, options = {}) => {
-//     if (!options.headers) {
-//         options.headers = new Headers({ Accept: 'application/json' });
-//     }
-//     const { token } = JSON.parse(localStorage.getItem('auth'));
-//     options.headers.set('Authorization', `Bearer ${token}`);
-//     return fetchUtils.fetchJson(url, options);
-// };
-
-// const dataProvider = myDataProvider(API_URL, httpClient)
-
 function CustomLayout(props) {
-    return <Layout {...props} layout={CustomAppBar} />;
+    return <Layout {...props} appBar={CustomAppBar} menu={CustomMenu} />;
 }
 
 function AdminApp() {
@@ -121,6 +111,8 @@ function AdminApp() {
             />
             <CustomRoutes>
                 <Route path="/user/security" element={<SecuritySettings />} />
+                <Route path="/user" element={<AccountPage />} />
+
                 {/* <Route path="/login-mfa" element={<MyLoginPage />} /> */}
             </CustomRoutes>
         </Admin>

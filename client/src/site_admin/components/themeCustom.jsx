@@ -6,6 +6,7 @@ import teal from '@mui/material/colors/indigo';
 
 import pink from '@mui/material/colors/pink';
 import red from '@mui/material/colors/red';
+import { grey } from '@mui/material/colors';
 
 export const customThemeInvariants = {
     sidebar: {
@@ -89,6 +90,11 @@ export const customLightTheme = {
     palette: {
         ...defaultLightTheme.palette,
         ...customThemeInvariants.palette,
+        grey: {
+            main: grey[600],
+            light: grey[400],
+            dark: grey[800],
+        },
         background: {
             default: '#F6F2F5',
         },
@@ -104,6 +110,11 @@ export const customDarkTheme = {
         ...customThemeInvariants.palette,
         primary: { main: '#55E0A3' },
         secondary: { main: '#3CCF4E' },
+        grey: {
+            main: grey[500],
+            light: grey[300],
+            dark: grey[700],
+        },
         background: { default: '#151c16' },
     },
     components: {
@@ -113,6 +124,7 @@ export const customDarkTheme = {
             styleOverrides: {
                 root: {
                     backgroundColor: '#25b95b',
+                    // backgroundColor: '#2EB872',
                 },
             },
         },

@@ -1,5 +1,18 @@
 import { API_URL } from './api/config';
 
+function setRequest(path, body, method = 'POST', headers = {}) {
+    headers = { 'Content-Type': 'application/json', ...headers };
+
+    const request = new Request(API_URL + path, {
+        method: method,
+        body: body ? JSON.stringify(body) : null,
+        headers: new Headers(headers),
+        credentials: 'include',
+    });
+
+    return request;
+}
+
 function handleResponse(response) {
     if (response.status < 200 || response.status >= 300) {
         if (
@@ -79,14 +92,15 @@ export const authProvider = {
 
         let reqPath;
         let reqBody;
-        let headers = { 'Content-Type': 'application/json' };
+        let reqHeaders;
+        // let headers = { 'Content-Type': 'application/json' };
 
         //Deleting auth item (if one exists)...
         localStorage.removeItem('auth');
 
         if (localStorage.getItem('mfa')) {
             const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
-            console.log('preAuthToken: ', preAuthToken);
+            // console.log('preAuthToken: ', preAuthToken);
             reqPath = '/login/mfa';
             reqBody = { OTPcode: formInput.code };
             headers = { ...headers, Authorization: `Bearer ${preAuthToken}` };
@@ -96,12 +110,13 @@ export const authProvider = {
             reqBody = { email: username, password: password };
         }
 
-        const request = new Request(API_URL + reqPath, {
-            method: 'POST',
-            body: JSON.stringify(reqBody),
-            headers: new Headers(headers),
-            credentials: 'include',
-        });
+        const request = setRequest(reqPath, reqBody, reqHeaders);
+        // const request = new Request(API_URL + reqPath, {
+        //     method: 'POST',
+        //     body: JSON.stringify(reqBody),
+        //     headers: new Headers(headers),
+        //     credentials: 'include',
+        // });
 
         if (localStorage.getItem('mfa')) return handleMFALogin(request);
 
@@ -207,11 +222,12 @@ export const authProvider = {
         localStorage.removeItem('auth');
         localStorage.removeItem('mfa');
 
-        const request = new Request(`${API_URL}/logout`, {
-            method: 'POST',
-            headers: new Headers({ 'Content-Type': 'application/json' }),
-            credentials: 'include',
-        });
+        const request = setRequest('/logout');
+        // const request = new Request(`${API_URL}/logout`, {
+        //     method: 'POST',
+        //     headers: new Headers({ 'Content-Type': 'application/json' }),
+        //     credentials: 'include',
+        // });
 
         return fetch(request).then(response => {
             if (response.status >= 200 && response.status < 300) {
@@ -221,5 +237,40 @@ export const authProvider = {
         });
     },
 
-    // getIdentity: () => Promise.resolve(/* ... */),
+    getPermissions: () => Promise.resolve(''),
+
+    getIdentity: async () => {
+        console.log('Getting identity...');
+
+        const request = setRequest('/auth/user', null, 'GET');
+
+        try {
+            const data = await fetch(request).then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong with fetching identity.');
+            });
+
+            if (data) {
+                console.log('User data: ', data);
+                const { id, fullName, avatar, email, lastLogin, mfaEnabled } =
+                    data;
+                return Promise.resolve({
+                    id,
+                    fullName,
+                    avatar,
+                    email,
+                    lastLogin,
+                    mfaEnabled,
+                });
+            }
+            // const { id, fullName, avatar } = JSON.parse(
+            //     localStorage.getItem('auth')
+            // );
+            //return Promise.resolve({id, fullName, avatar});
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
 };

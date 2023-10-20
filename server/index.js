@@ -28,6 +28,7 @@ import Post from './model/Post.js';
 import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
+import User from './model/User.js';
 import {
     authController,
     passportAuthenticate,
@@ -358,6 +359,31 @@ app.put('/admin/tags/:id', tagController.update);
 app.delete('/admin/tags/:id', tagController.delete);
 
 // -- USER routes
+
+// User info
+
+app.get('/admin/auth/user', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            throw new Error('Invalid.');
+        }
+        console.log(user);
+
+        const userInfo = {
+            fullName: user.name,
+            email: user.email,
+            lastLogin: user.lastLogin[1],
+            mfaEnabled: user.mfaEnabled,
+        };
+        res.json(userInfo);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error' });
+    }
+});
+
+// authController.verifyOTP);
 
 // User Registration?? (--> user account pwd set):
 

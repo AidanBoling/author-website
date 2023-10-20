@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
     Container,
     Paper,
@@ -6,10 +7,26 @@ import {
     Stack,
     Divider,
     Typography,
+    Button,
+    Switch,
+    FormControlLabel,
+    Link,
+    TextField,
 } from '@mui/material';
-import { Title } from 'react-admin';
+import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
 
 export default function SecuritySettings() {
+    const { isLoading, error, data, refetch } = useGetIdentity();
+    const [passwordEdit, setPasswordEdit] = useState(false);
+    const [passwordSubmitted, setPasswordSubmitted] = useState(false);
+
+    useAuthenticated();
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        setPasswordSubmitted(true);
+    }
+
     return (
         <Container maxWidth="xl">
             <Title title="Security Settings" />
@@ -27,7 +44,48 @@ export default function SecuritySettings() {
                                 </Typography>
                                 <Divider />
                             </Box>
-                            <Box>Change Password</Box>
+                            <Link
+                                onClick={() => setPasswordEdit(true)}
+                                sx={{ '&:hover': { cursor: 'pointer' } }}>
+                                Change Password
+                            </Link>
+                            {passwordEdit &&
+                                (!passwordSubmitted ? (
+                                    <form
+                                        onSubmit={event => handleSubmit(event)}>
+                                        <Stack
+                                            gap={1}
+                                            sx={{ maxWidth: '300px' }}>
+                                            <TextField
+                                                variant="outlined"
+                                                label="Current password"
+                                                required
+                                            />
+                                            <TextField
+                                                variant="outlined"
+                                                label="New password"
+                                                required
+                                            />
+                                            <TextField
+                                                variant="outlined"
+                                                label="New password"
+                                                required
+                                            />
+                                            <Box py={'1.5rem'}>
+                                                <Button
+                                                    variant="contained"
+                                                    type="submit"
+                                                    sx={{ width: '100%' }}>
+                                                    Submit
+                                                </Button>
+                                            </Box>
+                                        </Stack>
+                                    </form>
+                                ) : (
+                                    <Typography color="grey.main">
+                                        Password change submitted
+                                    </Typography>
+                                ))}
                         </Stack>
 
                         <Stack gap={2}>
@@ -40,10 +98,12 @@ export default function SecuritySettings() {
                                 </Typography>
                                 <Divider />
                             </Box>
-
-                            <Box>Set up 2FA</Box>
-                            <Box>Add 2FA method</Box>
-                            <Button>Enable/Disable 2FA</Button>
+                            <FormControlLabel
+                                control={<Switch disabled />}
+                                label="Enable 2FA"
+                            />
+                            {!data.mfaEnabled && <Box>Set up 2FA</Box>}
+                            {/* <Box>Add 2FA method</Box> */}
                         </Stack>
                     </Stack>
                 </Box>
