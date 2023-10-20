@@ -120,7 +120,8 @@ function MyLoginPage({ theme }) {
 
                 <form onSubmit={handleMfaSubmit}>
                     <Stack gap={4} sx={{ margin: '2rem' }}>
-                        <input
+                        <TextField
+                            variant="outlined"
                             name="code"
                             type="password"
                             value={code}

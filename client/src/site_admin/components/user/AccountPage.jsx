@@ -87,14 +87,22 @@ export default function AccountPage() {
                                         <Divider />
                                     </Box>
                                     <Stack gap={2} px={'2rem'}>
-                                        <FormControlLabel
-                                            control={<Switch disabled />}
-                                            label={
-                                                data.mfaEnabled
-                                                    ? '2FA is enabled'
-                                                    : '2FA is disabled'
-                                            }
-                                        />
+                                        {data.mfaEnabled ? (
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        defaultChecked
+                                                        disabled
+                                                    />
+                                                }
+                                                label={'2FA is enabled'}
+                                            />
+                                        ) : (
+                                            <FormControlLabel
+                                                control={<Switch disabled />}
+                                                label={'2FA is disabled'}
+                                            />
+                                        )}
                                         <Box
                                             display="flex"
                                             alignItems={'center'}>

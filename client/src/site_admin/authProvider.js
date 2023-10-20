@@ -2,7 +2,7 @@ import { API_URL } from './api/config';
 
 function setRequest(path, body, method = 'POST', headers = {}) {
     headers = { 'Content-Type': 'application/json', ...headers };
-
+    console.log('Request headers: ', headers);
     const request = new Request(API_URL + path, {
         method: method,
         body: body ? JSON.stringify(body) : null,
@@ -99,18 +99,19 @@ export const authProvider = {
         localStorage.removeItem('auth');
 
         if (localStorage.getItem('mfa')) {
+            console.log('Setting up mfa request options');
             const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
             // console.log('preAuthToken: ', preAuthToken);
             reqPath = '/login/mfa';
             reqBody = { OTPcode: formInput.code };
-            headers = { ...headers, Authorization: `Bearer ${preAuthToken}` };
+            reqHeaders = { Authorization: `Bearer ${preAuthToken}` };
         } else {
             const { username, password } = formInput;
             reqPath = '/login/password';
             reqBody = { email: username, password: password };
         }
 
-        const request = setRequest(reqPath, reqBody, reqHeaders);
+        const request = setRequest(reqPath, reqBody, 'POST', reqHeaders);
         // const request = new Request(API_URL + reqPath, {
         //     method: 'POST',
         //     body: JSON.stringify(reqBody),
@@ -245,12 +246,9 @@ export const authProvider = {
         const request = setRequest('/auth/user', null, 'GET');
 
         try {
-            const data = await fetch(request).then(response => {
-                if (response.status >= 200 && response.status < 300) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong with fetching identity.');
-            });
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
 
             if (data) {
                 console.log('User data: ', data);
@@ -270,7 +268,16 @@ export const authProvider = {
             // );
             //return Promise.resolve({id, fullName, avatar});
         } catch (error) {
-            return Promise.reject(error);
+            console.log(error);
+            if (error.message === 'Unauthorized') {
+                console.log('Identity request failed.');
+
+                return authProvider.logout();
+            }
+            throw new Error('Something went wrong with fetching identity.');
         }
+        // } catch (error) {
+        //     return Promise.reject(error);
+        // }
     },
 };
