@@ -37,7 +37,11 @@ export function initializePassport(app, passport) {
         //       email: user.email,
         //     });
         //   });
-        done(null, { id: user._id, email: user.email });
+        done(null, {
+            id: user._id,
+            email: user.email,
+            loginAt: user.lastLogin[0],
+        });
     });
 
     passport.deserializeUser(async (user, done) => {

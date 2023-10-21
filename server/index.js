@@ -383,6 +383,19 @@ app.get('/admin/auth/user', async (req, res) => {
     }
 });
 
+app.get('/admin/auth/check-login', (req, res) => {
+    // console.log('User found through check-login: ', req.user);
+    const currentLoginTime = new Date(req.user.loginAt);
+    const now = new Date();
+    const dTime = now.getTime() - currentLoginTime.getTime();
+    console.log('Minutes since last login: ', dTime / (1000 * 60));
+    if (dTime < 10 * 60 * 1000) {
+        res.json({ message: 'Security check ok' });
+    } else {
+        res.status(401).json({ message: 'Credential refresh required' });
+    }
+});
+
 // authController.verifyOTP);
 
 // User Registration?? (--> user account pwd set):

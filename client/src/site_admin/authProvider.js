@@ -1,8 +1,9 @@
 import { API_URL } from './api/config';
+import { redirect } from 'react-router-dom';
 
 function setRequest(path, body, method = 'POST', headers = {}) {
     headers = { 'Content-Type': 'application/json', ...headers };
-    console.log('Request headers: ', headers);
+    // console.log('Request headers: ', headers);
     const request = new Request(API_URL + path, {
         method: method,
         body: body ? JSON.stringify(body) : null,
@@ -14,6 +15,7 @@ function setRequest(path, body, method = 'POST', headers = {}) {
 }
 
 function handleResponse(response) {
+    // If unauthorized or other error:
     if (response.status < 200 || response.status >= 300) {
         if (
             response.status === 400 ||
@@ -25,8 +27,28 @@ function handleResponse(response) {
         console.log('Request failed');
         throw new Error(`${response.status}`);
     }
+
     // If success:
     return response.json();
+}
+
+function handleIsAuthenticated() {
+    const redirectUrl = localStorage.getItem('redirect');
+
+    localStorage.removeItem('mfa');
+    localStorage.setItem('auth', true);
+
+    // if (redirectUrl) {
+    //     console.log('Redirect request found -- path: ', redirectUrl);
+    //     loginWithRedirect(redirectUrl)
+    //     throw new Error("Intentional error to prevent react-admin from redirecting")
+    // }
+
+    // localStorage.removeItem('redirect');
+    // return Promise.resolve({ redirectTo: '/books' });
+    return Promise.resolve();
+
+    // return redirectUrl ? { redirectTo: redirectUrl } : Promise.resolve();
 }
 
 function handlePwdLogin(request) {
@@ -34,6 +56,7 @@ function handlePwdLogin(request) {
         .then(response => handleResponse(response))
         .then(data => {
             console.log('Login response: ', data);
+
             // If returns mfa indicator, redirect to mfa page
             if (data.challenge === 'MFA') {
                 localStorage.setItem(
@@ -48,9 +71,7 @@ function handlePwdLogin(request) {
                     redirectTo: '/auth-callback',
                 });
             } else {
-                localStorage.removeItem('mfa');
-                localStorage.setItem('auth', true);
-                return Promise.resolve();
+                handleIsAuthenticated();
             }
         })
         .catch(error => {
@@ -68,9 +89,7 @@ function handleMFALogin(request) {
         .then(response => handleResponse(response))
         .then(data => {
             console.log('MFA response: ', data);
-            localStorage.removeItem('mfa');
-            localStorage.setItem('auth', true);
-            return Promise.resolve();
+            handleIsAuthenticated();
         })
         .catch(error => {
             console.log(error);
@@ -79,6 +98,7 @@ function handleMFALogin(request) {
                     'MFA request failed. Deleting mfa item and redirecting...'
                 );
                 localStorage.removeItem('mfa');
+
                 return { redirectTo: '/login' };
             }
             throw new Error('Network error');
@@ -86,22 +106,20 @@ function handleMFALogin(request) {
 }
 
 export const authProvider = {
-    // authentication
     login: formInput => {
-        console.log('Going through authProvider login route...');
+        console.log('Going through login route...');
 
         let reqPath;
         let reqBody;
         let reqHeaders;
-        // let headers = { 'Content-Type': 'application/json' };
 
         //Deleting auth item (if one exists)...
         localStorage.removeItem('auth');
 
         if (localStorage.getItem('mfa')) {
             console.log('Setting up mfa request options');
+
             const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
-            // console.log('preAuthToken: ', preAuthToken);
             reqPath = '/login/mfa';
             reqBody = { OTPcode: formInput.code };
             reqHeaders = { Authorization: `Bearer ${preAuthToken}` };
@@ -112,12 +130,6 @@ export const authProvider = {
         }
 
         const request = setRequest(reqPath, reqBody, 'POST', reqHeaders);
-        // const request = new Request(API_URL + reqPath, {
-        //     method: 'POST',
-        //     body: JSON.stringify(reqBody),
-        //     headers: new Headers(headers),
-        //     credentials: 'include',
-        // });
 
         if (localStorage.getItem('mfa')) return handleMFALogin(request);
 
@@ -199,36 +211,48 @@ export const authProvider = {
         return Promise.resolve();
     },
 
-    checkAuth: () => {
-        console.log('Checking Auth...');
+    checkAuth: async () => {
+        console.log('Checking Auth at path: ', window.location.hash);
         // If have mfa item, redirect
         if (localStorage.getItem('mfa'))
             return Promise.resolve({ redirectTo: '/auth-callback' });
         // Note: ^might be able to actually check with the server for jwt valid, separately, before redirecting?
 
-        // if (window.location.pathname === '/login/mfa') {
-        //     console.log('Checking auth on mfa page...');
-        //     return localStorage.getItem('mfa.preAuthToken')
-        //         ? Promise.resolve()
-        //         : Promise.reject();
-        // }
+        if (localStorage.getItem('auth')) {
+            if (window.location.hash === '#/user/security') {
+                const request = setRequest('/auth/check-login', null, 'GET');
 
-        return localStorage.getItem('auth')
-            ? Promise.resolve()
-            : Promise.reject();
+                // Check user's most recent Login time
+                // If server sends ok, stay on page.
+                // Otherwise, save page url, then trigger logout.
+
+                try {
+                    const response = await fetch(request)
+                        .then(response => handleResponse(response))
+                        .then(() => Promise.resolve());
+                } catch (error) {
+                    localStorage.setItem(
+                        'redirect',
+                        window.location.origin + '/admin#/user/security'
+                    );
+                    return Promise.reject({
+                        message: 'Please renew your credentials',
+                    });
+                }
+            }
+
+            return Promise.resolve();
+        }
+        return Promise.reject();
     },
 
     logout: async () => {
-        console.log('Logging out');
-        localStorage.removeItem('auth');
-        localStorage.removeItem('mfa');
+        console.log('Logging out...');
 
         const request = setRequest('/logout');
-        // const request = new Request(`${API_URL}/logout`, {
-        //     method: 'POST',
-        //     headers: new Headers({ 'Content-Type': 'application/json' }),
-        //     credentials: 'include',
-        // });
+
+        localStorage.removeItem('auth');
+        localStorage.removeItem('mfa');
 
         return fetch(request).then(response => {
             if (response.status >= 200 && response.status < 300) {
@@ -263,10 +287,6 @@ export const authProvider = {
                     mfaEnabled,
                 });
             }
-            // const { id, fullName, avatar } = JSON.parse(
-            //     localStorage.getItem('auth')
-            // );
-            //return Promise.resolve({id, fullName, avatar});
         } catch (error) {
             console.log(error);
             if (error.message === 'Unauthorized') {
@@ -275,9 +295,7 @@ export const authProvider = {
                 return authProvider.logout();
             }
             throw new Error('Something went wrong with fetching identity.');
+            //     return Promise.reject(error);
         }
-        // } catch (error) {
-        //     return Promise.reject(error);
-        // }
     },
 };

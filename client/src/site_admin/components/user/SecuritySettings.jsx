@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Container,
     Paper,
@@ -14,13 +14,22 @@ import {
     TextField,
 } from '@mui/material';
 import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
+import { useNavigate } from 'react-router-dom';
 
 export default function SecuritySettings() {
     const { isLoading, error, data, refetch } = useGetIdentity();
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [passwordSubmitted, setPasswordSubmitted] = useState(false);
+    const navigate = useNavigate();
 
+    // console.log('Identity info: ', data);
     useAuthenticated();
+
+    // useEffect(() => {
+    //     if (error) {
+    //         navigate('/user');
+    //     }
+    // }, [error]);
 
     function handleSubmit(event) {
         event.preventDefault();

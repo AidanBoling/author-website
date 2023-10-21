@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
     Container,
     Box,
@@ -7,9 +8,24 @@ import {
     CardHeader,
 } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import { Button } from 'react-admin';
+import { Button, useRedirect } from 'react-admin';
 
 function Dashboard() {
+    const redirect = useRedirect();
+    if (localStorage.getItem('redirect')) {
+        const redirectUrl = localStorage.getItem('redirect');
+        localStorage.removeItem('redirect');
+        redirect(redirectUrl);
+    }
+    // useEffect(() => {
+    //     // Redirect to previous page
+    //     if (localStorage.getItem('redirect')) {
+    //         const redirectUrl = localStorage.getItem('redirect');
+    //         localStorage.removeItem('redirect');
+    //         redirect(redirectUrl);
+    //     }
+    // });
+
     return (
         <Container>
             <Card sx={{ mb: '1rem' }}>
@@ -17,7 +33,10 @@ function Dashboard() {
                 <CardContent>
                     <p>Lorem ipsum sic dolor amet...</p>
                     <Box>
-                        <Button variant="outlined" sx={{ p: '.75rem' }}>
+                        <Button
+                            to="/posts"
+                            variant="outlined"
+                            sx={{ p: '.75rem' }}>
                             <EditNoteIcon /> Posts - Drafts
                         </Button>
                     </Box>
