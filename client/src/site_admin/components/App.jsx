@@ -47,6 +47,7 @@ import TagShow from './tags/TagShow';
 import SecuritySettings from './user/SecuritySettings';
 import MyLoginPage from './MFALoginPage';
 import AccountPage from './user/AccountPage';
+import Register from './RegistrationPage';
 
 import { authProvider } from '../authProvider';
 
@@ -109,10 +110,10 @@ function AdminApp() {
                 icon={LabelIcon}
                 recordRepresentation="name"
             />
-            {/* <CustomRoutes noLayout>
+            <CustomRoutes noLayout>
                 <Route path="/register" element={<Register />} />
-                <Route path="/password-reset" element={<PasswordReset />} />
-            </CustomRoutes> */}
+                {/* <Route path="/password-reset" element={<PasswordReset />} /> */}
+            </CustomRoutes>
             <CustomRoutes>
                 <Route path="/user/security" element={<SecuritySettings />} />
                 <Route path="/user" element={<AccountPage />} />

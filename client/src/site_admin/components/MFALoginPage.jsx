@@ -52,16 +52,10 @@ function MyLoginPage({ theme }) {
     //     login({ email, password }).catch(error => notify(error.message));
     // }
 
-    // const mfaPreAuth = JSON.parse(localStorage.getItem('mfa.preAuthToken'));
-
     function handleMfaSubmit(event) {
         event.preventDefault();
         const mfa = JSON.parse(localStorage.getItem('mfa'));
         console.log('user: ', mfa.user);
-        // authProvider.handleCallback(code).catch(error => notify(error.message));
-        // login({ username: mfa.user, password: code }).catch(error =>
-        //     notify(error.message)
-        // );
         login({ code: code }).catch(error => notify(error.message));
     }
 
@@ -146,35 +140,5 @@ function MyLoginPage({ theme }) {
         </Container>
     );
 }
-
-// function MFALoginPage() {
-//     // useAuthenticated(); // redirects to login if not authenticated
-//     const [code, setCode] = useState('');
-//     const login = useLogin();
-//     // const notify = useNotify();
-
-//     // User info from token (not critical for auth, just to send login variables expected)
-//     const user = JSON.parse(localStorage.getItem('mfa.user'));
-//     console.log('user: ', user);
-
-//     function handleSubmit(event) {
-//         event.preventDefault();
-//         // will call authProvider.login({ email, password })
-//         login({ user, password });
-//         // .catch(() => notify('Invalid email or password'));
-//     }
-
-//     return (
-//         <form onSubmit={handleSubmit}>
-//             <Typography>Enter OTP Code:</Typography>
-//             <input
-//                 name="password"
-//                 type="password"
-//                 value={password}
-//                 onChange={event => setPassword(event.target.value)}
-//             />
-//         </form>
-//     );
-// }
 
 export default MyLoginPage;

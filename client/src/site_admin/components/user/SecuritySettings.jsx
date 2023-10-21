@@ -14,16 +14,28 @@ import {
     TextField,
 } from '@mui/material';
 import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
-import { useNavigate } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 export default function SecuritySettings() {
     const { isLoading, error, data, refetch } = useGetIdentity();
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [passwordSubmitted, setPasswordSubmitted] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // console.log('Identity info: ', data);
     useAuthenticated();
+
+    useEffect(() => {
+        // Time out page in 10 minutes
+        let timer = setTimeout(() => {
+            redirect('/user');
+        }, 10 * 60 * 1000);
+
+        return () => {
+            // This will clear Timeout if component unmounts, and redirect will not run
+            clearTimeout(timer);
+        };
+    }, []);
 
     // useEffect(() => {
     //     if (error) {
@@ -49,6 +61,13 @@ export default function SecuritySettings() {
                             <>Error</>
                         ) : (
                             <>
+                                <Typography
+                                    sx={{
+                                        color: 'grey.main',
+                                    }}>
+                                    <i>Note</i>: This page times out in 10
+                                    minutes
+                                </Typography>
                                 <Stack gap={2}>
                                     <Box>
                                         <Typography

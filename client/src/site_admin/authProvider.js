@@ -33,7 +33,7 @@ function handleResponse(response) {
 }
 
 function handleIsAuthenticated() {
-    const redirectUrl = localStorage.getItem('redirect');
+    // const redirectUrl = localStorage.getItem('redirect');
 
     localStorage.removeItem('mfa');
     localStorage.setItem('auth', true);
@@ -45,10 +45,7 @@ function handleIsAuthenticated() {
     // }
 
     // localStorage.removeItem('redirect');
-    // return Promise.resolve({ redirectTo: '/books' });
     return Promise.resolve();
-
-    // return redirectUrl ? { redirectTo: redirectUrl } : Promise.resolve();
 }
 
 function handlePwdLogin(request) {
@@ -213,6 +210,12 @@ export const authProvider = {
 
     checkAuth: async () => {
         console.log('Checking Auth at path: ', window.location.hash);
+
+        // On registration page, do nothing
+        if (window.location.hash === '#/register') {
+            return;
+        }
+
         // If have mfa item, redirect
         if (localStorage.getItem('mfa'))
             return Promise.resolve({ redirectTo: '/auth-callback' });
@@ -225,6 +228,11 @@ export const authProvider = {
                 // Check user's most recent Login time
                 // If server sends ok, stay on page.
                 // Otherwise, save page url, then trigger logout.
+
+                // Note: Saving page url is workaround -- for some reason, RA only redirects to
+                // last-viewed page for idle logouts (triggered due to credential expiration),
+                // otherwise redirects to Dashboard. Built-in "redirectTo" on login success doesn't work for me.
+                // Workaround is to have Dashboard page trigger the redirect to the saved url.
 
                 try {
                     const response = await fetch(request)
@@ -297,5 +305,9 @@ export const authProvider = {
             throw new Error('Something went wrong with fetching identity.');
             //     return Promise.reject(error);
         }
+    },
+
+    registration: code => {
+        console.log('It worked!');
     },
 };
