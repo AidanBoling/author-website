@@ -307,7 +307,14 @@ export const authProvider = {
         }
     },
 
+    //TODO: Change this to general submitCode route -- processing done server side
     registration: code => {
         console.log('It worked!');
+        //TODO submit form to appropriate backend route
     },
 };
+
+// TODO: set up checkAuth route for Registration
+// TODO: change Register page to general Code page -- multipurpose code entry
+
+// Notes: ideas for server "bouncer" -- cool-down code-entry period of 5 min? For everyone, regardless of ip, etc (since very limited number of users)

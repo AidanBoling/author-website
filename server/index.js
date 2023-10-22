@@ -33,7 +33,9 @@ import {
     authController,
     passportAuthenticate,
 } from './controllers/authController.js';
-import { errorMonitor } from 'events';
+import { userController } from './controllers/userController.js';
+import { verify } from './services/verifyUserTokens.js';
+// import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -360,6 +362,134 @@ app.delete('/admin/tags/:id', tagController.delete);
 
 // -- USER routes
 
+// User UPDATE
+
+// Initiate register or password reset using admin-created temp code
+app.post(
+    '/admin/mod/code',
+    //VALIDATE (code --> min 8, max 16, alphanumeric only...),
+    verify.accessCode,
+    userController.accessRequest
+);
+
+// User Registration (--> user account pwd set):
+
+app.post(
+    '/admin/mod/register',
+    // VALIDATION (id, token, purpose, name, email, password)
+    // body('email').notEmpty().escape(),
+    // body('password').notEmpty().escape(),
+    verify.userUpdateToken,
+    userController.completeAccountSetup
+);
+// TODO: ^improve validation
+
+// User Password Reset
+app.post(
+    '/admin/mod/password-reset',
+    // VALIDATION (id, token, purpose, email, password),
+    verify.userUpdateToken,
+    userController.passwordReset
+);
+
+// User MFA enable, setup, etc...
+
+// TODO: User re-enters password for all of below actions (mfa setting, password reset)
+// So add server-side check for login access time ON SUBMIT. See "check-login" route
+// Ex, maybe something like:
+//app.use('/admin/auth/settings',
+// // loginTimeCheck)
+
+//TODO: add require password input and verification before generate
+app.get(
+    '/admin/auth/settings/mfa/generate-2fa-secret',
+    // passport.authenticate('jwt', { session: false }),
+    userController.generateMfaSecret
+);
+
+app.post('/admin/auth/settings/mfa/verify-otp', userController.verifyOTP);
+
+//TODO: add require password input and verification before disable
+app.get('/admin/auth/settings/mfa/disable-mfa', userController.disableMfa);
+
+//TODO: User password change
+//TODO: add require password input and verification before disable
+// ... app.get('/admin/auth/settings/change-password', //VALIDATE (new pwd), userController.resetPassword);
+
+// -- User AUTH --
+
+// User Login (name, pwd):
+
+app.post(
+    '/admin/login/password',
+    passport.session(),
+    cleanSession,
+    passportAuthenticate.passwordLogin,
+    authController.login
+); //--> TODO: Add validation
+
+app.post(
+    '/admin/login/mfa',
+    passportAuthenticate.mfaLogin,
+    authController.login
+);
+//--> ^TODO: Add validation (OTPcode)
+
+// User logout
+
+app.post('/admin/logout', authController.logout);
+
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+});
+
+// User auth checks
+
+// app.get('/admin/mod/register',
+// //VALIDATE params (id, token, purpose),
+// verify.userUpdateToken, authController.authCheck)
+
+// app.get('/admin/mod/password-reset',
+// //VALIDATE params (id, token, purpose),
+// verify.userUpdateToken), authController.authCheck)
+
+app.get(
+    '/admin/auth/check-login',
+    (req, res, next) => {
+        // console.log('User found through check-login: ', req.user);
+        const currentLoginTime = new Date(req.user.loginAt);
+        const now = new Date();
+        const dTime = now.getTime() - currentLoginTime.getTime();
+        console.log('Minutes since last login: ', dTime / (1000 * 60));
+        if (dTime < 10 * 60 * 1000) {
+            next();
+        } else {
+            res.status(401).json({ message: 'Credential refresh required' });
+        }
+    },
+    authController.authCheck
+);
+
+// TODO: Add validation for session cookie...
+
+//TEMP:
+app.get('/admin/auth/protectedroute', (req, res) => {
+    console.log('session ID: ', req.sessionID);
+    console.log(req.session);
+    console.log('MaxAge: ', req.session.cookie.maxAge);
+    console.log('Authenticated: ', req.isAuthenticated());
+    res.send('<h1>Protected Page</h1>');
+});
+
+app.post('/admin/auth/checkAuth', (req, res) => {
+    console.log('Check auth route was called');
+    console.log('session ID: ', req.sessionID);
+    console.log(req.session);
+    console.log('MaxAge: ', req.session.cookie.maxAge);
+    console.log('Authenticated: ', req.isAuthenticated());
+    res.json({ message: 'Authenticated' });
+});
+
 // User info
 
 app.get('/admin/auth/user', async (req, res) => {
@@ -381,91 +511,4 @@ app.get('/admin/auth/user', async (req, res) => {
         console.log(error);
         res.status(500).json({ message: 'Error' });
     }
-});
-
-app.get('/admin/auth/check-login', (req, res) => {
-    // console.log('User found through check-login: ', req.user);
-    const currentLoginTime = new Date(req.user.loginAt);
-    const now = new Date();
-    const dTime = now.getTime() - currentLoginTime.getTime();
-    console.log('Minutes since last login: ', dTime / (1000 * 60));
-    if (dTime < 10 * 60 * 1000) {
-        res.json({ message: 'Security check ok' });
-    } else {
-        res.status(401).json({ message: 'Credential refresh required' });
-    }
-});
-
-// authController.verifyOTP);
-
-// User Registration?? (--> user account pwd set):
-
-//middleware -> validate+sanitize: email, password
-app.post(
-    '/admin/register',
-    body('email').notEmpty().escape(),
-    body('password').notEmpty().escape(),
-    authController.register
-);
-// TODO: ^improve validation
-
-// User Login (name, pwd):
-
-app.post(
-    '/admin/login/password',
-    passport.session(),
-    cleanSession,
-    passportAuthenticate.passwordLogin,
-    authController.login
-); //--> TODO: Add validation
-
-app.post(
-    '/admin/login/mfa',
-    passportAuthenticate.mfaLogin,
-    authController.login
-);
-//--> ^TODO: Add validation (OTPcode)
-
-// User auth
-
-// TODO: Add validation for session cookie...
-app.get('/admin/auth/protectedroute', (req, res) => {
-    console.log('session ID: ', req.sessionID);
-    console.log(req.session);
-    console.log('MaxAge: ', req.session.cookie.maxAge);
-    console.log('Authenticated: ', req.isAuthenticated());
-    res.send('<h1>Protected Page</h1>');
-});
-
-app.post('/admin/auth/checkAuth', (req, res) => {
-    console.log('Check auth route was called');
-    console.log('session ID: ', req.sessionID);
-    console.log(req.session);
-    console.log('MaxAge: ', req.session.cookie.maxAge);
-    console.log('Authenticated: ', req.isAuthenticated());
-    res.json({ message: 'Authenticated' });
-});
-
-// User MFA enable, setup, etc...
-
-// TODO: User re-enters password for all of below actions (mfa setting, password reset)
-// Use jwt, with short expiry, like with mfa login?
-app.get(
-    '/admin/auth/settings/mfa/generate-2fa-secret',
-    // passport.authenticate('jwt', { session: false }),
-    authController.generateMfaSecret
-);
-
-app.post('/admin/auth/settings/mfa/verify-otp', authController.verifyOTP);
-
-app.get('/admin/auth/settings/mfa/disable-mfa', authController.disableMfa);
-
-// User Password Reset -> /admin/passwordreset
-
-// User logout
-
-app.post('/admin/logout', authController.logout);
-
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
 });

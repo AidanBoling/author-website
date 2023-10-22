@@ -87,7 +87,11 @@ export default function Register({ theme }) {
                         </form>
                     </>
                 ) : (
-                    <Typography variant="h5" component="h2" m={'2rem'}>
+                    <Typography
+                        variant="h5"
+                        component="h2"
+                        m={'2rem'}
+                        textAlign={'center'}>
                         Thank you.
                         <br />
                         <br />

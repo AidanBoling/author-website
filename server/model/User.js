@@ -15,7 +15,7 @@ const userSchema = new Schema(
             required: [true, 'Email is missing'],
             unique: true,
         },
-        password: { type: String },
+        password: String,
         mfaEnabled: { type: Boolean, default: false },
         mfaAppSecret: String,
         permissionLevel: {
@@ -78,6 +78,20 @@ userSchema.static('authenticate', async (username, plainTextPassword) => {
     }
     if (user && (await argon2.verify(user.password, plainTextPassword)))
         return user;
+
+    return false;
+});
+
+userSchema.static('verifyIdEmailMatch', async (userId, email) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        console.log('No user with specified id');
+    } else {
+        if (user.email === email) return user;
+
+        console.log('Id and email mismatch');
+    }
 
     return false;
 });
