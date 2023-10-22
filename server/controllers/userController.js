@@ -3,7 +3,7 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import User from '../model/User.js';
 import Token from '../model/Token.js';
-import sendAccountInfoEmail from '../utils/sendResetPasswordEmail.js';
+import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
 import { generateTokenLink } from '../utils/userUtilities.js';
 import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
 // import crypt...?
@@ -32,14 +32,21 @@ export const userController = {
                     req.codePurpose,
                     'request'
                 );
+                res.json({
+                    message: `Success - email for ${req.codePurpose} should have been sent`,
+                });
             } else {
                 throw new Error('Invalid purpose');
             }
 
-            res.json({ message: 'Success' });
+            // res.json({ message: 'Success' });
         } catch (error) {
-            console.log(`Error with ${req.codePurpose} request: `, error);
-            res.status(500).json({ error: 'Error' });
+            if (error.message === 'Invalid purpose') {
+                res.status(401).json({ error: 'Invalid' });
+            } else {
+                console.log(`Error with ${req.codePurpose} request: `, error);
+                res.status(500).json({ error: 'Error' });
+            }
         }
     },
 
@@ -101,6 +108,8 @@ export const userController = {
     // TODO: preceded by validation and sanitization middleware (for email, and for password (min/max length, other security requirements, and that password entries match),
     // TODO: preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
     passwordReset: async (req, res) => {
+        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+
         let status;
         try {
             // // Additional auth check: check submitted userId matches
@@ -127,7 +136,7 @@ export const userController = {
 
                 sendAccountInfoEmail(
                     { name: user.name },
-                    user.email,
+                    emailRecipient, // for TESTING only. Change to --> user.email
                     'passwordReset',
                     'success'
                 );
@@ -138,7 +147,7 @@ export const userController = {
                 throw new Error('User not yet registered');
             }
         } catch (error) {
-            console.log('Error creating user account: ', error);
+            console.log('Error updating user account: ', error);
             // TODO (maybe): Send user email about error?
             res.status(500).json({
                 message: 'Error resetting password. Contact your admin',

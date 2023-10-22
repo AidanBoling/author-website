@@ -6,11 +6,12 @@ async function subscribeMailingListController(
     mailchimp,
     res
 ) {
+    const listId = process.env.MAILCHIMP_AUDIENCE_ID;
     const subscriberHash = md5(subscriber.email.toLowerCase());
 
     try {
         const response = await mailchimp.lists.setListMember(
-            mcListId,
+            listId,
             subscriberHash,
             {
                 email_address: subscriber.email,

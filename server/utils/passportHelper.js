@@ -57,6 +57,6 @@ export function initializePassport(app, passport) {
         }
     });
 
-    app.use(passport.initialize());
-    app.use(passport.session());
+    app.use('/admin', passport.initialize());
+    app.use('/admin', passport.session());
 }

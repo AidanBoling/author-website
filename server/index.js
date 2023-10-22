@@ -49,13 +49,13 @@ const PORT = process.env.PORT || 8000;
 const corsOrigin = 'http://app.localhost:3000';
 // const corsOrigin = process.env.CLIENT_URL;
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-    },
-});
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.GMAIL_USER,
+//         pass: process.env.GMAIL_APP_PASSWORD,
+//     },
+// });
 
 mailchimp.setConfig({
     apiKey: process.env.MAILCHIMP_API_KEY,
@@ -66,7 +66,6 @@ mailchimp.setConfig({
 //     const response = await mailchimp.ping.get();
 //     console.log(response);
 // }
-
 // pingMC();
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
@@ -88,7 +87,9 @@ app.use(
     })
 );
 
+//TODO: move session details to separate file
 app.use(
+    '/admin',
     session({
         name: 'id',
         secret: process.env.SESSION_SECRET,
@@ -113,11 +114,13 @@ app.use(
         }),
     })
 );
+
 // Checks sessions for user object; if not found then not authenticated, routing process halted
 // app.use('/admin', passport.session());
 app.use('/admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
 
+// TODO: move checkAuth and cleanSession to another file(s)
 function checkAuth(req, res, next) {
     console.log('Auth route was called');
     console.log('Session is authenticated: ', req.isAuthenticated());
@@ -256,34 +259,28 @@ app.get('/events', async (req, res) => {
 
 // -- Form routes
 
-//TODO (later): see if can split the following function into two functions --> sanitize middleware, controller.
-app.post('/form/contact', (req, res) => {
-    // console.log(req.body);
+//TODO (later): move sanitize middleware to another file
+app.post(
+    '/form/contact',
+    (req, res, next) => {
+        // console.log(req.body);
 
-    const data = {
-        name:
-            sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
-            ' ' +
-            sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
-        email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
-        messageArray: sanitizeHtml(
-            req.body.message,
-            sanitizeOptionsNoHTML
-        ).split(/\n+/),
-    };
+        const data = {
+            name:
+                sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
+                ' ' +
+                sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
+            email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
+            message: sanitizeHtml(req.body.message, sanitizeOptionsNoHTML),
+        };
 
-    const emailInvariants = {
-        from: `"Post Service" <${process.env.GMAIL_USER}>`,
-        to: `${process.env.GMAIL_USER}`,
-    };
+        console.log(data);
 
-    // const mParagraphs = data.message.split(/\n+/);
-    console.log(data);
-
-    contactFormController(data, emailInvariants, transporter, res);
-
-    // res.status(200).json({ message: 'Success' });
-});
+        req.data = { ...data, messageArray: data.message.split(/\n+/) };
+        next();
+    },
+    contactFormController
+);
 
 //TODO (later): see if can split the following function into two functions --> sanitize middleware, controller.
 app.post('/form/subscribe', (req, res) => {
@@ -295,6 +292,8 @@ app.post('/form/subscribe', (req, res) => {
         lastName: sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
         email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
     };
+
+    // req.subscriber = subscriber
 
     subscribeMailingListController(listId, subscriber, mailchimp, res);
 });

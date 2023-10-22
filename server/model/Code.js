@@ -15,6 +15,11 @@ const codeSchema = new Schema({
         required: true,
         immutable: true,
     },
+    purpose: {
+        type: String,
+        required: true,
+        immutable: true,
+    },
     createdAt: {
         type: Date,
         default: () => Date.now(),

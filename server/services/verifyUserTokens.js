@@ -9,7 +9,8 @@ export const verify = {
     // TODO: Preceded by validation middleware.
     accessCode: async (req, res, next) => {
         // CHECK: Need to handle validator invalid results here, or can do within validator middleware?
-        const data = matchedData(req); //CHECK variables -- depends on validation output...
+        // const data = matchedData(req); //CHECK variables -- depends on validation output...
+        const data = req.body;
         console.log(data);
 
         // ...Check for code, return purpose and userId
@@ -19,9 +20,12 @@ export const verify = {
                 console.log('Invalid access code entered');
                 throw new Error('Invalid');
             }
+            console.log('Code found: ', userCode);
 
             const user = await User.findById(userCode.userId);
-            if (!userCode) throw new Error('User not found');
+            if (!user) throw new Error('User not found');
+
+            console.log('User found: ', user.email);
 
             req.user = user;
             req.codePurpose = userCode.purpose;

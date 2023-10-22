@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import argon2 from 'argon2';
+import { randomBytes, createHmac } from 'node:crypto';
 
 const { Schema, SchemaTypes, model } = mongoose;
 
@@ -14,10 +15,16 @@ const tokenSchema = new Schema({
         required: true,
         //immutable: true <-- ???
     },
+    purpose: {
+        type: String,
+        required: true,
+        // immutable: true,
+    },
     createdAt: {
         type: Date,
         default: () => Date.now(),
         expires: 3600, // this is the expiry time in seconds
+        //immutable: true, // --> ??
     },
 });
 

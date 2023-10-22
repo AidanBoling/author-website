@@ -1,26 +1,24 @@
-import contactEmailTemplate from '../utils/contactFormEmailTemplate.js';
+import { contactEmailTemplate } from '../utils/emailTemplates.js';
+import sendEmail from '../utils/sendEmail.js';
 
-function contactFormController(data, mailDetailsInvariable, transporter, res) {
+function contactFormController(req, res) {
+    const { email, name, message } = req.data;
+
     const mailDetails = {
-        ...mailDetailsInvariable,
-        replyTo: data.email,
-        subject: `New contact form response, from: ${data.name}`,
-        html: contactEmailTemplate(data),
-        text:
-            `New message from ${data.name} (${data.email}): \n\n` +
-            data.message,
+        from: `"Post Service" <${process.env.GMAIL_USER}>`,
+        to: `${process.env.GMAIL_USER}`,
+        replyTo: email,
+        subject: `New contact form response, from: ${name}`,
+        html: contactEmailTemplate(req.data),
+        text: `New message from ${name} (${email}): \n\n` + message,
     };
 
-    transporter.sendMail(mailDetails, (err, info) => {
-        if (err) {
-            console.log('Error: ', err);
-            res.status(500).json({ error: `Error: \n${err}` });
-        } else {
-            console.log('Email sent successfully');
-            console.log('SMTP response: \n', info.response);
-            res.status(200).json({ message: 'Success' });
-        }
-    });
+    try {
+        sendEmail(mailDetails);
+        res.status(200).json({ message: 'Success' });
+    } catch (error) {
+        res.status(500).json({ error: `Error: \n${error}` });
+    }
 }
 
 export default contactFormController;
