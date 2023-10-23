@@ -44,25 +44,22 @@ export const verify = {
     // TODO: Preceded by validation middleware (id, token(??), purpose)
     userUpdateToken: async (req, res, next) => {
         // CHECK: Need to handle validator invalid results here, or can do within validator middleware?
-        const data = matchedData(req); // CHECK -- need different/separate one for params?
+        // const data = matchedData(req); // CHECK -- need different/separate one for params?
+
+        const data = { ...req.body }; // Temp
+
         console.log(data);
 
         try {
             // Check for existing token by submitted userId and purpose
-            const userToken = await Token.findOne({
-                userId: data.id,
-                purpose: data.purpose,
-            });
+            // If found, compare it's value with submitted token value
+            const verifiedUserToken = await Token.verifyToken(
+                data.id,
+                data.purpose,
+                data.token
+            );
 
-            if (!userToken) {
-                //TODO (??): insert dummy hash (for time-based attacks...)
-                console.log('No token linked to given user');
-                throw new Error('Invalid');
-            }
-
-            // Compare received token value with found db token value
-            const isValid = userToken.verifyToken(data.token);
-            if (!isValid) {
+            if (!verifiedUserToken) {
                 throw new Error('Invalid');
             }
 
@@ -73,7 +70,7 @@ export const verify = {
                 password: data.password,
                 codePurpose: data.purpose,
             };
-            req.token = userToken;
+            req.token = verifiedUserToken;
 
             return next();
         } catch (error) {

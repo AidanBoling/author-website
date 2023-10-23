@@ -45,15 +45,40 @@ tokenSchema.pre('save', async function (next) {
     }
 });
 
-tokenSchema.methods.verifyToken = async token => {
-    try {
-        const isValid = await argon2.verify(this.tokenValue, token);
-        if (isValid) return true;
-        return false;
-    } catch (error) {
-        console.log(error);
+// tokenSchema.methods.verifyToken = async token => {
+//     try {
+//         const isValid = await argon2.verify(this.tokenValue, token);
+//         if (isValid) return true;
+//         return false;
+//     } catch (error) {
+//         console.log(error);
+//         // throw error;
+//     }
+//     return false;
+// };
+
+tokenSchema.static('verifyToken', async (userId, tokenPurpose, tokenVal) => {
+    // Check for existing token for form-submitted userId and purpose
+    const userToken = await Token.findOne({
+        userId: userId,
+        purpose: tokenPurpose,
+    });
+
+    if (!userToken) {
+        // Q: Is this needed?
+        await argon2.hash(process.env.DUMMY_PWD, {
+            memoryCost: 2 ** 14,
+            parallelism: 3,
+        });
+        console.log('No token linked to given user');
     }
-};
+
+    // Compare received token value with found db token value
+    if (userToken && (await argon2.verify(userToken.tokenValue, tokenVal)))
+        return userToken;
+
+    return false;
+});
 
 const Token = model('Token', tokenSchema);
 export default Token;

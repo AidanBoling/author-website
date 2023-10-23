@@ -41,7 +41,7 @@ userSchema.pre('save', async function (next) {
     }
 
     try {
-        console.log('Attempting password hash');
+        console.log('Attempting password hash...');
         const hash = await argon2.hash(this.password, {
             memoryCost: 2 ** 14,
             parallelism: 3,

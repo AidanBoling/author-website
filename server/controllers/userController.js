@@ -10,11 +10,14 @@ import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
+// TODO: Make sure initial access Code is deleted at an appropriate point
+// (when email sends successfully? Or when user completes update action?)
+// CONSIDER: Connect access code with the generated token somehow?
+
 export const userController = {
     // Used to handle (admin-created) codes. Initiates registration and password reset process.
     // TODO: input is an alphanumeric code -> validate & sanitize with middleware first
     // TODO: then check code with custom middleware (verify.accessCode)
-
     accessRequest: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
@@ -109,14 +112,16 @@ export const userController = {
     // TODO: preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
     passwordReset: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
-
+        console.log(
+            'Token verification passed, continuing password reset process...'
+        );
         let status;
         try {
             // // Additional auth check: check submitted userId matches
             // the email submitted. If match, returns user
             const user = await User.verifyIdEmailMatch(
-                req.params.id,
-                req.body.email
+                req.data.id,
+                req.data.email
             );
             if (!user) {
                 throw new Error('Invalid');
@@ -124,9 +129,9 @@ export const userController = {
 
             // Update user's password
             if (user.password) {
-                user.password = data.password;
+                user.password = req.data.password;
                 user.markModified('password');
-                user = await user.save();
+                await user.save();
 
                 // console.log(user); // <-- check that password is hashed
                 res.json({
@@ -155,7 +160,6 @@ export const userController = {
         }
 
         // Delete email token (whether reset is sucessful or not)
-        // TODO: Check syntax
         await req.token
             .deleteOne()
             .catch(() =>

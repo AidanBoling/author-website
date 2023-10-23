@@ -19,7 +19,7 @@ export default function sendAccountInfoEmail(data, email, purpose, variant) {
     };
 
     if (!email) throw new Error('Invalid recipient');
-    console.log('Mail details: ', mailDetails);
+    // console.log('Mail details: ', mailDetails);
 
     sendEmail(mailDetails);
 }

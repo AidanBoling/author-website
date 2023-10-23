@@ -12,6 +12,8 @@ export async function generateTokenLink(purpose, userId) {
 
     // Generate new random token
     const token = randomBytes(50).toString('hex');
+    console.log('Token: ', token); // For testing only
+    console.log('Id: ', userId); // For testing only
 
     // Save new token in DB (hashed before save)
     await new Token({
