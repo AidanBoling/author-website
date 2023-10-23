@@ -444,13 +444,19 @@ app.listen(PORT, () => {
 
 // User auth checks
 
-// app.get('/admin/mod/register',
-// //VALIDATE params (id, token, purpose),
-// verify.userUpdateToken, authController.authCheck)
+app.get(
+    '/admin/mod/register',
+    //VALIDATE params (id, token, purpose),
+    verify.userUpdateToken,
+    authController.authCheck
+);
 
-// app.get('/admin/mod/password-reset',
-// //VALIDATE params (id, token, purpose),
-// verify.userUpdateToken), authController.authCheck)
+app.get(
+    '/admin/mod/password-reset',
+    //VALIDATE params (id, token, purpose),
+    verify.userUpdateToken,
+    authController.authCheck
+);
 
 app.get(
     '/admin/auth/check-login',

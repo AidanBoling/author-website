@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import User from '../model/User.js';
+import Code from '../model/Code.js';
 import Token from '../model/Token.js';
 import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
 import { generateTokenLink } from '../utils/userUtilities.js';
 import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
-// import crypt...?
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
@@ -17,7 +17,7 @@ const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 export const userController = {
     // Used to handle (admin-created) codes. Initiates registration and password reset process.
     // TODO: input is an alphanumeric code -> validate & sanitize with middleware first
-    // TODO: then check code with custom middleware (verify.accessCode)
+    // Preceded by checking code with custom middleware (verify.accessCode)
     accessRequest: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
@@ -55,10 +55,12 @@ export const userController = {
 
     // Final route taken when user updates their info via approved account registration
     // TODO: Preceded by validation middleware, then
-    // TODO: Preceded by dedicated custom middleware (verify.userUpdateToken) to verify token valid, and that
+    // Preceded by dedicated custom middleware (verify.userUpdateToken) to verify token valid, and that
     // the user linked to the token matches the email submitted by the user.
 
     completeAccountSetup: async (req, res) => {
+        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+
         try {
             const user = await User.verifyIdEmailMatch(
                 req.data.id,
@@ -70,21 +72,35 @@ export const userController = {
 
             // Update user's information, only if user doesn't yet have password set
             if (!user.password) {
-                // user.name = ...
-                // user.password = ...
-                user.password = data.password;
-                // [...]
+                user.name = req.data.name;
+                user.password = req.data.password;
                 user.markModified('password'); // this triggers it to be hashed on save()
-                user = await user.save();
-
-                // TODO: Delete temp registration code
+                await user.save();
 
                 res.status(200).json({
+                    email: user.email,
                     message: 'Account registration completed',
                 });
                 // Note: on front end - have this page redirect them to login page.
 
-                // TODO: Send email notifying of account created
+                // Delete the temp access code
+                console.log('Deleting initial code...');
+                await Code.deleteOne({
+                    userId: user._id,
+                    purpose: 'register',
+                }).catch(() =>
+                    console.log(
+                        'There was an error in deleting the access code!'
+                    )
+                );
+
+                // Send email notifying of account created
+                sendAccountInfoEmail(
+                    { name: user.name },
+                    emailRecipient, // for TESTING only. Change to --> user.email
+                    'register',
+                    'success'
+                );
             } else {
                 console.log(
                     "User's password already set; use reset password process instead."
@@ -94,12 +110,13 @@ export const userController = {
         } catch (error) {
             console.log('Error with account setup: ', error);
             res.status(500).json({
-                message: 'Error registering account. Contact your admin',
+                message:
+                    'Error registering account. Contact your website admin',
             });
         }
 
         // Delete email token (whether setup is sucessful or not)
-        // TODO: Check syntax
+        console.log('Deleting token...');
         await req.token
             .deleteOne()
             .catch(() =>
@@ -109,7 +126,7 @@ export const userController = {
 
     // Processes password reset submission
     // TODO: preceded by validation and sanitization middleware (for email, and for password (min/max length, other security requirements, and that password entries match),
-    // TODO: preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
+    // Preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
     passwordReset: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         console.log(
@@ -117,7 +134,7 @@ export const userController = {
         );
         let status;
         try {
-            // // Additional auth check: check submitted userId matches
+            // Additional auth check: check submitted userId matches
             // the email submitted. If match, returns user
             const user = await User.verifyIdEmailMatch(
                 req.data.id,
@@ -133,12 +150,24 @@ export const userController = {
                 user.markModified('password');
                 await user.save();
 
-                // console.log(user); // <-- check that password is hashed
+                // console.log(user); // --> check that password is hashed
                 res.json({
                     email: user.email,
                     message: 'Password reset successfully',
                 });
 
+                // Delete the temp access code
+                console.log('Deleting initial code...');
+                await Code.deleteOne({
+                    userId: user._id,
+                    purpose: 'register',
+                }).catch(() =>
+                    console.log(
+                        'There was an error in deleting the access code!'
+                    )
+                );
+
+                // Send email notifying of account created
                 sendAccountInfoEmail(
                     { name: user.name },
                     emailRecipient, // for TESTING only. Change to --> user.email
@@ -155,7 +184,7 @@ export const userController = {
             console.log('Error updating user account: ', error);
             // TODO (maybe): Send user email about error?
             res.status(500).json({
-                message: 'Error resetting password. Contact your admin',
+                message: 'Error resetting password. Contact your website admin',
             });
         }
 

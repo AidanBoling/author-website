@@ -48,12 +48,13 @@ export const userEmailTemplates = {
     },
 
     register: (data, variant) => {
+        const company = process.env.COMPANY_NAME;
         let content;
 
         if (variant === 'request') {
             content = {
                 subject: `${company} registration instructions`,
-                html: `<p>Your registration code was accepted. Follow link below to complete your ${company} account registration:</p>
+                html: `<p>Your registration code was accepted. Follow the link below to complete your ${company} account registration:</p>
                     <a href=${data.link}>Complete Registration</a>`,
                 text:
                     `Your registration code was accepted. Use the link below to complete your ${company} account registration: \n\n` +
@@ -64,11 +65,11 @@ export const userEmailTemplates = {
                 subject: `${company} registration confirmation`,
                 html: `<p>Welcome, ${data.name}!</p>
                     <p>You have successfully set up your ${company} user account.
-                   Link to the login page:</p>
+                   Here's the link to the login page:</p>
                     <p><a href="${process.env.CLIENT_URL}/admin#/login">Admin Portal Login</a></p>`,
                 text: `Welcome, ${data.name}!\n\n
                     You have successfully set up your ${company} user account.
-                    The link below will take you to the login:\n\n
+                    The link below will take you to the login page:\n\n
                     ${process.env.CLIENT_URL}/admin#/login`,
             };
         }
