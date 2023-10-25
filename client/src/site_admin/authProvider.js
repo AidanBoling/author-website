@@ -211,10 +211,30 @@ export const authProvider = {
     checkAuth: async () => {
         console.log('Checking Auth at path: ', window.location.hash);
 
-        // On registration page, do nothing
-        if (window.location.hash === '#/register') {
+        // On accessCode page, do nothing
+        if (window.location.hash === '#/use/code') {
             return;
         }
+
+        // On register and password reset pages, check for correct auth
+        // TODO:
+        if (window.location.hash === '#/register') {
+            // get reqBody from params...? Or send params as-is?
+            // const request = setRequest('/mod/register', null, 'GET');
+            // try {
+            //     const response = await fetch(request)
+            //         .then(response => handleResponse(response))
+            //         .then(() => Promise.resolve());
+            // } catch (error) {
+            //     return Promise.reject({
+            //         message: 'Unauthorized',
+            //     });
+            // }
+            return;
+        }
+        // if (window.location.hash === '#/passwordReset') {
+        //     // ...
+        // }
 
         // If have mfa item, redirect
         if (localStorage.getItem('mfa'))
@@ -222,8 +242,17 @@ export const authProvider = {
         // Note: ^might be able to actually check with the server for jwt valid, separately, before redirecting?
 
         if (localStorage.getItem('auth')) {
-            if (window.location.hash === '#/user/security') {
-                const request = setRequest('/auth/check-login', null, 'GET');
+            if (
+                window.location.hash === '#/user/security' ||
+                window.location.hash === '/user/security/enable-mfa'
+            ) {
+                let request;
+                if (window.location.hash === '#/user/security') {
+                    request = setRequest('/auth/check-login/1', null, 'GET');
+                }
+                if (window.location.hash === '/user/security/enable-mfa') {
+                    request = setRequest('/auth/check-login/2', null, 'GET');
+                }
 
                 // Check user's most recent Login time
                 // If server sends ok, stay on page.
@@ -241,7 +270,7 @@ export const authProvider = {
                 } catch (error) {
                     localStorage.setItem(
                         'redirect',
-                        window.location.origin + '/admin#/user/security'
+                        window.location.origin + '/admin' + window.location.hash
                     );
                     return Promise.reject({
                         message: 'Please renew your credentials',
@@ -284,8 +313,15 @@ export const authProvider = {
 
             if (data) {
                 console.log('User data: ', data);
-                const { id, fullName, avatar, email, lastLogin, mfaEnabled } =
-                    data;
+                const {
+                    id,
+                    fullName,
+                    avatar,
+                    email,
+                    lastLogin,
+                    mfaEnabled,
+                    mfaMethods,
+                } = data;
                 return Promise.resolve({
                     id,
                     fullName,
@@ -293,6 +329,7 @@ export const authProvider = {
                     email,
                     lastLogin,
                     mfaEnabled,
+                    mfaMethods,
                 });
             }
         } catch (error) {
@@ -307,14 +344,94 @@ export const authProvider = {
         }
     },
 
-    //TODO: Change this to general submitCode route -- processing done server side
-    registration: code => {
-        console.log('It worked!');
-        //TODO submit form to appropriate backend route
+    // TODO: Test this route
+    submitAccessCode: async code => {
+        const request = setRequest('/mod/code', { code: code });
+
+        // Note: Not taking actions on success/failure,
+        // so just logging if there's a server error
+        try {
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
+        } catch (error) {
+            console.log(error);
+            if (error.message !== 'Unauthorized') {
+                console.log('Server error');
+            }
+        }
+    },
+
+    enableMFAMethod: async method => {
+        const request = setRequest('/auth/settings/mfa/setup', {
+            method: method,
+        });
+
+        try {
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
+            return data;
+        } catch (error) {
+            console.log(error);
+            if (error.message !== 'Unauthorized') {
+                console.log('Server error');
+            }
+        }
+        // will return otp code info (auth app), or send email with otp code
+    },
+
+    verifyMFAMethod: async (method, code) => {
+        const request = setRequest('/auth/settings/mfa/verify', {
+            method: method,
+            code: code,
+        });
+
+        try {
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
+            return data.message;
+        } catch (error) {
+            console.log(error);
+            if (error.message !== 'Unauthorized') {
+                console.log('Server error');
+                throw new Error('Server error');
+            }
+            throw new Error('Code invalid or expired');
+        }
+    },
+
+    disableMFA: async () => {
+        // ...
+    },
+
+    resetPassword: async () => {
+        // ...
+    },
+
+    sendEmailCode: async () => {
+        const request = setRequest('/admin/login/mfa/email', null, 'GET');
+
+        try {
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
+            return data.message;
+        } catch (error) {
+            console.log(error);
+            if (error.message !== 'Unauthorized') {
+                console.log('Server error');
+                throw new Error('Server error');
+            }
+            throw new Error('Invalid credentials');
+        }
     },
 };
 
 // TODO: set up checkAuth route for Registration
-// TODO: change Register page to general Code page -- multipurpose code entry
 
 // Notes: ideas for server "bouncer" -- cool-down code-entry period of 5 min? For everyone, regardless of ip, etc (since very limited number of users)
+
+// TODO: Troubleshoot security pages -- checkAuth not working
+// as expected -- not timing out (to login page or otherwise)

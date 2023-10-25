@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { redirectDocument } from 'react-router-dom';
 
-export default function Register({ theme }) {
+export default function AccessCodeForm({ theme }) {
     const [code, setCode] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -66,7 +66,7 @@ export default function Register({ theme }) {
                 {!isSubmitted ? (
                     <>
                         <Typography variant="h5" component="p" mt={'2rem'}>
-                            Enter Registration Code
+                            Enter Code
                         </Typography>
 
                         <form onSubmit={handleSubmit}>

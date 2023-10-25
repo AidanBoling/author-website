@@ -19,11 +19,13 @@ import FeedIcon from '@mui/icons-material/Feed';
 import LabelIcon from '@mui/icons-material/Label';
 
 import myDataProvider from '../dataProvider';
+import { authProvider } from '../authProvider';
 
 import CustomMenu from './CustomMenu';
 import CustomAppBar, { MyAppBar } from './CustomAppBar';
-
 import Dashboard from './Dashboard';
+
+//Resources
 // import { UserList } from './UserList';
 // import UserShow from './UserShow';
 import PostList from './posts/PostList';
@@ -44,12 +46,14 @@ import EventCreate from './events/EventCreate';
 import EventEdit from './events/EventEdit';
 import TagList from './tags/TagList';
 import TagShow from './tags/TagShow';
+
+//Custom pages
 import SecuritySettings from './user/SecuritySettings';
 import MyLoginPage from './MFALoginPage';
 import AccountPage from './user/AccountPage';
-import Register from './RegistrationPage';
+import RegisterMFAMethod from './user/RegisterMFAMethod';
 
-import { authProvider } from '../authProvider';
+import AccessCodeForm from './AccessCodePage';
 
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
@@ -111,12 +115,16 @@ function AdminApp() {
                 recordRepresentation="name"
             />
             <CustomRoutes noLayout>
-                <Route path="/register" element={<Register />} />
+                <Route path="/use/code" element={<AccessCodeForm />} />
                 {/* <Route path="/password-reset" element={<PasswordReset />} /> */}
             </CustomRoutes>
             <CustomRoutes>
-                <Route path="/user/security" element={<SecuritySettings />} />
                 <Route path="/user" element={<AccountPage />} />
+                <Route path="/user/security" element={<SecuritySettings />} />
+                <Route
+                    path="/user/security/enable-mfa"
+                    element={<RegisterMFAMethod />}
+                />
 
                 {/* <Route path="/login-mfa" element={<MyLoginPage />} /> */}
             </CustomRoutes>
