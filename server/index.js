@@ -35,6 +35,7 @@ import {
 } from './controllers/authController.js';
 import { userController } from './controllers/userController.js';
 import { verify } from './services/verifyUserTokens.js';
+import { loginTimeCheck } from './services/loginCheck.js';
 // import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
 
@@ -122,7 +123,7 @@ initializePassport(app, passport);
 
 // TODO: move checkAuth and cleanSession to another file(s)
 function checkAuth(req, res, next) {
-    console.log('Auth route was called');
+    console.log('A protected route was called; checking auth...');
     console.log('Session is authenticated: ', req.isAuthenticated());
     if (!req.isAuthenticated()) {
         res.status(401).json({ message: 'Not authorized' });
@@ -393,23 +394,20 @@ app.post(
 
 // User MFA enable, setup, etc...
 
-// TODO: User re-enters password for all of below actions (mfa setting, password reset)
-// So add server-side check for login access time ON SUBMIT. See "check-login" route
-// Ex, maybe something like:
-//app.use('/admin/auth/settings',
-// // loginTimeCheck)
+// Checks that user's most recent login was <15min for all security settings routes
+app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 
-//TODO: add require password input and verification before generate
-app.get(
-    '/admin/auth/settings/mfa/generate-2fa-secret',
-    // passport.authenticate('jwt', { session: false }),
-    userController.generateMfaSecret
-);
+// This route triggered when users click "enable mfa" (and select method to register),
+// OR when users "register 2nd method" (if already enabled)
+// TODO: add require password input and verification before generate
+// CHECK: Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
+app.post('/admin/auth/settings/mfa/setup', userController.setUpMfa);
 
-app.post('/admin/auth/settings/mfa/verify-otp', userController.verifyOTP);
+// This route triggered when users submit otp code to verify a new mfa method
+app.post('/admin/auth/settings/mfa/verify', userController.verifyMfaMethod);
 
 //TODO: add require password input and verification before disable
-app.get('/admin/auth/settings/mfa/disable-mfa', userController.disableMfa);
+app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
 //TODO: User password change
 //TODO: add require password input and verification before disable
@@ -434,6 +432,18 @@ app.post(
 );
 //--> ^TODO: Add validation (OTPcode)
 
+// Send an email with a new OTP code
+app.get('/admin/login/mfa/email', async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        sendOTPCodeEmail(user._id, email);
+        res.json({ message: 'Success' });
+    } catch (error) {
+        console.log('Error sending OTP code email');
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // User logout
 
 app.post('/admin/logout', authController.logout);
@@ -442,7 +452,9 @@ app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
 
-// User auth checks
+// User Auth Checks
+
+// --Not logged in, but token from email required for these routes:
 
 app.get(
     '/admin/mod/register',
@@ -458,20 +470,16 @@ app.get(
     authController.authCheck
 );
 
+//Route used by front end authCheck when loading security settings page
 app.get(
-    '/admin/auth/check-login',
-    (req, res, next) => {
-        // console.log('User found through check-login: ', req.user);
-        const currentLoginTime = new Date(req.user.loginAt);
-        const now = new Date();
-        const dTime = now.getTime() - currentLoginTime.getTime();
-        console.log('Minutes since last login: ', dTime / (1000 * 60));
-        if (dTime < 10 * 60 * 1000) {
-            next();
-        } else {
-            res.status(401).json({ message: 'Credential refresh required' });
-        }
-    },
+    '/admin/auth/check-login/1',
+    loginTimeCheck.ten,
+    authController.authCheck
+);
+
+app.get(
+    '/admin/auth/check-login/2',
+    loginTimeCheck.fifteen,
     authController.authCheck
 );
 
@@ -495,21 +503,24 @@ app.post('/admin/auth/checkAuth', (req, res) => {
     res.json({ message: 'Authenticated' });
 });
 
-// User info
+// User Info
 
 app.get('/admin/auth/user', async (req, res) => {
+    console.log('Starting "get" user identity route...');
     try {
         const user = await User.findOne({ email: req.user.email });
         if (!user) {
             throw new Error('Invalid.');
         }
-        console.log(user);
+        console.log('User found: ', user.email);
 
         const userInfo = {
             fullName: user.name,
             email: user.email,
             lastLogin: user.lastLogin[1],
             mfaEnabled: user.mfaEnabled,
+            // mfaMethodsRegistered: user.mfaMethodsRegistered,
+            mfaMethods: user.mfaMethods,
         };
         res.json(userInfo);
     } catch (error) {

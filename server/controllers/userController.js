@@ -4,9 +4,14 @@ import qrcode from 'qrcode';
 import User from '../model/User.js';
 import Code from '../model/Code.js';
 import Token from '../model/Token.js';
+import EmailOTP from '../model/emailOTP.js';
 import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
-import { generateTokenLink } from '../utils/userUtilities.js';
+import {
+    generateEmailOtpCode,
+    generateTokenLink,
+} from '../utils/userUtilities.js';
 import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
+import sendOTPCodeEmail from '../utils/sendOTPemail.js';
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
@@ -196,63 +201,141 @@ export const userController = {
             );
     },
 
-    enableMfa: async (req, res) => {
-        /*...*/
-    },
+    setUpMfa: async (req, res) => {
+        const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
-    generateMfaSecret: async (req, res) => {
-        const user = await User.findOne({ email: req.user.email });
+        // ...receives mfaMethod (either AuthApp, or Email) --> req.body.method
+        console.log('Starting mfa setup route...');
 
-        // Check mfa enabled status - don't generate if already set up
-        // TODO(?): Add "if mfaEnabled && mfaAppSecret", and send along the existing app secret?
-        // (Any reason not to make the already-generated secret available on request?)
-        if (user.mfaEnabled) {
-            return res.status(400).json({
-                message: '2FA already verified and enabled',
-                mfaEnabled: user.mfaEnabled,
+        try {
+            // Find the user (from session info)
+            const user = await User.findById(req.user.id);
+            console.log('found user: ', user.email);
+            console.log('req.body: ', req.body);
+
+            // For Authentication App:
+            if (req.body.method === 'authApp') {
+                // if user doesn't have an appSecret yet, then generate new. Otherwise, use existing.
+
+                let secret;
+                if (!user.mfaAppSecret) {
+                    console.log('Generating new secret...');
+                    secret = await generateMfaSecret(user);
+                } else {
+                    console.log('Secret already generated for this user');
+                    secret = user.mfaAppSecret;
+                }
+
+                // Get the otp urls (qr code data url, plain otpauth url) using secret
+                const otpData = await generateAppOtpData(
+                    req.user.email,
+                    secret
+                );
+
+                // Enable method, if not yet enabled
+                if (!user.mfaMethods.authApp.enabled) {
+                    // save new method to user (with verified = false)
+                    user.mfaMethods.authApp = {
+                        enabled: true,
+                        verified: false,
+                    };
+                    await user.save();
+                }
+
+                // Send back the otp data for the user
+                res.json({
+                    message: '2FA secret generation successful',
+                    ...otpData,
+                });
+            }
+            // For Email:
+            else if (req.body.method === 'email') {
+                // Enable method, if not yet enabled
+                if (!user.mfaMethods.email.enabled) {
+                    // save new method to user (with verified = false)
+                    user.mfaMethods.email = {
+                        enabled: true,
+                        verified: false,
+                    };
+                    await user.save();
+                }
+
+                // Generate and email otp code
+                sendOTPCodeEmail(user._id, email);
+
+                console.log('Success -- code sent');
+
+                res.json({
+                    message: 'Email method enabled, pending verification',
+                });
+            }
+        } catch (error) {
+            console.log('Error with MFA setup: ', error);
+            res.status(500).json({
+                message: 'Error enabling 2FA method',
             });
         }
-
-        const secret = authenticator.generateSecret();
-        user.mfaAppSecret = secret;
-        user.save();
-        const appName = 'Author Website Admin Portal';
-
-        // TODO: Check if way to offer the otpauth code as copy-paste option (if qrcode doesn't work)?
-        return res.json({
-            message: '2FA secret generation successful',
-            secret: secret,
-            qrImageDataUrl: await qrcode.toDataURL(
-                authenticator.keyuri(req.user.email, appName, secret)
-            ),
-            mfaEnabled: user.mfaEnabled,
-        });
     },
 
-    verifyOTP: async (req, res) => {
-        const user = await User.findOne({ email: req.user.email });
+    //TODO: Add validation for input
+    verifyMfaMethod: async (req, res) => {
+        const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
-        // TODO: Check - Like with ^generateMfa, is the following necessary as-is? What if they need to register new app?
-        if (user.mfaEnabled) {
-            return res.json({
-                message: '2FA already verified and enabled',
-                mfaEnabled: user.mfaEnabled,
-            });
-        }
+        console.log('Starting MFA method verification...');
+        const { method, code } = req.body;
 
-        const token = req.body.OTPtoken.replaceAll(' ', ''); //--> TODO: replace with express-validator middleware
-        if (!authenticator.check(token, user.mfaAppSecret)) {
-            return res.status(400).json({
-                message: 'OTP verification failed: Invalid token',
-                mfaEnabled: user.mfaEnabled,
-            });
-        } else {
-            user.mfaEnabled = true;
-            user.save();
+        try {
+            // Find verified user
+            const user = await User.findById(req.user.id);
+            let isValid;
+
+            // Check for method verification status (? Need this?)
+            // if (user.mfaMethods[req.body.method]['verified']) {return "200, verified"}
+
+            // Verify authenticator app:
+            if (method === 'authApp') {
+                // const otpCode = req.body.code.replaceAll(' ', ''); //--> TODO: replace with express-validator middleware
+                isValid = authenticator.check(code, user.mfaAppSecret);
+                if (isValid) {
+                    user.mfaMethods.authApp.verified = true;
+                    await user.save();
+                }
+            }
+            // Verify email code:
+            if (method === 'email') {
+                isValid = await EmailOTP.verifyEmailOTP(user._id, code);
+                if (isValid) {
+                    user.mfaMethods.email.verified = true;
+                    await user.save();
+                }
+            }
+
+            if (!isValid) {
+                return res.status(401).json({
+                    message: 'OTP verification failed: Invalid code',
+                });
+            }
+
+            //Once at least ONE method verified, set mfaEnabled to true.
+            if (
+                !user.mfaEnabled &&
+                (user.mfaMethods.authApp.verified ||
+                    user.mfaMethods.email.verified)
+            ) {
+                user.mfaEnabled = true;
+                user.mfaDefaultMethod = method;
+                await user.save();
+            }
+
+            console.log('Success');
 
             return res.json({
                 message: 'OTP verification successful',
-                mfaEnabled: user.mfaEnabled,
+            });
+        } catch (error) {
+            console.log('Error with OTP verification: ', error);
+            return res.status(500).json({
+                message: 'OTP verification failed: Server error',
             });
         }
     },
@@ -270,9 +353,98 @@ export const userController = {
             });
         } catch (error) {
             console.log('Error disabling 2fa: ', error);
-            return res.status(400).json({
+            return res.status(500).json({
                 message: 'Error disabling 2FA',
             });
         }
     },
 };
+
+async function generateMfaSecret(user) {
+    try {
+        const secret = authenticator.generateSecret();
+        user.mfaAppSecret = secret;
+        await user.save();
+
+        console.log('2FA App secret generation successful');
+        return secret;
+    } catch (error) {
+        console.log('2FA secret generation error: ', error);
+        throw error;
+    }
+}
+
+async function generateAppOtpData(user, secret) {
+    console.log('Generating otp data...');
+
+    const appName = 'Author Website Admin Portal';
+    const otpAuth = authenticator.keyuri(user.email, appName, secret);
+    const qrImageUrl = await qrcode.toDataURL(otpAuth);
+
+    const qrInfo = {
+        otpauthUrl: otpAuth,
+        qrCodeDataUrl: qrImageUrl,
+    };
+    return qrInfo;
+}
+
+// TEMP Archive --------------------------
+
+// generateMfaSecret: async (req, res) => {
+// const user = await User.findById(req.user.id);
+
+// Check mfa enabled status - don't generate if already set up
+// TODO(?): Add "if mfaEnabled && mfaAppSecret", and send along the existing app secret?
+// (Any reason not to make the already-generated secret available on request?)
+// if (user.mfaEnabled && user.mfaAppSecret) {
+//     return res.status(400).json({
+//         message: '2FA already verified and enabled',
+//         mfaEnabled: user.mfaEnabled,
+//     });
+// }
+
+// const secret = authenticator.generateSecret();
+// user.mfaAppSecret = secret;
+// user.save();
+// const appName = 'Author Website Admin Portal';
+
+// TODO: Check if way to offer the otpauth code as copy-paste option (if qrcode doesn't work)?
+//     return res.json({
+//         message: '2FA secret generation successful',
+//         secret: secret,
+//         qrImageDataUrl: await qrcode.toDataURL(
+//             authenticator.keyuri(req.user.email, appName, secret)
+//         ),
+//         mfaEnabled: user.mfaEnabled,
+//     });
+// },
+
+// verifyOTP: async (req, res) => {
+//     const user = await User.findOne({ email: req.user.email });
+
+//     // TODO: Check - Like with ^generateMfa, is the following necessary as-is? What if they need to register new app?
+//     // if (user.mfaEnabled) {
+//     //     return res.json({
+//     //         message: '2FA already verified and enabled',
+//     //         mfaEnabled: user.mfaEnabled,
+//     //     });
+//     // }
+
+//     const otpCode = req.body.code.replaceAll(' ', ''); //--> TODO: replace with express-validator middleware
+//     const isValid = authenticator.check(otpCode, user.mfaAppSecret);
+//     if (!isValid) {
+//         return res.status(401).json({
+//             message: 'OTP verification failed: Invalid code',
+//             // mfaEnabled: user.mfaEnabled,
+//         });
+//     }
+
+//     // Code is valid -- Update user
+//     user.mfaMethods.authApp.verified = true;
+//     user.save();
+
+//     return res.json({
+//         message: 'OTP verification successful',
+//         // mfaEnabled: user.mfaEnabled,
+//     });
+// },

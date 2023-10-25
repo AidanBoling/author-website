@@ -119,7 +119,7 @@ export const authController = {
                     console.log(error);
                 } else {
                     console.log('User logged out');
-                    req.session.regenerate(function (err) {
+                    req.session.regenerate(function (error) {
                         console.log(error);
                     });
                 }

@@ -52,3 +52,11 @@ export function getMFALoginToken(user) {
     };
     return jwt.sign(payload, process.env.JWT_SECRET, options);
 }
+
+export function getRelativeLoginTime(user) {
+    const currentLoginTime = new Date(user.loginAt);
+    const now = new Date();
+    const dTime = now.getTime() - currentLoginTime.getTime();
+    console.log('Minutes since last login: ', dTime / (1000 * 60));
+    return dTime / (1000 * 60);
+}

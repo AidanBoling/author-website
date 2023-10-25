@@ -2,30 +2,6 @@ import argon2 from 'argon2';
 import User from '../model/User.js';
 
 export const passportStrategy = {
-    // loginOLD:
-
-    // async function verify(email, password, cb) {
-    //     try {
-    //         let user = await User.findOne({ email: email });
-    //         if (!user) {
-    //             return cb(null, false, {
-    //                 message: 'Incorrect username or password.',
-    //             });
-    //         }
-
-    //         const isValid = await user.verifyPassword(password);
-
-    //         // Note: -> If user model hash doesn't work, put hash function here
-
-    //         if (!isValid) {
-    //             return cb(null, false, {
-    //                 message: 'Incorrect username or password.',
-    //             });
-    //         }
-    //     } catch (error) {}
-    //     return cb(error);
-    // },
-
     login: async (req, email, password, done) => {
         // let data = req.body;
         // TODO: test if need to use req.email, req.password for validated values, or if
@@ -61,8 +37,9 @@ export const passportStrategy = {
         // }
 
         try {
+            console.log('Starting passport login strategy...');
             console.log('email: ', valEmail);
-            console.log('password: ', valPassword);
+            // console.log('password: ', valPassword);
 
             const user = await User.authenticate(valEmail, valPassword);
 

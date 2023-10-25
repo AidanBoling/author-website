@@ -76,4 +76,17 @@ export const userEmailTemplates = {
 
         return content;
     },
+
+    otpCode: code => {
+        const company = process.env.COMPANY_NAME;
+
+        const content = {
+            subject: `${company} Verification Code`,
+            html: `<p>Your login verification code is <b>${code}</b>. This code expires in 10 minutes.</p>`,
+            text: `Your login verification code: ${code}\n
+                This code expires in 10 minutes.`,
+        };
+
+        return content;
+    },
 };

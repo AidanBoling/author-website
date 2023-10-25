@@ -18,6 +18,17 @@ const userSchema = new Schema(
         password: String,
         mfaEnabled: { type: Boolean, default: false },
         mfaAppSecret: String,
+        mfaMethods: {
+            authApp: {
+                enabled: { type: Boolean, default: false },
+                verified: { type: Boolean, default: false },
+            },
+            email: {
+                enabled: { type: Boolean, default: false },
+                verified: { type: Boolean, default: false },
+            },
+        },
+        mfaDefaultMethod: { type: String },
         permissionLevel: {
             type: String,
             default: 'user',
