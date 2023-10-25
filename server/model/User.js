@@ -16,7 +16,13 @@ const userSchema = new Schema(
             unique: true,
         },
         password: String,
+        mfa: {
+            enabled: { type: Boolean, default: false },
+            methodsVerified: { type: Number, default: 0 },
+            defaultMethod: { type: String },
+        },
         mfaEnabled: { type: Boolean, default: false },
+        mfaDefaultMethod: { type: String },
         mfaAppSecret: String,
         mfaMethods: {
             authApp: {
@@ -28,7 +34,6 @@ const userSchema = new Schema(
                 verified: { type: Boolean, default: false },
             },
         },
-        mfaDefaultMethod: { type: String },
         permissionLevel: {
             type: String,
             default: 'user',
@@ -70,6 +75,24 @@ userSchema.pre('save', function (next) {
         this.createdAt = Date.now();
     } // set createdAt if not yet set (e.g. if user created through Mongo Atlas --> no automatic create timestamp)
     next();
+});
+
+userSchema.pre('save', async function (next) {
+    if (this.isModified('mfaMethods')) {
+        // do calc of methodsVerified
+        let n = 0;
+        if (this.mfaMethods.appAuth.verified) {
+            n += 1;
+        }
+        if (this.mfaMethods.email.verified) {
+            n += 1;
+        }
+
+        // this.mfa.methodsVerified = n;
+        console.log('MFA methods count: ', n);
+    }
+
+    return next();
 });
 
 userSchema.static('authenticate', async (username, plainTextPassword) => {

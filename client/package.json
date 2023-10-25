@@ -10,6 +10,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@mui/lab": "^5.0.0-alpha.150",
     "@mui/x-date-pickers": "^6.15.0",
     "dompurify": "^3.0.5",
     "next": "^13.5.1",

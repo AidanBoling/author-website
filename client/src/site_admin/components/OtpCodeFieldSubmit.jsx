@@ -1,5 +1,5 @@
 'use client';
-import { TextField, Button, Stack } from '@mui/material';
+import { Stack, TextField, Button, Typography } from '@mui/material';
 
 export default function OtpCodeField(props) {
     return (
@@ -15,10 +15,18 @@ export default function OtpCodeField(props) {
                     label="OTP Code"
                     onChange={props.onChange}
                 />
-                {props.includeSubmit && (
+                {!props.noSubmit && (
                     <Button variant="contained" type="submit">
                         Submit
                     </Button>
+                )}
+
+                {props.note && (
+                    <Typography>
+                        <i>Note</i>:
+                        <br />
+                        {props.note}
+                    </Typography>
                 )}
             </Stack>
         </>

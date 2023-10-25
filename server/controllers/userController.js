@@ -306,6 +306,7 @@ export const userController = {
                 isValid = await EmailOTP.verifyEmailOTP(user._id, code);
                 if (isValid) {
                     user.mfaMethods.email.verified = true;
+                    // user.mfaMethodsVerified = user.mfaMethodsVerified + 1;
                     await user.save();
                 }
             }
@@ -318,12 +319,12 @@ export const userController = {
 
             //Once at least ONE method verified, set mfaEnabled to true.
             if (
-                !user.mfaEnabled &&
+                !user.mfa.enabled &&
                 (user.mfaMethods.authApp.verified ||
                     user.mfaMethods.email.verified)
             ) {
-                user.mfaEnabled = true;
-                user.mfaDefaultMethod = method;
+                user.mfa.enabled = true;
+                user.mfa.defaultMethod = method;
                 await user.save();
             }
 
@@ -343,13 +344,13 @@ export const userController = {
     disableMfa: async (req, res) => {
         try {
             const user = await User.findOne({ email: req.user.email });
-            user.mfaEnabled = false;
+            user.mfa.enabled = false;
             user.mfaAppSecret = '';
             await user.save();
 
             return res.json({
                 message: '2FA disabled successfully',
-                mfaEnabled: user.mfaEnabled,
+                mfaEnabled: user.mfa.enabled,
             });
         } catch (error) {
             console.log('Error disabling 2fa: ', error);

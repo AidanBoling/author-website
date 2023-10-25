@@ -36,6 +36,7 @@ import {
 import { userController } from './controllers/userController.js';
 import { verify } from './services/verifyUserTokens.js';
 import { loginTimeCheck } from './services/loginCheck.js';
+import sendOTPCodeEmail from './utils/sendOTPemail.js';
 // import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
 
@@ -433,13 +434,17 @@ app.post(
 //--> ^TODO: Add validation (OTPcode)
 
 // Send an email with a new OTP code
-app.get('/admin/login/mfa/email', async (req, res) => {
+// TODO: add validation for email (req.body.email)
+app.post('/admin/login/mfa/email', async (req, res) => {
+    console.log('Send email route triggered...');
     try {
-        const user = await User.findById(req.user.id);
+        const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) throw new Error('User not found');
         sendOTPCodeEmail(user._id, email);
         res.json({ message: 'Success' });
     } catch (error) {
-        console.log('Error sending OTP code email');
+        console.log('Error sending OTP code email: ', error);
         res.status(500).json({ message: 'Server error' });
     }
 });

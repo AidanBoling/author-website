@@ -4,6 +4,7 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import mongoose from 'mongoose';
 import User from '../model/User.js';
+import EmailOTP from '../model/emailOTP.js';
 import passport from 'passport';
 import {
     getAuthToken,
@@ -39,9 +40,13 @@ export const passportAuthenticate = {
                     // if mfa enabled, send temp token that confirms authorized to go to step 2
                     return res.json({
                         message: 'Please complete 2-factor authentication',
-                        user: user.email,
-                        mfaEnabled: user.mfaEnabled,
                         challenge: 'MFA',
+                        user: user.email,
+                        mfa: {
+                            enabled: user.mfa.enabled,
+                            defaultMethod: user.mfa.defaultMethod,
+                            methodsCount: user.mfa.methodsVerified,
+                        },
                         preAuthToken: getMFALoginToken(user),
                         // ^TODO?: May want to implement user fingerprint, so have way to invalidate token
                         // from server side (deleting the cookie)?
@@ -73,9 +78,17 @@ export const passportAuthenticate = {
                 // JWT verified, now check OTP code:
                 console.log('JWT verified, checking OTP code...');
 
-                const token = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+                const code = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+                let isValid;
 
-                if (authenticator.check(token, user.mfaAppSecret)) {
+                if (req.body.method === 'authApp') {
+                    isValid = authenticator.check(code, user.mfaAppSecret);
+                } else if (req.body.method === 'email') {
+                    isValid = await EmailOTP.verifyEmailOTP(user._id, code);
+                }
+
+                if (isValid) {
+                    console.log('Code validated. Saving login data...');
                     User.saveLogin(user);
                     req.login(user, next); // Call passport login function (to set req.user and send to session)
                 } else {
@@ -102,7 +115,7 @@ export const authController = {
         return res.json({
             message: 'Success',
             user: req.user.email,
-            mfaEnabled: req.user.mfaEnabled,
+            // mfaEnabled: req.user.mfaEnabled,
             // sessionID: req.session.id(?) // FOR TESTING ONLY -- remove.
         });
     },

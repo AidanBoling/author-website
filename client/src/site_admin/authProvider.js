@@ -56,11 +56,13 @@ function handlePwdLogin(request) {
 
             // If returns mfa indicator, redirect to mfa page
             if (data.challenge === 'MFA') {
+                console.log('mfa info: ', data.mfa);
                 localStorage.setItem(
                     'mfa',
                     JSON.stringify({
                         user: data.user,
                         preAuthToken: data.preAuthToken,
+                        info: data.mfa,
                     })
                 );
                 console.log(JSON.parse(localStorage.getItem('mfa')));
@@ -115,10 +117,11 @@ export const authProvider = {
 
         if (localStorage.getItem('mfa')) {
             console.log('Setting up mfa request options');
+            // console.log('Code: ', formInput.code);
 
             const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
             reqPath = '/login/mfa';
-            reqBody = { OTPcode: formInput.code };
+            reqBody = { method: formInput.method, OTPcode: formInput.code };
             reqHeaders = { Authorization: `Bearer ${preAuthToken}` };
         } else {
             const { username, password } = formInput;
@@ -411,9 +414,13 @@ export const authProvider = {
     },
 
     sendEmailCode: async () => {
-        const request = setRequest('/admin/login/mfa/email', null, 'GET');
+        const mfa = JSON.parse(localStorage.getItem('mfa'));
+        const request = setRequest('/login/mfa/email', {
+            email: mfa.user,
+        });
 
         try {
+            console.log('Starting email send fetch...');
             const data = await fetch(request).then(response =>
                 handleResponse(response)
             );
