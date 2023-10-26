@@ -316,23 +316,14 @@ export const authProvider = {
 
             if (data) {
                 console.log('User data: ', data);
-                const {
-                    id,
-                    fullName,
-                    avatar,
-                    email,
-                    lastLogin,
-                    mfaEnabled,
-                    mfaMethods,
-                } = data;
+                const { id, fullName, avatar, email, lastLogin, mfa } = data;
                 return Promise.resolve({
                     id,
                     fullName,
                     avatar,
                     email,
                     lastLogin,
-                    mfaEnabled,
-                    mfaMethods,
+                    mfa,
                 });
             }
         } catch (error) {

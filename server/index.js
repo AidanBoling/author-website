@@ -523,9 +523,12 @@ app.get('/admin/auth/user', async (req, res) => {
             fullName: user.name,
             email: user.email,
             lastLogin: user.lastLogin[1],
-            mfaEnabled: user.mfaEnabled,
-            // mfaMethodsRegistered: user.mfaMethodsRegistered,
-            mfaMethods: user.mfaMethods,
+            mfa: {
+                enabled: user.mfa.enabled,
+                methods: user.mfaMethods,
+                default: user.mfa.defaultMethod,
+                count: user.mfa.methodsVerified,
+            },
         };
         res.json(userInfo);
     } catch (error) {

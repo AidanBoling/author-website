@@ -25,7 +25,7 @@ import {
     useNotify,
 } from 'react-admin';
 import { redirect, useNavigate } from 'react-router-dom';
-import UserSettingsPageWrapper from '../UserSettingsPageWrapper';
+import UserSettingsPageWrapper from './UserSettingsUtilities';
 import OtpCodeField from '../OtpCodeFieldSubmit';
 
 export default function RegisterMFAMethod() {

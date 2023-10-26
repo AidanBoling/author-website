@@ -41,3 +41,19 @@ export default function UserSettingsPageWrapper(props) {
         </Container>
     );
 }
+
+export function UserSettingsSection(props) {
+    return (
+        <>
+            <Box>
+                <Typography variant="h5" component="h2" my=".5rem">
+                    {props.title}
+                </Typography>
+                <Divider />
+            </Box>
+            <Box px={'2.5rem'} mb={'2rem'}>
+                {props.children}
+            </Box>
+        </>
+    );
+}

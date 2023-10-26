@@ -14,8 +14,11 @@ import {
 } from '@mui/material';
 import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
-import UserSettingsPageWrapper from '../UserSettingsPageWrapper';
+import UserSettingsPageWrapper, {
+    UserSettingsSection,
+} from './UserSettingsUtilities';
 
+// TODO: User info section into a List (mui)
 export default function AccountPage() {
     const { isLoading, error, data, refetch } = useGetIdentity();
 
@@ -25,15 +28,8 @@ export default function AccountPage() {
         <UserSettingsPageWrapper title="Account Info">
             {data && (
                 <>
-                    <Stack gap={2}>
-                        <Box>
-                            <Typography variant="h5" component="h2" my=".5rem">
-                                Info
-                            </Typography>
-
-                            <Divider />
-                        </Box>
-                        <Box px={'2rem'}>
+                    <Stack gap={3}>
+                        <UserSettingsSection title="Info">
                             <Box
                                 display="flex"
                                 alignItems={'center'}
@@ -62,49 +58,44 @@ export default function AccountPage() {
                                     }
                                 )}
                             </p>
-                        </Box>
-                    </Stack>
-
-                    <Stack gap={2}>
-                        <Box>
-                            <Typography variant="h5" component="h2" my=".5rem">
-                                Security
-                            </Typography>
-                            <Divider />
-                        </Box>
-                        <Stack gap={2} px={'2rem'}>
-                            {data.mfaEnabled ? (
-                                <FormControlLabel
-                                    control={<Switch defaultChecked disabled />}
-                                    label={'2FA is enabled'}
-                                />
-                            ) : (
-                                <FormControlLabel
-                                    control={<Switch disabled />}
-                                    label={'2FA is disabled'}
-                                />
-                            )}
-                            <Box display="flex" alignItems={'center'}>
-                                <Button
-                                    component={RouterLink}
-                                    to="/user/security"
-                                    variant="outlined"
-                                    sx={{ maxWidth: '275px' }}>
-                                    Security Settings
-                                </Button>
-                                <Typography
-                                    sx={{
-                                        ml: '2rem',
-                                        fontSize: '.9rem',
-                                        color: 'grey.main',
-                                    }}>
-                                    Change your password or two-factor
-                                    authentication (2FA) settings. Note, you
-                                    will be required to re-confirm all your
-                                    credentials.
-                                </Typography>
-                            </Box>
-                        </Stack>
+                        </UserSettingsSection>
+                        <UserSettingsSection title="Security">
+                            <Stack gap={4}>
+                                {data.mfa.enabled ? (
+                                    <FormControlLabel
+                                        control={
+                                            <Switch defaultChecked disabled />
+                                        }
+                                        label={'2FA is enabled'}
+                                    />
+                                ) : (
+                                    <FormControlLabel
+                                        control={<Switch disabled />}
+                                        label={'2FA is disabled'}
+                                    />
+                                )}
+                                <Box display="flex" alignItems={'center'}>
+                                    <Button
+                                        component={RouterLink}
+                                        to="/user/security"
+                                        variant="outlined"
+                                        sx={{ maxWidth: '275px' }}>
+                                        Security Settings
+                                    </Button>
+                                    <Typography
+                                        sx={{
+                                            ml: '2rem',
+                                            fontSize: '.9rem',
+                                            color: 'grey.main',
+                                        }}>
+                                        Change your password or two-factor
+                                        authentication (2FA) settings. Note, you
+                                        will be required to re-confirm all your
+                                        credentials.
+                                    </Typography>
+                                </Box>
+                            </Stack>
+                        </UserSettingsSection>
                     </Stack>
                 </>
             )}

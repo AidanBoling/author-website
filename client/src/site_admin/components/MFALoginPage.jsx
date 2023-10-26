@@ -138,6 +138,7 @@ function MyLoginPage({ theme }) {
         login({ method: useMethod, code: code }).catch(error =>
             notify(error.message, { type: 'error' })
         );
+        //TODO: Troubleshoot notify here -- doesnt notify. (Probably to do with the way login method works...))
     }
 
     return (
