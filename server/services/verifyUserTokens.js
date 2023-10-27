@@ -45,10 +45,10 @@ export const verify = {
     userUpdateToken: async (req, res, next) => {
         // CHECK: Need to handle validator invalid results here, or can do within validator middleware?
         // const data = matchedData(req); // CHECK -- need different/separate one for params?
+        console.log('Starting user update token verification...');
 
         const data = { ...req.body }; // Temp
-
-        console.log(data);
+        // console.log(data);
 
         try {
             // Check for existing token by submitted userId and purpose

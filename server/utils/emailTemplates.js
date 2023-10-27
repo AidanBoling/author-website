@@ -24,10 +24,11 @@ export const userEmailTemplates = {
             content = {
                 subject: `${company} registration instructions`,
                 html: `<p>Your registration code was accepted. Follow the link below to complete your ${company} account registration:</p>
-                    <a href=${data.link}>Complete Registration</a>`,
-                text:
-                    `Your registration code was accepted. Use the link below to complete your ${company} account registration: \n\n` +
-                    data.link,
+                    <a href=${data.link}>Complete Registration</a>
+                    <p>Note: This link expires in 15 minutes. After that, you'll need to use your access code to generate another link.</p>`,
+                text: `Your registration code was accepted. Use the link below to complete your ${company} account registration: \n\n
+                    ${data.link}\n\n\n
+                    Note: This link expires in 15 minutes. After that, you'll need to use your access code to generate another link.`,
             };
         } else if (variant === 'success') {
             content = {

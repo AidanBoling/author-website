@@ -152,6 +152,7 @@ export const authController = {
     },
 
     authCheck: (req, res) => {
+        console.log('Auth check: OK');
         res.json({ message: 'Security check ok' });
     },
 };

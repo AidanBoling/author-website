@@ -21,6 +21,7 @@ export default function UserForm(props) {
         newPassword: '',
         confirmPassword: '',
     });
+    // const params = props.params;
     const notify = useNotify();
     const authProvider = useAuthProvider();
 
@@ -35,7 +36,7 @@ export default function UserForm(props) {
         // ...
         console.log('Form values on submit: ', values);
         await props
-            .formRouting(values)
+            .formRouting(values, props.params)
             .then(() => {
                 if (props.hideable) {
                     props.hideForm();

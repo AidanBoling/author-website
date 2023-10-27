@@ -15,15 +15,16 @@ import {
 } from '@mui/material';
 import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
 import { redirect } from 'react-router-dom';
+import LoadingPage from '../LoadingPage';
 
 export default function UserSettingsPageWrapper(props) {
     const { isLoading, error } = useGetIdentity();
 
     // console.log('Identity info: ', data);
-    useAuthenticated();
+    // useAuthenticated();
 
     const content = isLoading ? (
-        <>Loading...</>
+        <LoadingPage isLoading={isLoading} />
     ) : error ? (
         <>Error</>
     ) : (
@@ -34,7 +35,7 @@ export default function UserSettingsPageWrapper(props) {
             <Title title={props.title} />
 
             <Paper>
-                <Box sx={{ padding: '2rem' }}>
+                <Box sx={{ padding: '2rem', minHeight: '60vh' }}>
                     <Stack gap={4}>{content}</Stack>
                 </Box>
             </Paper>

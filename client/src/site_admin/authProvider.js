@@ -1,5 +1,5 @@
 import { API_URL } from './api/config';
-import { redirect } from 'react-router-dom';
+import { redirect, useSearchParams } from 'react-router-dom';
 
 function setRequest(path, body, method = 'POST', headers = {}) {
     headers = { 'Content-Type': 'application/json', ...headers };
@@ -124,6 +124,8 @@ async function fetchWithThrowError(
     }
 }
 
+// const [searchParams, setSearchParams] = useSearchParams();
+
 export const authProvider = {
     login: formInput => {
         console.log('Going through login route...');
@@ -231,33 +233,60 @@ export const authProvider = {
         return Promise.resolve();
     },
 
-    checkAuth: async () => {
-        console.log('Checking Auth at path: ', window.location.hash);
-
+    checkAuth: async params => {
+        console.log('Checking Auth at path: ', location.hash);
+        if (params) {
+            console.log('checkAuth params: ', params);
+        }
         // On accessCode page, do nothing
-        if (window.location.hash === '#/use/code') {
+        if (location.hash === '#/use/code') {
             return;
         }
 
         // On register and password reset pages, check for correct auth
         // TODO:
-        if (window.location.hash === '#/register') {
-            // get reqBody from params...? Or send params as-is?
-            // const request = setRequest('/mod/register', null, 'GET');
-            // try {
-            //     const response = await fetch(request)
-            //         .then(response => handleResponse(response))
-            //         .then(() => Promise.resolve());
-            // } catch (error) {
-            //     return Promise.reject({
-            //         message: 'Unauthorized',
-            //     });
-            // }
-            return;
+        const registerHash = /^#\/register/;
+        const passwordResetHash = /^#\/password-reset/;
+        if (
+            registerHash.test(location.hash) ||
+            passwordResetHash.test(location.hash)
+        ) {
+            let purpose;
+            if (registerHash.test(location.hash)) {
+                purpose = 'register';
+            }
+            if (passwordResetHash.test(location.hash)) {
+                purpose = 'passwordReset';
+            }
+            console.log('Hash matches a pattern. Purpose: ', purpose);
+
+            // If no params, do nothing (pages set to send urlsearchparams)
+            if (!params) {
+                return;
+            }
+
+            const request = setRequest('/mod/checkAuth', {
+                purpose: purpose,
+                ...params,
+            });
+
+            try {
+                const data = await fetch(request).then(response =>
+                    handleResponse(response)
+                );
+                return Promise.resolve();
+            } catch (error) {
+                console.log(error.message);
+                if (error.message === 'Unauthorized')
+                    return Promise.reject({
+                        message: 'Unauthorized',
+                    });
+
+                return Promise.reject({
+                    message: 'An unexpected error occurred.',
+                });
+            }
         }
-        // if (window.location.hash === '#/passwordReset') {
-        //     // ...
-        // }
 
         // If have mfa item, redirect
         if (localStorage.getItem('mfa'))
@@ -314,18 +343,25 @@ export const authProvider = {
 
         localStorage.removeItem('auth');
         localStorage.removeItem('mfa');
-
-        return fetch(request).then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                return Promise.resolve();
-            }
-            throw new Error('Something went wrong with server logout.');
-        });
+        return fetch(request)
+            .then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    return Promise.resolve();
+                }
+                throw new Error('Something went wrong with server logout.');
+            })
+            .catch(error => console.log('Error: ', error.message));
     },
 
     getPermissions: () => Promise.resolve(''),
 
     getIdentity: async () => {
+        //Skip get Identity if user not logged in
+        if (!localStorage.getItem('auth')) {
+            console.log('Skipping get identity...');
+            return;
+        }
+
         console.log('Getting identity...');
 
         const request = setRequest('/auth/user', null, 'GET');
@@ -486,15 +522,26 @@ export const authProvider = {
 
     preAuthUser: {
         //TODO: these routes involve getting params from url...
-        register: async () => {
-            //--> name, email, password
-            // const { currentPassword, newPassword, confirmPassword } = formData;
+        // on page -->   let { token, id } = useParams();
+
+        //TODO: Test -- once up and running, make sure that if someone changes
+        // the "purpose", aka the path, they should not be able to get to
+        // the other page (or should be immediately kicked off it) if the token
+        // they have is not valid for that path (purpose)
+
+        register: async (formData, params) => {
+            //--> name, email, password, + params
+            // const { name, email, newPassword, confirmPassword } = formData;
             // const request = setRequest('/auth/settings/change/password', {
-            //     currentPwd: currentPassword,
-            //     newPwd: newPassword,
-            //     confirmNewPwd: confirmPassword,
+            //     id: params.id,
+            //     token: params.token,
+            //     name: name,
+            //     email: email,
+            //     password: newPassword,
+            //     confirmPassword: confirmPassword,
             // });
-            // const errorUnauthorizedMsg = 'Current password invalid';
+            // Prob change the following... b/c different error handling/routing?
+            // const errorUnauthorizedMsg = 'Invalid or expired token';
             // const errorOtherMsg = 'Server error. Password not changed.';
             // return fetchWithThrowError(
             //     request,
@@ -512,3 +559,9 @@ export const authProvider = {
 
 // TODO: Troubleshoot security pages -- checkAuth not working
 // as expected -- not timing out (to login page or otherwise)
+
+// TODO: Troubleshoot Login+MFA -- If get through pwd login, but then don't put
+// otp password and click back in browser instead, get taken to Dashboard page,
+// even though console error message says Unauthorized...
+
+//TODO: Add validation to UserForm fields

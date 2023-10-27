@@ -22,6 +22,7 @@ import {
 import LoadingButton from '@mui/lab/LoadingButton';
 import SendIcon from '@mui/icons-material/Send';
 import OtpCodeField from './OtpCodeFieldSubmit';
+import FormPageWrapper from './FormNoLayoutPageWrapper';
 
 function MethodInfo({ method }) {
     const [submitPending, setSubmitPending] = useState(false);
@@ -83,8 +84,6 @@ function MethodInfo({ method }) {
 //TODO: fix so that the "back" button takes to login page, NOT dashboard
 
 function MyLoginPage({ theme }) {
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('')
     const mfa = JSON.parse(localStorage.getItem('mfa'));
     const [useMethod, setUseMethod] = useState(mfa.info.defaultMethod);
     // const [otherMethod, setOtherMethod] = useState(mfa.info.defaultMethod)
@@ -109,7 +108,6 @@ function MyLoginPage({ theme }) {
         setUseMethod(otherMethod);
     }
 
-    //TODO(?): Update this -- extend mfa cookie expire, to accomodate email...?
     useEffect(() => {
         // Delete mfa after 5 minutes (when it expires anyways)
         let timer = setTimeout(() => {
@@ -124,12 +122,6 @@ function MyLoginPage({ theme }) {
         };
     }, []);
 
-    // function handleLoginSubmit(event) {
-    //     event.preventDefault();
-    //     console.log('email: ', email);
-    //     login({ email, password }).catch(error => notify(error.message));
-    // }
-
     function handleMfaSubmit(event) {
         event.preventDefault();
         console.log('Code entered: ', code);
@@ -138,64 +130,26 @@ function MyLoginPage({ theme }) {
         login({ method: useMethod, code: code }).catch(error =>
             notify(error.message, { type: 'error' })
         );
-        //TODO: Troubleshoot notify here -- doesnt notify. (Probably to do with the way login method works...))
+        //TODO: Troubleshoot notify here -- doesnt notify. (Probably to do with the way login method works...?))
     }
 
     return (
-        <Container
-            className="login"
-            maxWidth={'xl'}
-            sx={{
-                position: 'relative',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 100,
-            }}>
-            <Paper
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '340px',
-                    mt: '10vh',
-                    // padding: '2rem',
-                }}>
-                <Stack gap={3}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}>
-                        <Typography
-                            variant="h5"
-                            component="h2"
-                            mt={'1.25rem'}
-                            mb={'1rem'}>
-                            Enter OTP
-                        </Typography>
-                        <Divider width={'80%'} />
-                    </Box>
-                    <MethodInfo method={useMethod} />
-                    {mfa.info.methodsCount > 1 && (
-                        <Box>
-                            <Button>Use {otherMethod} instead</Button>
-                        </Box>
-                    )}
-                    <form onSubmit={handleMfaSubmit}>
-                        <OtpCodeField
-                            control={code}
-                            onChange={event => setCode(event.target.value)}
-                            note="If code is invalid or expired, you will be
+        <FormPageWrapper title="Enter OTP" width="340px">
+            <MethodInfo method={useMethod} />
+            {mfa.info.methodsCount > 1 && (
+                <Box>
+                    <Button>Use {otherMethod} instead</Button>
+                </Box>
+            )}
+            <form onSubmit={handleMfaSubmit}>
+                <OtpCodeField
+                    control={code}
+                    onChange={event => setCode(event.target.value)}
+                    note="If code is invalid or expired, you will be
                             redirected to login page"
-                        />
-                    </form>
-                </Stack>
-            </Paper>
-        </Container>
+                />
+            </form>
+        </FormPageWrapper>
     );
 }
 

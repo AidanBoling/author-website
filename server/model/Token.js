@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import argon2 from 'argon2';
 import { randomBytes, createHmac } from 'node:crypto';
+import User from './User.js';
 
 const { Schema, SchemaTypes, model } = mongoose;
 
@@ -59,18 +60,22 @@ tokenSchema.pre('save', async function (next) {
 
 tokenSchema.static('verifyToken', async (userId, tokenPurpose, tokenVal) => {
     // Check for existing token for form-submitted userId and purpose
-    const userToken = await Token.findOne({
-        userId: userId,
-        purpose: tokenPurpose,
-    });
+    const user = await User.findById(userId);
+    let userToken;
+    if (user) {
+        userToken = await Token.findOne({
+            userId: user._id,
+            purpose: tokenPurpose,
+        });
+    }
 
-    if (!userToken) {
+    if (!user) {
         // Q: Is this needed?
         await argon2.hash(process.env.DUMMY_PWD, {
             memoryCost: 2 ** 14,
             parallelism: 3,
         });
-        console.log('No token linked to given user');
+        console.log('Invalid user, or no token linked to given user');
     }
 
     // Compare received token value with found db token value

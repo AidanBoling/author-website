@@ -53,11 +53,21 @@ import SecuritySettings from './user/SecuritySettings';
 import MyLoginPage from './MFALoginPage';
 import AccountPage from './user/AccountPage';
 import RegisterMFAMethod from './user/RegisterMFAMethod';
+import Register from './Register';
+import PasswordReset from './PasswordReset';
 
 import AccessCodeForm from './AccessCodePage';
 
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
+
+function DashboardRequireAuth(props) {
+    return (
+        <Authenticated requireAuth>
+            <Dashboard />
+        </Authenticated>
+    );
+}
 
 function CustomLayout(props) {
     return <Layout {...props} appBar={CustomAppBar} menu={CustomMenu} />;
@@ -74,8 +84,9 @@ function AdminApp() {
             darkTheme={customDarkTheme}
             // loginPage={MyLoginPage}
             authCallbackPage={MyLoginPage}
-            dashboard={Dashboard}
-            requireAuth>
+            dashboard={DashboardRequireAuth}
+            // requireAuth
+        >
             <Resource
                 name="posts"
                 list={PostList}
@@ -117,10 +128,18 @@ function AdminApp() {
             />
             <CustomRoutes noLayout>
                 <Route path="/use/code" element={<AccessCodeForm />} />
-                {/* <Route path="/password-reset" element={<PasswordReset />} /> */}
+                <Route path="/register" element={<Register />} />
+                <Route path="/password-reset" element={<PasswordReset />} />
             </CustomRoutes>
             <CustomRoutes>
-                <Route path="/user" element={<AccountPage />} />
+                <Route
+                    path="/user"
+                    element={
+                        <Authenticated requireAuth>
+                            <AccountPage />
+                        </Authenticated>
+                    }
+                />
                 <Route
                     path="/user/security"
                     element={
@@ -131,7 +150,11 @@ function AdminApp() {
                 />
                 <Route
                     path="/user/security/enable-mfa"
-                    element={<RegisterMFAMethod />}
+                    element={
+                        <Authenticated requireAuth>
+                            <RegisterMFAMethod />
+                        </Authenticated>
+                    }
                 />
 
                 {/* <Route path="/login-mfa" element={<MyLoginPage />} /> */}

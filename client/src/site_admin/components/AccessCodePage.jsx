@@ -19,6 +19,7 @@ import {
     TextField,
 } from '@mui/material';
 import { redirectDocument } from 'react-router-dom';
+import FormPageWrapper from './FormNoLayoutPageWrapper';
 
 export default function AccessCodeForm({ theme }) {
     const [code, setCode] = useState('');
@@ -32,74 +33,53 @@ export default function AccessCodeForm({ theme }) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        authProvider.registration(code);
+        authProvider.submitAccessCode(code);
         setIsSubmitted(true);
 
         // Redirect page after 5min (2m?)
+
         // TODO: Fix and add author website homepage url
         // const timer = setTimeout(() => {
-        //     redirectDocument('http://app.localhost:3000/login');
+        //     redirectDocument('http://app.localhost:3000/admin#/login');
         // }, 1 * 60 * 1000);
     }
 
     return (
-        <Container
-            className="login"
-            maxWidth={'xl'}
-            sx={{
-                position: 'relative',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-            <Paper
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '300px',
-                    minHeight: '400px',
-                    mt: '5vh',
-                }}>
-                {!isSubmitted ? (
-                    <>
-                        <Typography variant="h5" component="p" mt={'2rem'}>
-                            Enter Code
-                        </Typography>
-
-                        <form onSubmit={handleSubmit}>
-                            <Stack gap={4} sx={{ margin: '2rem' }}>
-                                <TextField
-                                    variant="outlined"
-                                    name="code"
-                                    type="password"
-                                    value={code}
-                                    onChange={event =>
-                                        setCode(event.target.value)
-                                    }
-                                />
-                                <Button variant="contained" type="submit">
-                                    Submit
-                                </Button>
-                            </Stack>
-                        </form>
-                    </>
-                ) : (
-                    <Typography
-                        variant="h5"
-                        component="h2"
-                        m={'2rem'}
-                        textAlign={'center'}>
-                        Thank you.
-                        <br />
-                        <br />
-                        If your code is valid, you will receive an email with
-                        further instructions.
+        <FormPageWrapper width="300px">
+            {!isSubmitted ? (
+                <>
+                    <Typography variant="h5" component="p" mt={'2rem'}>
+                        Enter Code
                     </Typography>
-                )}
-            </Paper>
-        </Container>
+
+                    <form onSubmit={handleSubmit}>
+                        <Stack gap={4} sx={{ margin: '2rem' }}>
+                            <TextField
+                                variant="outlined"
+                                name="code"
+                                type="password"
+                                value={code}
+                                onChange={event => setCode(event.target.value)}
+                            />
+                            <Button variant="contained" type="submit">
+                                Submit
+                            </Button>
+                        </Stack>
+                    </form>
+                </>
+            ) : (
+                <Typography
+                    variant="h5"
+                    component="h2"
+                    m={'2rem'}
+                    textAlign={'center'}>
+                    Thank you.
+                    <br />
+                    <br />
+                    If your code is valid, you will receive an email with
+                    further instructions.
+                </Typography>
+            )}
+        </FormPageWrapper>
     );
 }

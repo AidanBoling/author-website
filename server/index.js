@@ -376,9 +376,21 @@ app.post(
 
 // User Registration (--> user account pwd set):
 
+// app.use('/admin/mod',
+// // VALIDATION (id, token, purpose),
+// verify.userUpdateToken)
+
+// Check token
+app.post(
+    '/admin/mod/checkAuth',
+    // VALIDATION (id, token, purpose),
+    verify.userUpdateToken,
+    authController.authCheck
+);
+
 app.post(
     '/admin/mod/register',
-    // VALIDATION (id, token, purpose, name, email, password)
+    // VALIDATION ((id, token, purpose), name, email, password)
     // body('email').notEmpty().escape(),
     // body('password').notEmpty().escape(),
     verify.userUpdateToken,
@@ -389,7 +401,7 @@ app.post(
 // User Password Reset
 app.post(
     '/admin/mod/password-reset',
-    // VALIDATION (id, token, purpose, email, password),
+    // VALIDATION ((id, token, purpose), email, password),
     verify.userUpdateToken,
     userController.passwordReset
 );
@@ -405,7 +417,7 @@ app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 // CHECK: Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
 app.post('/admin/auth/settings/mfa/setup', userController.setUpMfa);
 
-// This route triggered when users submit otp code to verify a new mfa method
+// Triggered when users submit otp code to verify a new mfa method
 app.post('/admin/auth/settings/mfa/verify', userController.verifyMfaMethod);
 
 //TODO: add require password input and verification before disable
@@ -447,6 +459,7 @@ app.post(
 
 // Send an email with a new OTP code
 // TODO: add validation for email (req.body.email)
+// TODO: change Email OTP expires to 5 minutes (?) (mfa login token expires 5 minutes, atm...)
 app.post('/admin/login/mfa/email', async (req, res) => {
     console.log('Send email route triggered...');
     try {

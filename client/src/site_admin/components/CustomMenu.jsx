@@ -8,6 +8,8 @@ import FeedIcon from '@mui/icons-material/Feed';
 export default function CustomMenu() {
     return (
         <Menu>
+            <Menu.DashboardItem />
+
             <Menu.Item
                 to={{
                     pathname: '/posts',
