@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
     Container,
     Paper,
@@ -12,17 +13,26 @@ import {
     FormControlLabel,
     Link,
 } from '@mui/material';
-import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
+import {
+    Title,
+    useGetIdentity,
+    useAuthenticated,
+    useAuthProvider,
+} from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
 import UserSettingsPageWrapper, {
     UserSettingsSection,
 } from './UserSettingsUtilities';
+import UserForm from '../UserForm';
 
 // TODO: User info section into a List (mui)
 export default function AccountPage() {
     const { isLoading, error, data, refetch } = useGetIdentity();
-
+    const [nameEdit, setNameEdit] = useState(false);
+    const authProvider = useAuthProvider();
     useAuthenticated();
+
+    const changeNameRouting = data => authProvider.settings.changeName(data);
 
     return (
         <UserSettingsPageWrapper title="Account Info">
@@ -37,8 +47,22 @@ export default function AccountPage() {
                                 <Typography my={0}>
                                     Name: {data.fullName || null}
                                 </Typography>
-                                <Link ml={'auto'}>Change</Link>
+                                <Link
+                                    onClick={() => setNameEdit(true)}
+                                    ml={'auto'}
+                                    sx={{ '&:hover': { cursor: 'pointer' } }}>
+                                    Change
+                                </Link>
                             </Box>
+                            {nameEdit && (
+                                <UserForm
+                                    name
+                                    hideable
+                                    hideForm={() => setNameEdit(false)}
+                                    formRouting={changeNameRouting}
+                                    refetchOnSubmit
+                                />
+                            )}
                             <p>Email: {data.email}</p>
                             <p>
                                 Last login:{' '}

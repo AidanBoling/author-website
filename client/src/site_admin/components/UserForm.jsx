@@ -9,9 +9,10 @@ import {
     Link,
     TextField,
 } from '@mui/material';
-import { useAuthProvider, useNotify } from 'react-admin';
+import { useAuthProvider, useNotify, useGetIdentity } from 'react-admin';
 
 export default function UserForm(props) {
+    const { refetch } = useGetIdentity();
     const [submitPending, setSubmitPending] = useState(false);
     const [values, setValues] = useState({
         name: '',
@@ -23,22 +24,29 @@ export default function UserForm(props) {
     const notify = useNotify();
     const authProvider = useAuthProvider();
 
-    function handleSubmit(event, field) {
+    function handleChange(event) {
+        const { id, value } = event.target;
+        setValues({ ...values, [id]: value });
+    }
+
+    async function handleSubmit(event, field) {
         event.preventDefault();
         setSubmitPending(true);
         // ...
         console.log('Form values on submit: ', values);
-        //...
+        await props
+            .formRouting(values)
+            .then(() => {
+                if (props.hideable) {
+                    props.hideForm();
+                }
+                notify('Password submitted successfully', { type: 'success' });
+            })
+            .catch(error => notify(error.message, { type: 'error' }));
         setSubmitPending(false);
-        if (props.hideable) {
-            props.hideForm();
+        if (props.refetchOnSubmit) {
+            refetch();
         }
-        notify('Password submitted successfully', { type: 'success' });
-    }
-
-    function handleChange(event) {
-        const { id, value } = event.target;
-        setValues({ ...values, [id]: value });
     }
 
     return (

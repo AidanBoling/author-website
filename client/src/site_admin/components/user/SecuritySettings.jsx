@@ -45,12 +45,13 @@ export default function SecuritySettings() {
                 data.mfa.methods[method]['verified']
         );
     const methodNames = { authApp: 'Authentication App', email: 'Email' };
-    console.log('Other methods: ', otherMethods);
-
+    // console.log('Other methods: ', otherMethods);
+    const authProvider = useAuthProvider();
     const navigate = useNavigate();
     const redirect = useRedirect();
+    const notify = useNotify();
 
-    useAuthenticated();
+    // useAuthenticated();
 
     useEffect(() => {
         // Time out page in 10 minutes
@@ -70,6 +71,9 @@ export default function SecuritySettings() {
             notify(error.message, { type: 'error' });
         }
     }, [error]);
+
+    const changePasswordRouting = data =>
+        authProvider.settings.changePassword(data);
 
     // Triggers opening page to register a method
     function handle2FAEnable() {
@@ -149,6 +153,7 @@ export default function SecuritySettings() {
                                 password
                                 hideable
                                 hideForm={() => setPasswordEdit(false)}
+                                formRouting={changePasswordRouting}
                             />
                         )}
                     </UserSettingsSection>

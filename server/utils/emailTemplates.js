@@ -16,6 +16,36 @@ export function contactEmailTemplate(data) {
 }
 
 export const userEmailTemplates = {
+    register: (data, variant) => {
+        const company = process.env.COMPANY_NAME;
+        let content;
+
+        if (variant === 'request') {
+            content = {
+                subject: `${company} registration instructions`,
+                html: `<p>Your registration code was accepted. Follow the link below to complete your ${company} account registration:</p>
+                    <a href=${data.link}>Complete Registration</a>`,
+                text:
+                    `Your registration code was accepted. Use the link below to complete your ${company} account registration: \n\n` +
+                    data.link,
+            };
+        } else if (variant === 'success') {
+            content = {
+                subject: `${company} registration confirmation`,
+                html: `<p>Welcome, ${data.name}!</p>
+                    <p>You have successfully set up your ${company} user account.
+                   Here's the link to the login page:</p>
+                    <p><a href="${process.env.CLIENT_URL}/admin#/login">Admin Portal Login</a></p>`,
+                text: `Welcome, ${data.name}!\n\n
+                    You have successfully set up your ${company} user account.
+                    The link below will take you to the login page:\n\n
+                    ${process.env.CLIENT_URL}/admin#/login`,
+            };
+        }
+
+        return content;
+    },
+
     passwordReset: (data, variant) => {
         const company = process.env.COMPANY_NAME;
         let content;
@@ -47,32 +77,19 @@ export const userEmailTemplates = {
         return content;
     },
 
-    register: (data, variant) => {
+    passwordChange: data => {
         const company = process.env.COMPANY_NAME;
-        let content;
 
-        if (variant === 'request') {
-            content = {
-                subject: `${company} registration instructions`,
-                html: `<p>Your registration code was accepted. Follow the link below to complete your ${company} account registration:</p>
-                    <a href=${data.link}>Complete Registration</a>`,
-                text:
-                    `Your registration code was accepted. Use the link below to complete your ${company} account registration: \n\n` +
-                    data.link,
-            };
-        } else if (variant === 'success') {
-            content = {
-                subject: `${company} registration confirmation`,
-                html: `<p>Welcome, ${data.name}!</p>
-                    <p>You have successfully set up your ${company} user account.
-                   Here's the link to the login page:</p>
-                    <p><a href="${process.env.CLIENT_URL}/admin#/login">Admin Portal Login</a></p>`,
-                text: `Welcome, ${data.name}!\n\n
-                    You have successfully set up your ${company} user account.
-                    The link below will take you to the login page:\n\n
-                    ${process.env.CLIENT_URL}/admin#/login`,
-            };
-        }
+        const content = {
+            subject: `${company} Password Change Confirmation`,
+            html: `<p>${data.name},</p>
+                    <p>Your ${company} password has been changed successfully. Link to the login page:</p>
+                    <p><a href="${process.env.CLIENT_URL}/admin#/login">${company} Admin Portal</a></p><br />
+                    <p><b>Important:</b> If you did not make this change, report this immediately to your website sys admin.</p>`,
+            text: `${data.name},\n\n
+                    Your ${company} password has been reset successfully.\n\n\n
+                    Important: If you did not make this change, report this immediately to your website sys admin.`,
+        };
 
         return content;
     },

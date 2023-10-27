@@ -8,6 +8,7 @@ import {
     EditGuesser,
     ShowGuesser,
     defaultTheme,
+    Authenticated,
 } from 'react-admin';
 import { Route } from 'react-router-dom';
 import { customLightTheme, customDarkTheme } from './themeCustom';
@@ -120,7 +121,14 @@ function AdminApp() {
             </CustomRoutes>
             <CustomRoutes>
                 <Route path="/user" element={<AccountPage />} />
-                <Route path="/user/security" element={<SecuritySettings />} />
+                <Route
+                    path="/user/security"
+                    element={
+                        <Authenticated requireAuth>
+                            <SecuritySettings />
+                        </Authenticated>
+                    }
+                />
                 <Route
                     path="/user/security/enable-mfa"
                     element={<RegisterMFAMethod />}

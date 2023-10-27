@@ -172,7 +172,7 @@ export const userController = {
                     )
                 );
 
-                // Send email notifying of account created
+                // Send email notifying of password reset
                 sendAccountInfoEmail(
                     { name: user.name },
                     emailRecipient, // for TESTING only. Change to --> user.email
@@ -199,6 +199,58 @@ export const userController = {
             .catch(() =>
                 console.log('There was an error in deleting the access token!')
             );
+    },
+
+    passwordChange: async (req, res) => {
+        console.log('Starting password change request...');
+        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+
+        try {
+            // Verify submitted current password matches password of user found in session
+            const sessionUserEmail = req.user.email;
+            const currentPassword = req.body.currentPwd;
+
+            const user = await User.authenticate(
+                sessionUserEmail,
+                currentPassword
+            );
+
+            if (!user) {
+                console.log('Error: User current password not authenticated.');
+                throw new Error('Invalid');
+            }
+
+            // Authenticated; Update user's password
+            user.password = req.body.newPwd;
+            user.markModified('password');
+            await user.save();
+
+            res.json({
+                email: user.email,
+                message: 'Password changed successfully',
+            });
+
+            //TODO(??): Force user logout/login after password change??? Or, regenerate session??
+
+            // Send email notifying of password change
+            sendAccountInfoEmail(
+                { name: user.name },
+                emailRecipient, // for TESTING only. Change to --> user.email
+                'passwordChange'
+            );
+        } catch (error) {
+            console.log('Error updating user account: ', error);
+            if (error.message === 'Invalid') {
+                res.status(401).json({
+                    message: 'Invalid',
+                });
+            } else {
+                res.status(500).json({
+                    message:
+                        'Unable to change password. Contact your website admin',
+                });
+            }
+        }
     },
 
     setUpMfa: async (req, res) => {
@@ -341,6 +393,7 @@ export const userController = {
         }
     },
 
+    //TODO: set mfaMethods... all equal false
     disableMfa: async (req, res) => {
         try {
             const user = await User.findOne({ email: req.user.email });
@@ -356,6 +409,25 @@ export const userController = {
             console.log('Error disabling 2fa: ', error);
             return res.status(500).json({
                 message: 'Error disabling 2FA',
+            });
+        }
+    },
+
+    // TODO: add validation for name
+    changeName: async (req, res) => {
+        try {
+            const user = await User.findOne({ email: req.user.email });
+            user.name = req.body.name;
+            await user.save();
+
+            return res.json({
+                message: 'Name updated successfully',
+                mfaEnabled: user.mfa.enabled,
+            });
+        } catch (error) {
+            console.log('Error updating user name: ', error);
+            return res.status(500).json({
+                message: 'Error updating user info',
             });
         }
     },

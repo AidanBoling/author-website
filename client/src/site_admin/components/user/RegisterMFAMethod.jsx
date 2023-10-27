@@ -34,6 +34,7 @@ export default function RegisterMFAMethod() {
     const [submitPending, setSubmitPending] = useState(false);
     const [otpData, setOtpData] = useState(null);
     const [code, setCode] = useState('');
+    const redirect = useRedirect();
 
     // const enabledNotVerified = {}
 
@@ -118,9 +119,9 @@ export default function RegisterMFAMethod() {
     }
 
     // Successful submit -> get OTP data -> triggers refresh of data
-    // refresh of data shows method enabled but not verified, so shows verification page
+    // on refresh, method updated to enabled but not verified, so verification info displayed
     async function getOtpData() {
-        await authProvider
+        await authProvider.settings
             .enableMFAMethod(methodSelected)
             .then(res => {
                 console.log('Setting otpData');
@@ -128,7 +129,8 @@ export default function RegisterMFAMethod() {
                 refetch();
             })
             .catch(error => {
-                notify(error.message, { type: 'error' });
+                notify('Error enabling method.', { type: 'error' });
+                redirect('/user/security');
             });
         setSubmitPending(false);
         // notify('Success', { type: 'success' });
@@ -335,7 +337,7 @@ function VerificationCodeForm({ text, methodSelected, indent }) {
         event.preventDefault();
         setSubmitPending(true);
 
-        await authProvider
+        await authProvider.settings
             .verifyMFAMethod(methodSelected, code)
             .catch(error => notify(error.message, { type: 'error' }));
         setSubmitPending(false);

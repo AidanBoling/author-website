@@ -5,11 +5,14 @@ export default function sendAccountInfoEmail(data, email, purpose, variant) {
     console.log('Starting email prep...');
     let emailContent;
 
+    if (purpose === 'register') {
+        emailContent = userEmailTemplates.register(data, variant);
+    }
     if (purpose === 'passwordReset') {
         emailContent = userEmailTemplates.passwordReset(data, variant);
     }
-    if (purpose === 'register') {
-        emailContent = userEmailTemplates.register(data, variant);
+    if (purpose === 'passwordChange') {
+        emailContent = userEmailTemplates.passwordChange(data);
     }
 
     const mailDetails = {

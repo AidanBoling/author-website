@@ -361,9 +361,10 @@ app.get('/admin/tags/:id', tagController.get);
 app.put('/admin/tags/:id', tagController.update);
 app.delete('/admin/tags/:id', tagController.delete);
 
+//
 // -- USER routes
 
-// User UPDATE
+// User UPDATES --
 
 // Initiate register or password reset using admin-created temp code
 app.post(
@@ -410,9 +411,20 @@ app.post('/admin/auth/settings/mfa/verify', userController.verifyMfaMethod);
 //TODO: add require password input and verification before disable
 app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
-//TODO: User password change
-//TODO: add require password input and verification before disable
-// ... app.get('/admin/auth/settings/change-password', //VALIDATE (new pwd), userController.resetPassword);
+//TODO: add require password input and verification before change
+//      Use val/ver to check that new password (newPwd) and confirm password (confirmNewPwd) match each other...
+app.post(
+    '/admin/auth/settings/change/password',
+    //VALIDATE (new pwd),
+    userController.passwordChange
+);
+
+//TODO: User name change
+app.post(
+    '/admin/auth/settings/change/name',
+    //VALIDATE (name),
+    userController.changeName
+);
 
 // -- User AUTH --
 
@@ -508,7 +520,7 @@ app.post('/admin/auth/checkAuth', (req, res) => {
     res.json({ message: 'Authenticated' });
 });
 
-// User Info
+// User Get Info
 
 app.get('/admin/auth/user', async (req, res) => {
     console.log('Starting "get" user identity route...');

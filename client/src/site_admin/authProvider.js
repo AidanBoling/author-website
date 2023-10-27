@@ -104,6 +104,26 @@ function handleMFALogin(request) {
         });
 }
 
+// Used on custom methods when need to return error responses to user (via Notify)
+async function fetchWithThrowError(
+    request,
+    errorUnauthorizedMsg,
+    errorMsg = 'Server error'
+) {
+    try {
+        const data = await fetch(request).then(response =>
+            handleResponse(response)
+        );
+        return data.message;
+    } catch (error) {
+        console.log(error);
+        if (error.message === 'Unauthorized') {
+            throw new Error(errorUnauthorizedMsg);
+        }
+        throw new Error(errorMsg);
+    }
+}
+
 export const authProvider = {
     login: formInput => {
         console.log('Going through login route...');
@@ -263,7 +283,8 @@ export const authProvider = {
 
                 // Note: Saving page url is workaround -- for some reason, RA only redirects to
                 // last-viewed page for idle logouts (triggered due to credential expiration),
-                // otherwise redirects to Dashboard. Built-in "redirectTo" on login success doesn't work for me.
+                // otherwise redirects to Dashboard. Unable to get the built-in "redirectTo"
+                // on login success to work for me.
                 // Workaround is to have Dashboard page trigger the redirect to the saved url.
 
                 try {
@@ -338,70 +359,90 @@ export const authProvider = {
         }
     },
 
-    // TODO: Test this route
-    submitAccessCode: async code => {
-        const request = setRequest('/mod/code', { code: code });
+    settings: {
+        enableMFAMethod: async method => {
+            const request = setRequest('/auth/settings/mfa/setup', {
+                method: method,
+            });
 
-        // Note: Not taking actions on success/failure,
-        // so just logging if there's a server error
-        try {
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
-            );
-        } catch (error) {
-            console.log(error);
-            if (error.message !== 'Unauthorized') {
-                console.log('Server error');
+            try {
+                // Will return otp code info (auth app), or send email with otp code
+                const data = await fetch(request).then(response =>
+                    handleResponse(response)
+                );
+                return data;
+            } catch (error) {
+                console.log(error);
+                if (error.message !== 'Unauthorized') {
+                    console.log('Server error');
+                    throw new Error('Server error');
+                }
+                //CHECK: does this work? May not, if has to be called directly
+                // from the page being checked. If not, can maybe instead copy the
+                // error portion of checkAuth, then call authProvider.logout()...?
+                return authProvider.checkAuth();
             }
-        }
-    },
+        },
 
-    enableMFAMethod: async method => {
-        const request = setRequest('/auth/settings/mfa/setup', {
-            method: method,
-        });
+        verifyMFAMethod: async (method, code) => {
+            const request = setRequest('/auth/settings/mfa/verify', {
+                method: method,
+                code: code,
+            });
+            const errorUnauthorizedMsg = 'Code invalid or expired';
 
-        try {
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
+            return fetchWithThrowError(request, errorUnauthorizedMsg);
+            // Delete after testing the above:
+            // try {
+            //     const data = await fetch(request).then(response =>
+            //         handleResponse(response)
+            //     );
+            //     return data.message;
+            // } catch (error) {
+            //     console.log(error);
+            //     if (error.message !== 'Unauthorized') {
+            //         console.log('Server error');
+            //         throw new Error('Server error');
+            //     }
+            //     throw new Error('Code invalid or expired');
+            // }
+        },
+
+        disableMFA: async () => {
+            // ...
+        },
+
+        changePassword: async formData => {
+            const { currentPassword, newPassword, confirmPassword } = formData;
+            const request = setRequest('/auth/settings/change/password', {
+                currentPwd: currentPassword,
+                newPwd: newPassword,
+                confirmNewPwd: confirmPassword,
+            });
+            const errorUnauthorizedMsg = 'Current password invalid';
+            const errorOtherMsg = 'Server error. Password not changed.';
+
+            return fetchWithThrowError(
+                request,
+                errorUnauthorizedMsg,
+                errorOtherMsg
             );
-            return data;
-        } catch (error) {
-            console.log(error);
-            if (error.message !== 'Unauthorized') {
-                console.log('Server error');
-            }
-        }
-        // will return otp code info (auth app), or send email with otp code
-    },
+        },
 
-    verifyMFAMethod: async (method, code) => {
-        const request = setRequest('/auth/settings/mfa/verify', {
-            method: method,
-            code: code,
-        });
+        changeName: async formData => {
+            const { name } = formData;
+            const request = setRequest('/auth/settings/change/name', {
+                name: name,
+            });
+            const errorUnauthorizedMsg = 'Error: Unauthorized';
+            const errorOtherMsg = 'Server error. User info not changed.';
 
-        try {
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
+            return fetchWithThrowError(
+                request,
+                errorUnauthorizedMsg,
+                errorOtherMsg
             );
-            return data.message;
-        } catch (error) {
-            console.log(error);
-            if (error.message !== 'Unauthorized') {
-                console.log('Server error');
-                throw new Error('Server error');
-            }
-            throw new Error('Code invalid or expired');
-        }
-    },
-
-    disableMFA: async () => {
-        // ...
-    },
-
-    resetPassword: async () => {
-        // ...
+        },
     },
 
     sendEmailCode: async () => {
@@ -424,6 +465,44 @@ export const authProvider = {
             }
             throw new Error('Invalid credentials');
         }
+    },
+
+    // TODO: Test this route
+    submitAccessCode: async code => {
+        const request = setRequest('/mod/code', { code: code });
+
+        // Only logging server error, b/c not taking actions on success/failure
+        try {
+            const data = await fetch(request).then(response =>
+                handleResponse(response)
+            );
+        } catch (error) {
+            console.log(error);
+            if (error.message !== 'Unauthorized') {
+                console.log('Server error');
+            }
+        }
+    },
+
+    preAuthUser: {
+        //TODO: these routes involve getting params from url...
+        register: async () => {
+            //--> name, email, password
+            // const { currentPassword, newPassword, confirmPassword } = formData;
+            // const request = setRequest('/auth/settings/change/password', {
+            //     currentPwd: currentPassword,
+            //     newPwd: newPassword,
+            //     confirmNewPwd: confirmPassword,
+            // });
+            // const errorUnauthorizedMsg = 'Current password invalid';
+            // const errorOtherMsg = 'Server error. Password not changed.';
+            // return fetchWithThrowError(
+            //     request,
+            //     errorUnauthorizedMsg,
+            //     errorOtherMsg
+            // );
+        },
+        resetPassword: async () => {},
     },
 };
 
