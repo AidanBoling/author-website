@@ -81,7 +81,7 @@ userSchema.pre('save', async function (next) {
     if (this.isModified('mfaMethods')) {
         // do calc of methodsVerified
         let n = 0;
-        if (this.mfaMethods.appAuth.verified) {
+        if (this.mfaMethods.authApp.verified) {
             n += 1;
         }
         if (this.mfaMethods.email.verified) {
@@ -90,6 +90,7 @@ userSchema.pre('save', async function (next) {
 
         // this.mfa.methodsVerified = n;
         console.log('MFA methods count: ', n);
+        this.mfa.methodsVerified = n;
     }
 
     return next();

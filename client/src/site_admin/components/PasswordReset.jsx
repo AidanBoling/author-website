@@ -46,7 +46,7 @@ export default function PasswordReset() {
         authProvider.preAuthUser.resetPassword(data, params);
 
     return (
-        <FormPageWrapper title="Complete Account Setup" width="340px">
+        <FormPageWrapper title="Reset Password" width="370px">
             {!formSubmitted ? (
                 <UserForm
                     email
@@ -63,8 +63,8 @@ export default function PasswordReset() {
                         Submitted.
                         <br />
                         <br />
-                        If your account is authenticated, a confirmation email
-                        will be sent shortly.
+                        If your password reset was successful, a confirmation
+                        email will be sent shortly.
                     </Typography>
                 </Box>
             )}

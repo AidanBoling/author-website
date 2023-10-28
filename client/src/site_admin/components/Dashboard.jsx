@@ -8,9 +8,12 @@ import {
     CardHeader,
 } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import { Button, useRedirect } from 'react-admin';
+import { Button, useAuthState, useRedirect } from 'react-admin';
+import LoadingPage from './LoadingPage';
 
 function Dashboard() {
+    // const { isLoading, authenticated } = useAuthState();
+
     const redirect = useRedirect();
     if (localStorage.getItem('redirect')) {
         const redirectUrl = localStorage.getItem('redirect');
@@ -25,6 +28,8 @@ function Dashboard() {
     //         redirect(redirectUrl);
     //     }
     // });
+
+    // if (isLoading) return <LoadingPage />;
 
     return (
         <Container>

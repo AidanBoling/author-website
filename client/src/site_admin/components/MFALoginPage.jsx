@@ -84,8 +84,11 @@ function MethodInfo({ method }) {
 //TODO: fix so that the "back" button takes to login page, NOT dashboard
 
 function MyLoginPage({ theme }) {
+    useAuthenticated(); // redirects to login if not authenticated
+    // const { isLoading, authenticated } = useAuthState();
+    // const methodInit = !isLoading
     const mfa = JSON.parse(localStorage.getItem('mfa'));
-    const [useMethod, setUseMethod] = useState(mfa.info.defaultMethod);
+    const [useMethod, setUseMethod] = useState(mfa && mfa.info.defaultMethod);
     // const [otherMethod, setOtherMethod] = useState(mfa.info.defaultMethod)
     const [code, setCode] = useState('');
     const [submitted, setSubmitted] = useState(true);
@@ -100,8 +103,6 @@ function MyLoginPage({ theme }) {
     const redirect = useRedirect();
     // const navigate = useNavigate();
     const authProvider = useAuthProvider();
-
-    useAuthenticated(); // redirects to login if not authenticated
 
     function handleToggleMethod() {
         // Check: ...if otherMethod updates when useMethod updates
@@ -125,7 +126,7 @@ function MyLoginPage({ theme }) {
     function handleMfaSubmit(event) {
         event.preventDefault();
         console.log('Code entered: ', code);
-        const mfa = JSON.parse(localStorage.getItem('mfa'));
+        // const mfa = JSON.parse(localStorage.getItem('mfa'));
         console.log('user: ', mfa.user);
         login({ method: useMethod, code: code }).catch(error =>
             notify(error.message, { type: 'error' })
@@ -134,22 +135,24 @@ function MyLoginPage({ theme }) {
     }
 
     return (
-        <FormPageWrapper title="Enter OTP" width="340px">
-            <MethodInfo method={useMethod} />
-            {mfa.info.methodsCount > 1 && (
-                <Box>
-                    <Button>Use {otherMethod} instead</Button>
-                </Box>
-            )}
-            <form onSubmit={handleMfaSubmit}>
-                <OtpCodeField
-                    control={code}
-                    onChange={event => setCode(event.target.value)}
-                    note="If code is invalid or expired, you will be
+        mfa && (
+            <FormPageWrapper title="Enter OTP" width="340px">
+                <MethodInfo method={useMethod} />
+                {mfa.info.methodsCount > 1 && (
+                    <Box>
+                        <Button>Use {otherMethod} instead</Button>
+                    </Box>
+                )}
+                <form onSubmit={handleMfaSubmit}>
+                    <OtpCodeField
+                        control={code}
+                        onChange={event => setCode(event.target.value)}
+                        note="If code is invalid or expired, you will be
                             redirected to login page"
-                />
-            </form>
-        </FormPageWrapper>
+                    />
+                </form>
+            </FormPageWrapper>
+        )
     );
 }
 

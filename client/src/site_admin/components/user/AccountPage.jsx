@@ -61,6 +61,7 @@ export default function AccountPage() {
                                     hideForm={() => setNameEdit(false)}
                                     formRouting={changeNameRouting}
                                     refetchOnSubmit
+                                    successNotify="Name changed successfully"
                                 />
                             )}
                             <p>Email: {data.email}</p>

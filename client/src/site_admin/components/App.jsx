@@ -129,7 +129,7 @@ function AdminApp() {
             <CustomRoutes noLayout>
                 <Route path="/use/code" element={<AccessCodeForm />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/password-reset" element={<PasswordReset />} />
+                <Route path="/passwordReset" element={<PasswordReset />} />
             </CustomRoutes>
             <CustomRoutes>
                 <Route

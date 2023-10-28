@@ -41,7 +41,9 @@ export default function UserForm(props) {
                 if (props.hideable) {
                     props.hideForm();
                 }
-                notify('Password submitted successfully', { type: 'success' });
+                notify(props.successNotify || 'Submitted!', {
+                    type: 'success',
+                });
             })
             .catch(error => notify(error.message, { type: 'error' }));
         setSubmitPending(false);
@@ -53,7 +55,12 @@ export default function UserForm(props) {
     return (
         <Box mt=".75rem">
             <form onSubmit={handleSubmit}>
-                <Stack gap={props.spacing} sx={{ maxWidth: '300px' }}>
+                <Stack
+                    gap={props.spacing}
+                    sx={{
+                        maxWidth: props.maxWidth || '300px',
+                        width: props.width || '280px',
+                    }}>
                     {props.name && (
                         <TextField
                             variant="outlined"
@@ -69,6 +76,7 @@ export default function UserForm(props) {
                             id="email"
                             label="Confirm email"
                             required
+                            onChange={handleChange}
                         />
                     )}
                     {props.password && (

@@ -56,6 +56,29 @@ export const passportAuthenticate = {
         )(req, res, next);
     },
 
+    mfaAuthCheck: (req, res, next) => {
+        passport.authenticate(
+            'loginJwt',
+            { failureMessage: true },
+            async (error, user, info) => {
+                if (!user) {
+                    console.log('No user returned -> Invalid or expired token');
+                    return res.status(401).json({
+                        message: 'Invalid or expired token',
+                    });
+                }
+                if (error) {
+                    console.log('Some error occurred with checking token');
+
+                    return res.status(500).json({
+                        message: 'Error',
+                    });
+                }
+                authController.authCheck(req, res);
+            }
+        )(req, res, next);
+    },
+
     mfaLogin: (req, res, next) => {
         passport.authenticate(
             'loginJwt',

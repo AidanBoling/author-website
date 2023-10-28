@@ -124,8 +124,6 @@ async function fetchWithThrowError(
     }
 }
 
-// const [searchParams, setSearchParams] = useSearchParams();
-
 export const authProvider = {
     login: formInput => {
         console.log('Going through login route...');
@@ -134,10 +132,13 @@ export const authProvider = {
         let reqBody;
         let reqHeaders;
 
-        //Deleting auth item (if one exists)...
+        //Deleting mfa item (if one exists)...
         localStorage.removeItem('auth');
 
-        if (localStorage.getItem('mfa')) {
+        if (
+            location.hash === '#/auth-callback' &&
+            localStorage.getItem('mfa')
+        ) {
             console.log('Setting up mfa request options');
             // console.log('Code: ', formInput.code);
 
@@ -146,6 +147,7 @@ export const authProvider = {
             reqBody = { method: formInput.method, OTPcode: formInput.code };
             reqHeaders = { Authorization: `Bearer ${preAuthToken}` };
         } else {
+            localStorage.removeItem('mfa');
             const { username, password } = formInput;
             reqPath = '/login/password';
             reqBody = { email: username, password: password };
@@ -153,7 +155,8 @@ export const authProvider = {
 
         const request = setRequest(reqPath, reqBody, 'POST', reqHeaders);
 
-        if (localStorage.getItem('mfa')) return handleMFALogin(request);
+        if (location.hash === '#/auth-callback' && localStorage.getItem('mfa'))
+            return handleMFALogin(request);
 
         return handlePwdLogin(request);
     },
@@ -235,18 +238,15 @@ export const authProvider = {
 
     checkAuth: async params => {
         console.log('Checking Auth at path: ', location.hash);
-        if (params) {
-            console.log('checkAuth params: ', params);
-        }
+
         // On accessCode page, do nothing
         if (location.hash === '#/use/code') {
             return;
         }
 
         // On register and password reset pages, check for correct auth
-        // TODO:
         const registerHash = /^#\/register/;
-        const passwordResetHash = /^#\/password-reset/;
+        const passwordResetHash = /^#\/passwordReset/;
         if (
             registerHash.test(location.hash) ||
             passwordResetHash.test(location.hash)
@@ -261,9 +261,14 @@ export const authProvider = {
             console.log('Hash matches a pattern. Purpose: ', purpose);
 
             // If no params, do nothing (pages set to send urlsearchparams)
-            if (!params) {
+            if (Object.keys(params).length === 0) {
                 return;
             }
+
+            console.log('Params: ', params);
+
+            // TODO: Add some sort of validation of id and token params here, so if
+            // not correct format, doesn't even go to api (may help with DDoS or something?? Check...)
 
             const request = setRequest('/mod/checkAuth', {
                 purpose: purpose,
@@ -280,35 +285,77 @@ export const authProvider = {
                 if (error.message === 'Unauthorized')
                     return Promise.reject({
                         message: 'Unauthorized',
+                        redirectTo: '/',
                     });
 
                 return Promise.reject({
                     message: 'An unexpected error occurred.',
+                    redirectTo: '/',
                 });
             }
         }
 
         // If have mfa item, redirect
-        if (localStorage.getItem('mfa'))
-            return Promise.resolve({ redirectTo: '/auth-callback' });
-        // Note: ^might be able to actually check with the server for jwt valid, separately, before redirecting?
+        if (localStorage.getItem('mfa')) {
+            if (location.hash !== '#/auth-callback') {
+                console.log(
+                    'Not on auth-callback; redirecting and logging out...'
+                );
+                return Promise.reject({
+                    message: 'An unexpected error occurred.',
+                });
+                // return Promise.reject({ redirectTo: '/auth-callback' });
+            }
+            // Note: ^might be able to actually check with the server for jwt valid, separately, before redirecting?
+
+            if (location.hash === '#/auth-callback') {
+                console.log('Starting mfa auth check request...');
+
+                const { preAuthToken } = JSON.parse(
+                    localStorage.getItem('mfa')
+                );
+                const path = '/login/mfa/checkAuth';
+                const header = { Authorization: `Bearer ${preAuthToken}` };
+                const request = setRequest(path, null, 'GET', header);
+
+                try {
+                    const data = await fetch(request).then(response =>
+                        handleResponse(response)
+                    );
+                    console.log('Success');
+                    return Promise.resolve();
+                    // return Promise.resolve({ redirectTo: '/auth-callback' });
+                } catch (error) {
+                    console.log(error.message);
+                    if (error.message === 'Unauthorized')
+                        return Promise.reject({
+                            message: 'Unauthorized',
+                        });
+
+                    return Promise.reject({
+                        message: 'An unexpected error occurred.',
+                    });
+                }
+            }
+        }
 
         if (localStorage.getItem('auth')) {
-            if (
-                window.location.hash === '#/user/security' ||
-                window.location.hash === '/user/security/enable-mfa'
-            ) {
+            const securityHash = /^#\/user\/security/;
+            if (securityHash.test(location.hash)) {
+                // if (
+                //     location.hash === '#/user/security' ||
+                //     location.hash === '/user/security/enable-mfa'
+                // ) {
                 let request;
-                if (window.location.hash === '#/user/security') {
+                if (location.hash === '#/user/security') {
                     request = setRequest('/auth/check-login/1', null, 'GET');
                 }
-                if (window.location.hash === '/user/security/enable-mfa') {
+                if (location.hash === '#/user/security/enable-mfa') {
                     request = setRequest('/auth/check-login/2', null, 'GET');
                 }
 
-                // Check user's most recent Login time
-                // If server sends ok, stay on page.
-                // Otherwise, save page url, then trigger logout.
+                // Check user's most recent Login time. If server doesn't
+                // send ok: save page url, then trigger logout.
 
                 // Note: Saving page url is workaround -- for some reason, RA only redirects to
                 // last-viewed page for idle logouts (triggered due to credential expiration),
@@ -321,16 +368,26 @@ export const authProvider = {
                         .then(response => handleResponse(response))
                         .then(() => Promise.resolve());
                 } catch (error) {
-                    localStorage.setItem(
-                        'redirect',
-                        window.location.origin + '/admin' + window.location.hash
-                    );
+                    if (error.message === 'Unauthorized') {
+                        // CHECK: Can use router-dom history (or something) instead?
+                        localStorage.setItem(
+                            'redirect',
+                            window.location.origin + '/admin' + location.hash
+                        );
+                        return Promise.reject({
+                            message: 'Please renew your credentials',
+                        });
+                    }
                     return Promise.reject({
-                        message: 'Please renew your credentials',
+                        redirectTo: '/user',
+                        message:
+                            'An unexpected error occurred. Please log back in to continue.',
                     });
+                    // redirect('/user');
+                    // return;
                 }
             }
-
+            console.log('Resolving auth check');
             return Promise.resolve();
         }
         return Promise.reject();
@@ -397,6 +454,7 @@ export const authProvider = {
 
     settings: {
         enableMFAMethod: async method => {
+            console.log('Method submitted: ', method);
             const request = setRequest('/auth/settings/mfa/setup', {
                 method: method,
             });
@@ -521,35 +579,59 @@ export const authProvider = {
     },
 
     preAuthUser: {
-        //TODO: these routes involve getting params from url...
-        // on page -->   let { token, id } = useParams();
-
-        //TODO: Test -- once up and running, make sure that if someone changes
-        // the "purpose", aka the path, they should not be able to get to
-        // the other page (or should be immediately kicked off it) if the token
-        // they have is not valid for that path (purpose)
-
         register: async (formData, params) => {
-            //--> name, email, password, + params
-            // const { name, email, newPassword, confirmPassword } = formData;
-            // const request = setRequest('/auth/settings/change/password', {
-            //     id: params.id,
-            //     token: params.token,
-            //     name: name,
-            //     email: email,
-            //     password: newPassword,
-            //     confirmPassword: confirmPassword,
-            // });
-            // Prob change the following... b/c different error handling/routing?
-            // const errorUnauthorizedMsg = 'Invalid or expired token';
-            // const errorOtherMsg = 'Server error. Password not changed.';
-            // return fetchWithThrowError(
-            //     request,
-            //     errorUnauthorizedMsg,
-            //     errorOtherMsg
-            // );
+            const { name, email, newPassword, confirmPassword } = formData;
+            const request = setRequest('/mod/register', {
+                name: name,
+                email: email,
+                password: newPassword,
+                confirmPassword: confirmPassword,
+                purpose: 'register',
+                ...params,
+            });
+
+            // try {
+            //     const data = await fetch(request).then(response =>
+            //         handleResponse(response)
+            //     );
+            //     return data.message;
+            // } catch (error) {
+            //     console.log(error);
+            //     if (error.message === 'Unauthorized') {
+            //         throw new Error('Invalid or expired credentials');
+            //     }
+            //     throw new Error(errorMsg);
+            // }
+
+            // Q: Need to change this? Need different error handling/routing, for security?
+            const errorUnauthorizedMsg = 'Invalid or expired credentials';
+            const errorOtherMsg = 'Server error. Contact your site admin.';
+            return fetchWithThrowError(
+                request,
+                errorUnauthorizedMsg,
+                errorOtherMsg
+            );
         },
-        resetPassword: async () => {},
+
+        resetPassword: async (formData, params) => {
+            const { email, newPassword, confirmPassword } = formData;
+            const request = setRequest('/mod/password-reset', {
+                email: email,
+                password: newPassword,
+                confirmPassword: confirmPassword,
+                purpose: 'passwordReset',
+                ...params,
+            });
+
+            // Q: Need to change this? Need different error handling/routing, for security?
+            const errorUnauthorizedMsg = 'Invalid or expired credentials';
+            const errorOtherMsg = 'Server error. Contact your site admin.';
+            return fetchWithThrowError(
+                request,
+                errorUnauthorizedMsg,
+                errorOtherMsg
+            );
+        },
     },
 };
 

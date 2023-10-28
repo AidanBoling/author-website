@@ -431,7 +431,6 @@ app.post(
     userController.passwordChange
 );
 
-//TODO: User name change
 app.post(
     '/admin/auth/settings/change/name',
     //VALIDATE (name),
@@ -456,6 +455,12 @@ app.post(
     authController.login
 );
 //--> ^TODO: Add validation (OTPcode)
+
+app.get(
+    '/admin/login/mfa/checkAuth',
+    passportAuthenticate.mfaAuthCheck,
+    authController.authCheck
+);
 
 // Send an email with a new OTP code
 // TODO: add validation for email (req.body.email)

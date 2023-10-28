@@ -5,9 +5,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 export default function LoadingPage({ isLoading }) {
     return (
         <Fade
-            in={query === isLoading}
+            in={isLoading}
             style={{
-                transitionDelay: query === isLoading ? '800ms' : '0ms',
+                transitionDelay: isLoading ? '800ms' : '0ms',
             }}
             unmountOnExit>
             <CircularProgress />

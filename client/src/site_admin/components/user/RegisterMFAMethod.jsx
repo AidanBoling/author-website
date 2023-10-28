@@ -8,14 +8,11 @@ import {
     Divider,
     Typography,
     Button,
-    Switch,
     Radio,
     FormControl,
     FormLabel,
     RadioGroup,
     FormControlLabel,
-    Link,
-    TextField,
 } from '@mui/material';
 import {
     Title,
@@ -23,8 +20,9 @@ import {
     useAuthenticated,
     useAuthProvider,
     useNotify,
+    useRedirect,
 } from 'react-admin';
-import { redirect, useNavigate } from 'react-router-dom';
+// import { redirect, useNavigate } from 'react-router-dom';
 import UserSettingsPageWrapper from './UserSettingsUtilities';
 import OtpCodeField from '../OtpCodeFieldSubmit';
 
@@ -33,20 +31,18 @@ export default function RegisterMFAMethod() {
     const [methodSelected, setMethodSelected] = useState('');
     const [submitPending, setSubmitPending] = useState(false);
     const [otpData, setOtpData] = useState(null);
-    const [code, setCode] = useState('');
+    // const [code, setCode] = useState('');
     const redirect = useRedirect();
-
-    // const enabledNotVerified = {}
 
     // TODO: use this to disable whichever option already enabled
     const isEnabled = {
-        authApp: data && data.mfaMethods.authApp.enabled,
-        email: data && data.mfaMethods.email.enabled,
+        authApp: data && data.mfa.methods.authApp.enabled,
+        email: data && data.mfa.methods.email.enabled,
     };
 
     const isVerified = {
-        authApp: data && data.mfaMethods.authApp.verified,
-        email: data && data.mfaMethods.email.verified,
+        authApp: data && data.mfa.methods.authApp.verified,
+        email: data && data.mfa.methods.email.verified,
     };
 
     const awaitingVerify = {
@@ -54,18 +50,17 @@ export default function RegisterMFAMethod() {
         email: isEnabled.email && !isVerified.email,
     };
 
-    const showVerification = awaitingVerify.email;
+    const showVerification = awaitingVerify.authApp || awaitingVerify.email;
 
     const authProvider = useAuthProvider();
     const notify = useNotify();
     // console.log('Identity info: ', data);
     useAuthenticated();
-    const navigate = useNavigate();
 
     useEffect(() => {
         // Time out page in 10 minutes
         let timer = setTimeout(() => {
-            navigate('/user');
+            redirect('/user');
         }, 10 * 60 * 1000);
 
         return () => {
@@ -74,27 +69,13 @@ export default function RegisterMFAMethod() {
         };
     }, []);
 
+    // !For dev/bug checking -- remove later
     useEffect(() => {
         if (data) {
             console.log('Data: ', data);
             console.log('show verification?', showVerification);
         }
     }, [data]);
-
-    // useEffect(() => {
-    //     if (error) {
-    //         redirect('/user');
-    //     }
-    // }, [error]);
-
-    //TODO:
-    // useEffect(() => {
-    //     if (otpData) { refetch
-    //      // refetch userIdentity
-    // (this should update the awaitingVerification,
-    // and so the verification info + form should appear for that method
-    //     }
-    // }, [otpData]);
 
     useEffect(() => {
         if (showVerification) {
@@ -105,6 +86,10 @@ export default function RegisterMFAMethod() {
 
         if (showVerification && methodSelected !== '') {
             getOtpData();
+        }
+
+        if (data && data.mfa.count === 1) {
+            setMethodSelected(isVerified.authApp ? 'email' : 'authApp');
         }
     }, [data, methodSelected]);
 
@@ -145,105 +130,109 @@ export default function RegisterMFAMethod() {
         notify('Success! Email sent with new code', { type: 'success' });
     }
 
-    // async function handleCodeSubmit(event) {
-    //     event.preventDefault();
-    //     setSubmitPending(true);
-
-    //     await authProvider
-    //         .verifyMFAMethod(methodSelected, code)
-    //         .catch(error => notify(error.message, { type: 'error' }));
-    //     setSubmitPending(false);
-    //     console.log('Code verified, attempting redirect...');
-    //     navigate('/user');
-    //     notify('Success! 2FA method verified', { type: 'success' });
-    // }
+    useEffect(() => {
+        // Redirect if no more methods available to enable
+        if (data && data.mfa.count >= 2) {
+            redirect('/user/security');
+        }
+    }, [data]);
 
     return (
-        <UserSettingsPageWrapper title="Security Settings">
-            <Stack gap={4}>
-                <Box>
-                    <Typography variant="h4" component="h2" my=".5rem">
-                        Set Up an MFA Method
-                    </Typography>
-                    <Divider />
-                </Box>
-
-                {awaitingVerify.authApp || awaitingVerify.email ? (
-                    // If either authapp or email still need to be verified, show verification page
-
-                    <>
-                        <Typography
-                            variant="h5"
-                            component="h3"
-                            color="primary.main">
-                            Step Two – Verify
+        data &&
+        data.mfa.count < 2 && (
+            <UserSettingsPageWrapper title="Security Settings">
+                <Stack gap={4}>
+                    <Box>
+                        <Typography variant="h4" component="h2" my=".5rem">
+                            Set Up an MFA Method
                         </Typography>
+                        <Divider />
+                    </Box>
 
-                        {awaitingVerify.authApp
-                            ? otpData && (
-                                  <>
-                                      <Box sx={{ mx: '2rem' }}>
-                                          <Typography
-                                              my="1rem"
-                                              sx={{ fontWeight: 'bold' }}>
-                                              1. Save the one-time password to
-                                              your authenticator app (see your
-                                              app's documentation for
-                                              instructions).
-                                          </Typography>
-                                          <Typography ml="1.2rem" my="1rem">
-                                              Scan this QR code with your app:
-                                          </Typography>
-                                          <Box ml="1.2rem" mb="1.75rem">
-                                              <img
-                                                  src={otpData.qrCodeDataUrl}
-                                                  alt="qr code"
-                                              />
+                    {awaitingVerify.authApp || awaitingVerify.email ? (
+                        // If either authapp or email still need to be verified, show verification page
+
+                        <>
+                            <Typography
+                                variant="h5"
+                                component="h3"
+                                color="primary.main">
+                                Step Two – Verify
+                            </Typography>
+
+                            {awaitingVerify.authApp
+                                ? otpData && (
+                                      <>
+                                          <Box sx={{ mx: '2rem' }}>
+                                              <Typography
+                                                  my="1rem"
+                                                  sx={{
+                                                      fontWeight: 'bold',
+                                                  }}>
+                                                  1. Save the one-time password
+                                                  to your authenticator app (see
+                                                  your app's documentation for
+                                                  instructions).
+                                              </Typography>
+                                              <Typography ml="1.2rem" my="1rem">
+                                                  Scan this QR code with your
+                                                  app:
+                                              </Typography>
+                                              <Box ml="1.2rem" mb="1.75rem">
+                                                  <img
+                                                      src={
+                                                          otpData.qrCodeDataUrl
+                                                      }
+                                                      alt="qr code"
+                                                  />
+                                              </Box>
+                                              <Typography ml="1.2rem" my="1rem">
+                                                  Or, enter this url directly
+                                                  into the app:
+                                              </Typography>
+                                              <Typography ml="1.2rem" my="1rem">
+                                                  {otpData &&
+                                                      otpData.otpauthUrl}
+                                              </Typography>
                                           </Box>
-                                          <Typography ml="1.2rem" my="1rem">
-                                              Or, enter this url directly into
-                                              the app:
-                                          </Typography>
-                                          <Typography ml="1.2rem" my="1rem">
-                                              {otpData && otpData.otpauthUrl}
-                                          </Typography>
-                                      </Box>
-                                      <VerificationCodeForm
-                                          text="2. Enter the OTP code generated by your app to
+                                          <VerificationCodeForm
+                                              text="2. Enter the OTP code generated by your app to
                                 verify this method is set up correctly."
-                                          methodSelected={methodSelected}
-                                          indent="1.2rem"
-                                      />
-                                  </>
-                              )
-                            : awaitingVerify.email && (
-                                  <>
-                                      <Box sx={{ mx: '2rem' }}>
-                                          <Typography my="1rem">
-                                              A one-time code has been sent to
-                                              your email. (Be sure to check your
-                                              spam folder.)
-                                          </Typography>
-                                          <Typography my="1rem">
-                                              Code expired?
-                                          </Typography>
-                                          <Button
-                                              variant="outlined"
-                                              onClick={handleResendEmailCode}
-                                              sx={{ mb: '1rem' }}>
-                                              Resend Email
-                                          </Button>
-                                      </Box>
-                                      <VerificationCodeForm
-                                          text="Enter the OTP code below to
+                                              methodSelected={methodSelected}
+                                              indent="1.2rem"
+                                          />
+                                      </>
+                                  )
+                                : awaitingVerify.email && (
+                                      <>
+                                          <Box sx={{ mx: '2rem' }}>
+                                              <Typography my="1rem">
+                                                  A one-time code has been sent
+                                                  to your email. (Be sure to
+                                                  check your spam folder.)
+                                              </Typography>
+                                              <Typography my="1rem">
+                                                  Code expired?
+                                              </Typography>
+                                              <Button
+                                                  variant="outlined"
+                                                  onClick={
+                                                      handleResendEmailCode
+                                                  }
+                                                  sx={{ mb: '1rem' }}>
+                                                  Resend Email
+                                              </Button>
+                                          </Box>
+                                          <VerificationCodeForm
+                                              text="Enter the OTP code below to
                                 verify this method is set up correctly."
-                                          indent="0"
-                                          methodSelected={methodSelected}
-                                      />
-                                  </>
-                              )}
+                                              indent="0"
+                                              methodSelected={methodSelected}
+                                          />
+                                      </>
+                                  )}
 
-                        {/* <Box>
+                            {/* <Box>
                             <Typography
                                 variant="p"
                                 mx="2rem"
@@ -263,67 +252,69 @@ export default function RegisterMFAMethod() {
                                 </form>
                             </Box>
                         </Box> */}
-                    </>
-                ) : (
-                    // Show form, if no method currently awaiting verification
-                    <>
-                        <Typography
-                            variant="h5"
-                            component="h3"
-                            color="primary.main">
-                            Step One – Select a Method
-                        </Typography>
-                        <form onSubmit={handleMethodSubmit}>
-                            <Box
-                                sx={{
-                                    mx: '2rem',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                }}>
-                                <FormControl>
-                                    <FormLabel
-                                        id="mfa-methods-radio-group"
-                                        sx={{ mb: '.75rem' }}>
-                                        Options:
-                                    </FormLabel>
-                                    <RadioGroup
-                                        aria-labelledby="mfa-methods-radio-group"
-                                        name="mfa-methods-radio-group"
-                                        value={methodSelected}
-                                        onChange={handleChange}>
-                                        <FormControlLabel
-                                            value="authApp"
-                                            control={<Radio />}
-                                            label="Authentication App"
-                                            disabled={isEnabled.authApp}
-                                        />
-                                        <FormControlLabel
-                                            value="email"
-                                            control={<Radio />}
-                                            label="Email"
-                                            disabled={isEnabled.email}
-                                        />
-                                    </RadioGroup>
-                                </FormControl>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    disabled={methodSelected === ''}
+                        </>
+                    ) : (
+                        // Show form, if no method currently awaiting verification
+                        <>
+                            <Typography
+                                variant="h5"
+                                component="h3"
+                                color="primary.main">
+                                Step One – Select a Method
+                            </Typography>
+                            <form onSubmit={handleMethodSubmit}>
+                                <Box
                                     sx={{
-                                        mt: '2rem',
-                                        maxWidth: '175px',
+                                        mx: '2rem',
+                                        display: 'flex',
+                                        flexDirection: 'column',
                                     }}>
-                                    Enable
-                                </Button>
-                            </Box>
-                        </form>
-                    </>
-                )}
-            </Stack>
-        </UserSettingsPageWrapper>
+                                    <FormControl>
+                                        <FormLabel
+                                            id="mfa-methods-radio-group"
+                                            sx={{ mb: '.75rem' }}>
+                                            Options:
+                                        </FormLabel>
+                                        <RadioGroup
+                                            aria-labelledby="mfa-methods-radio-group"
+                                            name="mfa-methods-radio-group"
+                                            value={methodSelected}
+                                            onChange={handleChange}>
+                                            <FormControlLabel
+                                                value="authApp"
+                                                control={<Radio />}
+                                                label="Authentication App"
+                                                disabled={isVerified.authApp}
+                                            />
+                                            <FormControlLabel
+                                                value="email"
+                                                control={<Radio />}
+                                                label="Email"
+                                                disabled={isVerified.email}
+                                            />
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        disabled={methodSelected === ''}
+                                        sx={{
+                                            mt: '2rem',
+                                            maxWidth: '175px',
+                                        }}>
+                                        Enable
+                                    </Button>
+                                </Box>
+                            </form>
+                        </>
+                    )}
+                </Stack>
+            </UserSettingsPageWrapper>
+        )
     );
 }
 
+// TODO (?): Move this?
 function VerificationCodeForm({ text, methodSelected, indent }) {
     const { refetch } = useGetIdentity();
     const [code, setCode] = useState('');
@@ -331,7 +322,8 @@ function VerificationCodeForm({ text, methodSelected, indent }) {
 
     const authProvider = useAuthProvider();
     const notify = useNotify();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+    const redirect = useRedirect();
 
     async function handleCodeSubmit(event) {
         event.preventDefault();
@@ -339,13 +331,15 @@ function VerificationCodeForm({ text, methodSelected, indent }) {
 
         await authProvider.settings
             .verifyMFAMethod(methodSelected, code)
+            .then(() => {
+                console.log('Code verified, attempting redirect...');
+                refetch();
+                redirect('/user');
+
+                notify('Success! 2FA method verified', { type: 'success' });
+            })
             .catch(error => notify(error.message, { type: 'error' }));
         setSubmitPending(false);
-        console.log('Code verified, attempting redirect...');
-        navigate('/user');
-        refetch();
-
-        notify('Success! 2FA method verified', { type: 'success' });
     }
     return (
         <Box>

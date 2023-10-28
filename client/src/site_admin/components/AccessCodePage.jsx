@@ -48,7 +48,11 @@ export default function AccessCodeForm({ theme }) {
         <FormPageWrapper width="300px">
             {!isSubmitted ? (
                 <>
-                    <Typography variant="h5" component="p" mt={'2rem'}>
+                    <Typography
+                        variant="h5"
+                        component="p"
+                        mt={'2rem'}
+                        textAlign="center">
                         Enter Code
                     </Typography>
 

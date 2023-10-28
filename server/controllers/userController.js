@@ -62,7 +62,7 @@ export const userController = {
     // TODO: Preceded by validation middleware, then
     // Preceded by dedicated custom middleware (verify.userUpdateToken) to verify token valid, and that
     // the user linked to the token matches the email submitted by the user.
-
+    // TODO: Also delete admin-created token on success
     completeAccountSetup: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
@@ -120,7 +120,7 @@ export const userController = {
             });
         }
 
-        // Delete email token (whether setup is sucessful or not)
+        // Delete email token (whether setup is successful or not)
         console.log('Deleting token...');
         await req.token
             .deleteOne()
@@ -132,6 +132,8 @@ export const userController = {
     // Processes password reset submission
     // TODO: preceded by validation and sanitization middleware (for email, and for password (min/max length, other security requirements, and that password entries match),
     // Preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
+    // TODO: Also delete admin-created token on success
+
     passwordReset: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         console.log(

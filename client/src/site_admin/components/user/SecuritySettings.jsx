@@ -154,11 +154,12 @@ export default function SecuritySettings() {
                                 hideable
                                 hideForm={() => setPasswordEdit(false)}
                                 formRouting={changePasswordRouting}
+                                successNotify="Password changed successfully"
                             />
                         )}
                     </UserSettingsSection>
                     <UserSettingsSection title="Two-Factor Authentication (2FA)">
-                        {data && data.mfa.enabled ? (
+                        {data.mfa.enabled ? (
                             <Box>
                                 <Box
                                     sx={{
@@ -222,9 +223,14 @@ export default function SecuritySettings() {
                                     </>
                                 )}
                                 {data.mfa.count > 1 && (
-                                    <>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                        }}>
                                         <Button
-                                            onClick={handle2FAChangeDefault}>
+                                            onClick={handle2FAChangeDefault}
+                                            sx={{ maxWidth: 'max-content' }}>
                                             Change default method
                                         </Button>
                                         <ConfirmAction
@@ -239,7 +245,7 @@ export default function SecuritySettings() {
                                                 })
                                             }
                                         />
-                                    </>
+                                    </Box>
                                 )}
                             </Box>
                         ) : (
