@@ -3,14 +3,11 @@ import { useState, useEffect } from 'react';
 import {
     useAuthenticated,
     useNotify,
-    Notification,
     useAuthProvider,
     useRedirect,
 } from 'react-admin';
-import { Container, Paper, Box, Stack, Form, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import LoadingButton from '@mui/lab/LoadingButton';
-import SendIcon from '@mui/icons-material/Send';
 import FormPageWrapper from './FormNoLayoutPageWrapper';
 import UserForm from './UserForm';
 
@@ -26,7 +23,6 @@ export default function PasswordReset() {
 
     // const notify = useNotify();
     // const redirect = useRedirect();
-    // const navigate = useNavigate();
     const authProvider = useAuthProvider();
 
     // Check auth every 10 minutes

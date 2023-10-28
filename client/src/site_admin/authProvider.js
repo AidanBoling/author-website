@@ -1,5 +1,4 @@
 import { API_URL } from './api/config';
-import { redirect, useSearchParams } from 'react-router-dom';
 
 function setRequest(path, body, method = 'POST', headers = {}) {
     headers = { 'Content-Type': 'application/json', ...headers };
@@ -161,67 +160,6 @@ export const authProvider = {
         return handlePwdLogin(request);
     },
 
-    // handleCallback: code => {
-    //     console.log('Starting handleCallback route...');
-    //     const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
-
-    //     const request = new Request(API_URL + '/login/mfa', {
-    //         method: 'POST',
-    //         body: JSON.stringify({ OTPcode: code }),
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json',
-    //             Authorization: `Bearer ${preAuthToken}`,
-    //         }),
-    //         credentials: 'include',
-    //     });
-
-    //     return fetch(request)
-    //         .then(response => {
-    //             console.log('handleCallback request fetched');
-    //             // If unauthorized or other errors:
-    //             if (response.status < 200 || response.status >= 300) {
-    //                 if (
-    //                     response.status === 400 ||
-    //                     response.status === 401 ||
-    //                     response.status === 403
-    //                 )
-    //                     throw new Error('Unauthorized');
-
-    //                 console.log('handleCallback request failed');
-    //                 throw new Error(`${response.status}`); // --> May want to switch to this later, if need log out/vs. not log out actions (e.g., don't redirect for 500 status)?
-    //             }
-
-    //             // If success:
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             localStorage.removeItem('mfa');
-    //             localStorage.setItem('auth', true);
-    //             return Promise.resolve();
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //             if (error.message === 'Unauthorized') {
-    //                 console.log('MFA request failed. Deleting mfa item...');
-    //                 localStorage.removeItem('mfa');
-    //                 // console.log('Returning rejected promise');
-    //                 throw new Error({
-    //                     logoutOnFailure: true,
-    //                     message:
-    //                         'Invalid or expired code. Please re-enter credentials.',
-    //                 });
-    //                 // console.log('Requesting redirect to login...');
-    //                 // return { redirectTo: '/login' };
-    //             }
-    //             // throw new Error('Network error');
-    //             // return Promise.reject({
-    //             //     logoutOnFailure: true,
-    //             //     message: error.message,
-    //             // });
-    //             throw new Error('Network error');
-    //         });
-    // },
-
     checkError: error => {
         const status = error.status;
         console.log('There was some kind of error!');
@@ -342,10 +280,6 @@ export const authProvider = {
         if (localStorage.getItem('auth')) {
             const securityHash = /^#\/user\/security/;
             if (securityHash.test(location.hash)) {
-                // if (
-                //     location.hash === '#/user/security' ||
-                //     location.hash === '/user/security/enable-mfa'
-                // ) {
                 let request;
                 if (location.hash === '#/user/security') {
                     request = setRequest('/auth/check-login/1', null, 'GET');
@@ -355,13 +289,7 @@ export const authProvider = {
                 }
 
                 // Check user's most recent Login time. If server doesn't
-                // send ok: save page url, then trigger logout.
-
-                // Note: Saving page url is workaround -- for some reason, RA only redirects to
-                // last-viewed page for idle logouts (triggered due to credential expiration),
-                // otherwise redirects to Dashboard. Unable to get the built-in "redirectTo"
-                // on login success to work for me.
-                // Workaround is to have Dashboard page trigger the redirect to the saved url.
+                // send ok, trigger logout.
 
                 try {
                     const response = await fetch(request)
@@ -369,12 +297,10 @@ export const authProvider = {
                         .then(() => Promise.resolve());
                 } catch (error) {
                     if (error.message === 'Unauthorized') {
-                        // CHECK: Can use router-dom history (or something) instead?
-                        localStorage.setItem(
-                            'redirect',
-                            window.location.origin + '/admin' + location.hash
-                        );
+                        const currentPath = location.hash.replace('#', '');
+
                         return Promise.reject({
+                            redirectTo: currentPath,
                             message: 'Please renew your credentials',
                         });
                     }
@@ -383,8 +309,6 @@ export const authProvider = {
                         message:
                             'An unexpected error occurred. Please log back in to continue.',
                     });
-                    // redirect('/user');
-                    // return;
                 }
             }
             console.log('Resolving auth check');
@@ -448,7 +372,6 @@ export const authProvider = {
                 return authProvider.logout();
             }
             throw new Error('Something went wrong with fetching identity.');
-            //     return Promise.reject(error);
         }
     },
 
@@ -486,20 +409,6 @@ export const authProvider = {
             const errorUnauthorizedMsg = 'Code invalid or expired';
 
             return fetchWithThrowError(request, errorUnauthorizedMsg);
-            // Delete after testing the above:
-            // try {
-            //     const data = await fetch(request).then(response =>
-            //         handleResponse(response)
-            //     );
-            //     return data.message;
-            // } catch (error) {
-            //     console.log(error);
-            //     if (error.message !== 'Unauthorized') {
-            //         console.log('Server error');
-            //         throw new Error('Server error');
-            //     }
-            //     throw new Error('Code invalid or expired');
-            // }
         },
 
         disableMFA: async () => {
@@ -590,19 +499,6 @@ export const authProvider = {
                 ...params,
             });
 
-            // try {
-            //     const data = await fetch(request).then(response =>
-            //         handleResponse(response)
-            //     );
-            //     return data.message;
-            // } catch (error) {
-            //     console.log(error);
-            //     if (error.message === 'Unauthorized') {
-            //         throw new Error('Invalid or expired credentials');
-            //     }
-            //     throw new Error(errorMsg);
-            // }
-
             // Q: Need to change this? Need different error handling/routing, for security?
             const errorUnauthorizedMsg = 'Invalid or expired credentials';
             const errorOtherMsg = 'Server error. Contact your site admin.';
@@ -635,15 +531,106 @@ export const authProvider = {
     },
 };
 
-// TODO: set up checkAuth route for Registration
-
 // Notes: ideas for server "bouncer" -- cool-down code-entry period of 5 min? For everyone, regardless of ip, etc (since very limited number of users)
+// and maybe... add a use-limit to code; ex, every time code checked, use increases by 1; if use gets to 3, code is invalidated/deleted?
+// (Prob not critical, b/c of needing access to email for link anyways)
 
 // TODO: Troubleshoot security pages -- checkAuth not working
 // as expected -- not timing out (to login page or otherwise)
 
-// TODO: Troubleshoot Login+MFA -- If get through pwd login, but then don't put
-// otp password and click back in browser instead, get taken to Dashboard page,
-// even though console error message says Unauthorized...
+// TODO: Add validation to UserForm fields
+// TODO: change pwd fields to type='password'
 
-//TODO: Add validation to UserForm fields
+// TODO: Move functions at top of page to separate page(s)
+
+// TODO: check access code exp. is 1hr
+// TODO: update access code
+
+// TODO: check all admin components that need it have 'use client'
+
+//
+//
+// TEMP Archive ------------------------------
+//
+// if (
+//     location.hash === '#/user/security' ||
+//     location.hash === '/user/security/enable-mfa'
+// ) {}
+
+// Check user's most recent Login time. If server doesn't
+// send ok: save page url, then trigger logout.
+
+// Note: Saving page url is workaround -- for some reason, RA only redirects to
+// last-viewed page for idle logouts (triggered due to credential expiration),
+// otherwise redirects to Dashboard. Unable to get the built-in "redirectTo"
+// on login success to work for me.
+// Workaround is to have Dashboard page trigger the redirect to the saved url.
+
+// const currentPage =
+//     window.location.origin + '/admin' + location.hash;
+// localStorage.setItem(
+//     'redirect',
+//     window.location.origin + '/admin' + location.hash
+// );
+
+//
+// handleCallback: code => {
+//     console.log('Starting handleCallback route...');
+//     const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
+
+//     const request = new Request(API_URL + '/login/mfa', {
+//         method: 'POST',
+//         body: JSON.stringify({ OTPcode: code }),
+//         headers: new Headers({
+//             'Content-Type': 'application/json',
+//             Authorization: `Bearer ${preAuthToken}`,
+//         }),
+//         credentials: 'include',
+//     });
+
+//     return fetch(request)
+//         .then(response => {
+//             console.log('handleCallback request fetched');
+//             // If unauthorized or other errors:
+//             if (response.status < 200 || response.status >= 300) {
+//                 if (
+//                     response.status === 400 ||
+//                     response.status === 401 ||
+//                     response.status === 403
+//                 )
+//                     throw new Error('Unauthorized');
+
+//                 console.log('handleCallback request failed');
+//                 throw new Error(`${response.status}`); // --> May want to switch to this later, if need log out/vs. not log out actions (e.g., don't redirect for 500 status)?
+//             }
+
+//             // If success:
+//             return response.json();
+//         })
+//         .then(data => {
+//             localStorage.removeItem('mfa');
+//             localStorage.setItem('auth', true);
+//             return Promise.resolve();
+//         })
+//         .catch(error => {
+//             console.log(error);
+//             if (error.message === 'Unauthorized') {
+//                 console.log('MFA request failed. Deleting mfa item...');
+//                 localStorage.removeItem('mfa');
+//                 // console.log('Returning rejected promise');
+//                 throw new Error({
+//                     logoutOnFailure: true,
+//                     message:
+//                         'Invalid or expired code. Please re-enter credentials.',
+//                 });
+//                 // console.log('Requesting redirect to login...');
+//                 // return { redirectTo: '/login' };
+//             }
+//             // throw new Error('Network error');
+//             // return Promise.reject({
+//             //     logoutOnFailure: true,
+//             //     message: error.message,
+//             // });
+//             throw new Error('Network error');
+//         });
+// },

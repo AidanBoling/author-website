@@ -14,23 +14,6 @@ import LoadingPage from './LoadingPage';
 function Dashboard() {
     // const { isLoading, authenticated } = useAuthState();
 
-    const redirect = useRedirect();
-    if (localStorage.getItem('redirect')) {
-        const redirectUrl = localStorage.getItem('redirect');
-        localStorage.removeItem('redirect');
-        redirect(redirectUrl);
-    }
-    // useEffect(() => {
-    //     // Redirect to previous page
-    //     if (localStorage.getItem('redirect')) {
-    //         const redirectUrl = localStorage.getItem('redirect');
-    //         localStorage.removeItem('redirect');
-    //         redirect(redirectUrl);
-    //     }
-    // });
-
-    // if (isLoading) return <LoadingPage />;
-
     return (
         <Container>
             <Card sx={{ mb: '1rem' }}>

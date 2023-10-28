@@ -1,5 +1,4 @@
 'use client';
-import { useState, useEffect } from 'react';
 import {
     Container,
     Paper,
@@ -7,14 +6,8 @@ import {
     Stack,
     Divider,
     Typography,
-    Button,
-    Switch,
-    FormControlLabel,
-    Link,
-    TextField,
 } from '@mui/material';
 import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
-import { redirect } from 'react-router-dom';
 import LoadingPage from '../LoadingPage';
 
 export default function UserSettingsPageWrapper(props) {

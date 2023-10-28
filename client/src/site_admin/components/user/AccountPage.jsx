@@ -25,7 +25,7 @@ import UserSettingsPageWrapper, {
 } from './UserSettingsUtilities';
 import UserForm from '../UserForm';
 
-// TODO: User info section into a List (mui)
+// TODO (later): User info section into a List (mui)
 export default function AccountPage() {
     const { isLoading, error, data, refetch } = useGetIdentity();
     const [nameEdit, setNameEdit] = useState(false);

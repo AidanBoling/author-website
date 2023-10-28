@@ -414,7 +414,7 @@ app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 // This route triggered when users click "enable mfa" (and select method to register),
 // OR when users "register 2nd method" (if already enabled)
 // TODO: add require password input and verification before generate
-// CHECK: Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
+// CHECK (later): Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
 app.post('/admin/auth/settings/mfa/setup', userController.setUpMfa);
 
 // Triggered when users submit otp code to verify a new mfa method
@@ -491,19 +491,20 @@ app.listen(PORT, () => {
 
 // --Not logged in, but token from email required for these routes:
 
-app.get(
-    '/admin/mod/register',
-    //VALIDATE params (id, token, purpose),
-    verify.userUpdateToken,
-    authController.authCheck
-);
+// NOTE: The below two can be removed, I think replaced in earlier section
+// app.get(
+//     '/admin/mod/register',
+//     //VALIDATE params (id, token, purpose),
+//     verify.userUpdateToken,
+//     authController.authCheck
+// );
 
-app.get(
-    '/admin/mod/password-reset',
-    //VALIDATE params (id, token, purpose),
-    verify.userUpdateToken,
-    authController.authCheck
-);
+// app.get(
+//     '/admin/mod/password-reset',
+//     //VALIDATE params (id, token, purpose),
+//     verify.userUpdateToken,
+//     authController.authCheck
+// );
 
 //Route used by front end authCheck when loading security settings page
 app.get(
@@ -529,6 +530,7 @@ app.get('/admin/auth/protectedroute', (req, res) => {
     res.send('<h1>Protected Page</h1>');
 });
 
+// TEMP (?):
 app.post('/admin/auth/checkAuth', (req, res) => {
     console.log('Check auth route was called');
     console.log('session ID: ', req.sessionID);
@@ -566,3 +568,7 @@ app.get('/admin/auth/user', async (req, res) => {
         res.status(500).json({ message: 'Error' });
     }
 });
+
+// TODO: Helmet
+// TODO (?): logger?
+// TODO: "bouncer" -- limit the number of wrong attempts in given time, or given ip/user context?

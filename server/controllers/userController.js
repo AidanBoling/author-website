@@ -15,6 +15,7 @@ import sendOTPCodeEmail from '../utils/sendOTPemail.js';
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
+// TODO: (production prep) Update instances of email to input email, not TEST_EMAIL
 // TODO: Make sure initial access Code is deleted at an appropriate point
 // (when email sends successfully? Or when user completes update action?)
 // CONSIDER: Connect access code with the generated token somehow?
@@ -232,7 +233,7 @@ export const userController = {
                 message: 'Password changed successfully',
             });
 
-            //TODO(??): Force user logout/login after password change??? Or, regenerate session??
+            //TODO (??): Force user logout/login after password change??? Or, regenerate session??
 
             // Send email notifying of password change
             sendAccountInfoEmail(

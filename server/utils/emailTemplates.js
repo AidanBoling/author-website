@@ -15,6 +15,7 @@ export function contactEmailTemplate(data) {
     return emailContent;
 }
 
+// TODO: Update Password Reset template with info about link expiration.
 export const userEmailTemplates = {
     register: (data, variant) => {
         const company = process.env.COMPANY_NAME;

@@ -30,6 +30,7 @@ import UserSettingsPageWrapper, {
 import UserForm from '../UserForm';
 
 export default function SecuritySettings() {
+    useAuthenticated();
     const { isLoading, error, data, refetch } = useGetIdentity();
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [showConfirm, setShowConfirm] = useState({
@@ -47,7 +48,7 @@ export default function SecuritySettings() {
     const methodNames = { authApp: 'Authentication App', email: 'Email' };
     // console.log('Other methods: ', otherMethods);
     const authProvider = useAuthProvider();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const redirect = useRedirect();
     const notify = useNotify();
 
@@ -67,7 +68,7 @@ export default function SecuritySettings() {
 
     useEffect(() => {
         if (error) {
-            navigate('/user');
+            redirect('/user');
             notify(error.message, { type: 'error' });
         }
     }, [error]);
@@ -80,13 +81,13 @@ export default function SecuritySettings() {
         redirect('/user/security/enable-mfa');
     }
 
-    // TODO:
+    // TODO (later):
     function handle2FADisable() {
         setShowConfirm({ ...showConfirm, disable2FA: true });
         // When confirm, send to authProvider.disableMFA method
     }
 
-    // TODO:
+    // TODO (later):
     function handle2FAChangeDefault() {
         setShowConfirm({ ...showConfirm, changeDefault: true });
         // Open warning/check dialog first: "Change to {methodNames[otherMethods[0]]}?"

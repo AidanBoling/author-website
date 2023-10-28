@@ -21,6 +21,8 @@ import {
 import { redirectDocument } from 'react-router-dom';
 import FormPageWrapper from './FormNoLayoutPageWrapper';
 
+//TODO: update the form to use the OtpCodeField component
+
 export default function AccessCodeForm({ theme }) {
     const [code, setCode] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -38,7 +40,7 @@ export default function AccessCodeForm({ theme }) {
 
         // Redirect page after 5min (2m?)
 
-        // TODO: Fix and add author website homepage url
+        // TODO (later): Fix and add author website homepage url
         // const timer = setTimeout(() => {
         //     redirectDocument('http://app.localhost:3000/admin#/login');
         // }, 1 * 60 * 1000);
@@ -57,7 +59,7 @@ export default function AccessCodeForm({ theme }) {
                     </Typography>
 
                     <form onSubmit={handleSubmit}>
-                        <Stack gap={4} sx={{ margin: '2rem' }}>
+                        <Stack gap={4} sx={{ margin: '2rem', mt: '1.5rem' }}>
                             <TextField
                                 variant="outlined"
                                 name="code"
