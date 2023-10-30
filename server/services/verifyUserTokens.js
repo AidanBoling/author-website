@@ -8,9 +8,8 @@ export const verify = {
     // Returns user linked to code.
     // TODO: Preceded by validation middleware.
     accessCode: async (req, res, next) => {
-        // CHECK: Need to handle validator invalid results here, or can do within validator middleware?
-        // const data = matchedData(req); //CHECK variables -- depends on validation output...
-        const data = req.body;
+        const data = matchedData(req); //CHECK variables -- depends on validation output...
+        // const data = req.body;
         console.log(data);
 
         // ...Check for code, return purpose and userId
@@ -43,12 +42,19 @@ export const verify = {
     // Verifies token + user match from submission of registration & password reset forms
     // TODO: Preceded by validation middleware (id, token(??), purpose)
     userUpdateToken: async (req, res, next) => {
-        // CHECK: Need to handle validator invalid results here, or can do within validator middleware?
-        // const data = matchedData(req); // CHECK -- need different/separate one for params?
+        // try {
+        //     const result = myValidationResult(req).throw();
+        //     console.log('Validation result: ', result);
+        // } catch (e) {
+        //     console.log('Error:', e.mapped());
+        //     throw new Error('Validation error')
+        //     // res.status(400).json({ error: e.mapped() });
+        // }
+
+        const data = matchedData(req);
         console.log('Starting user update token verification...');
 
-        const data = { ...req.body }; // Temp
-        // console.log(data);
+        console.log('Validated data: ', data);
 
         try {
             // Check for existing token by submitted userId and purpose

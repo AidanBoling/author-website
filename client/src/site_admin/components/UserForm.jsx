@@ -18,16 +18,28 @@ export default function UserForm(props) {
         name: '',
         email: '',
         currentPassword: '',
-        newPassword: '',
+        password: '',
         confirmPassword: '',
     });
-    // const params = props.params;
+    const [errorMsg, setErrorMsg] = useState({});
     const notify = useNotify();
     const authProvider = useAuthProvider();
 
     function handleChange(event) {
         const { id, value } = event.target;
         setValues({ ...values, [id]: value });
+
+        // Clear errors on value change
+        if (id === 'confirmPassword' || id === 'password') {
+            // Clear error for both password and confirmPassword if either one is updated
+            setErrorMsg({
+                ...errorMsg,
+                password: false,
+                confirmPassword: false,
+            });
+        } else {
+            setErrorMsg({ ...errorMsg, [id]: false });
+        }
     }
 
     async function handleSubmit(event, field) {
@@ -37,15 +49,23 @@ export default function UserForm(props) {
         console.log('Form values on submit: ', values);
         await props
             .formRouting(values, props.params)
-            .then(() => {
-                if (props.hideable) {
-                    props.hideForm();
+            .then()
+            .then(data => {
+                if (data.validationError) {
+                    setErrorMsg(data.validationError);
+                } else {
+                    if (props.hideable) {
+                        props.hideForm();
+                    }
+                    notify(props.successNotify || 'Submitted!', {
+                        type: 'success',
+                    });
                 }
-                notify(props.successNotify || 'Submitted!', {
-                    type: 'success',
-                });
             })
-            .catch(error => notify(error.message, { type: 'error' }));
+            .catch(error => {
+                console.log(error.message);
+                notify(error.message, { type: 'error' });
+            });
         setSubmitPending(false);
         if (props.refetchOnSubmit) {
             refetch();
@@ -56,7 +76,7 @@ export default function UserForm(props) {
         <Box mt=".75rem">
             <form onSubmit={handleSubmit}>
                 <Stack
-                    gap={props.spacing}
+                    gap={props.spacing || 1}
                     sx={{
                         maxWidth: props.maxWidth || '300px',
                         width: props.width || '280px',
@@ -68,6 +88,8 @@ export default function UserForm(props) {
                             label="Name"
                             required
                             onChange={handleChange}
+                            helperText={errorMsg.name || false}
+                            error={errorMsg.name ? true : false}
                         />
                     )}
                     {props.email && (
@@ -77,12 +99,16 @@ export default function UserForm(props) {
                             label="Confirm email"
                             required
                             onChange={handleChange}
+                            helperText={errorMsg.email || false}
+                            error={errorMsg.email ? true : false}
                         />
                     )}
                     {props.password && (
                         <UserFormPasswordSection
                             currentpwd={props.currentpwd}
                             onChange={e => handleChange(e)}
+                            passwordLabel={props.passwordLabel}
+                            errorMsg={errorMsg}
                         />
                     )}
 
@@ -92,6 +118,7 @@ export default function UserForm(props) {
                             type="submit"
                             sx={{
                                 width: '100%',
+                                mt: '.75rem',
                             }}>
                             Submit
                         </Button>
@@ -113,30 +140,46 @@ export default function UserForm(props) {
 }
 
 function UserFormPasswordSection(props) {
+    const passwordHelperText = 'Password must be at least 12 characters.';
+
     return (
         <>
             {props.currentpwd && (
                 <TextField
                     variant="outlined"
                     id="currentPassword"
-                    label="Current password"
+                    label="Current Password"
                     required
                     onChange={props.onChange}
+                    helperText={props.errorMsg.currentPassword || false}
+                    error={props.errorMsg.currentPassword}
                 />
             )}
             <TextField
                 variant="outlined"
-                id="newPassword"
-                label="New password"
+                id="password"
+                label={props.passwordLabel || 'Password'}
                 required
                 onChange={props.onChange}
+                helperText={
+                    props.errorMsg.password ||
+                    (props.errorMsg.confirmPassword && ' ') ||
+                    passwordHelperText
+                }
+                error={
+                    props.errorMsg.password || props.errorMsg.confirmPassword
+                        ? true
+                        : false
+                }
             />
             <TextField
                 variant="outlined"
                 id="confirmPassword"
-                label="Confirm password"
+                label="Confirm Password"
                 required
                 onChange={props.onChange}
+                helperText={props.errorMsg.confirmPassword || false}
+                error={props.errorMsg.confirmPassword ? true : false}
             />
         </>
     );

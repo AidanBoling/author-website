@@ -4,7 +4,12 @@ import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import nodemailer from 'nodemailer';
 import sanitizeHtml from 'sanitize-html';
-import { body, validationResult, matchedData } from 'express-validator';
+import {
+    body,
+    validationResult,
+    matchedData,
+    checkSchema,
+} from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
 // import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
@@ -39,6 +44,8 @@ import { loginTimeCheck } from './services/loginCheck.js';
 import sendOTPCodeEmail from './utils/sendOTPemail.js';
 // import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
+import { validationSchema } from './utils/validationSchema.js';
+import { handleValidationErrors } from './services/validation.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -122,7 +129,7 @@ app.use(
 app.use('/admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
 
-// TODO: move checkAuth and cleanSession to another file(s)
+// TODO: move checkAuth and cleanSession to another file(s) --> Services > auth.js
 function checkAuth(req, res, next) {
     console.log('A protected route was called; checking auth...');
     console.log('Session is authenticated: ', req.isAuthenticated());
@@ -369,39 +376,48 @@ app.delete('/admin/tags/:id', tagController.delete);
 // Initiate register or password reset using admin-created temp code
 app.post(
     '/admin/mod/code',
-    //VALIDATE (code --> min 8, max 16, alphanumeric only...),
+    checkSchema({ code: validationSchema.accessCode }),
     verify.accessCode,
     userController.accessRequest
 );
 
 // User Registration (--> user account pwd set):
 
-// app.use('/admin/mod',
-// // VALIDATION (id, token, purpose),
-// verify.userUpdateToken)
+app.use(
+    '/admin/mod',
+    checkSchema({
+        id: validationSchema.id,
+        token: validationSchema.token,
+        purpose: validationSchema.purpose,
+    }),
+    handleValidationErrors,
+    verify.userUpdateToken
+);
 
 // Check token
-app.post(
-    '/admin/mod/checkAuth',
-    // VALIDATION (id, token, purpose),
-    verify.userUpdateToken,
-    authController.authCheck
-);
+app.post('/admin/mod/checkAuth', authController.authCheck);
 
 app.post(
     '/admin/mod/register',
-    // VALIDATION ((id, token, purpose), name, email, password)
-    // body('email').notEmpty().escape(),
-    // body('password').notEmpty().escape(),
+    checkSchema({
+        email: validationSchema.email,
+        password: validationSchema.password,
+        confirmPassword: validationSchema.confirmPassword,
+    }),
+    handleValidationErrors,
     verify.userUpdateToken,
     userController.completeAccountSetup
 );
-// TODO: ^improve validation
 
 // User Password Reset
 app.post(
     '/admin/mod/password-reset',
-    // VALIDATION ((id, token, purpose), email, password),
+    checkSchema({
+        email: validationSchema.email,
+        password: validationSchema.password,
+        confirmPassword: validationSchema.confirmPassword,
+    }),
+    handleValidationErrors,
     verify.userUpdateToken,
     userController.passwordReset
 );
@@ -413,21 +429,27 @@ app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 
 // This route triggered when users click "enable mfa" (and select method to register),
 // OR when users "register 2nd method" (if already enabled)
-// TODO: add require password input and verification before generate
 // CHECK (later): Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
-app.post('/admin/auth/settings/mfa/setup', userController.setUpMfa);
+app.post(
+    '/admin/auth/settings/mfa/setup',
+    // VALIDATE (method)
+    userController.setUpMfa
+);
 
 // Triggered when users submit otp code to verify a new mfa method
-app.post('/admin/auth/settings/mfa/verify', userController.verifyMfaMethod);
+app.post(
+    '/admin/auth/settings/mfa/verify',
+    // VALIDATE (code)
+    userController.verifyMfaMethod
+);
 
-//TODO: add require password input and verification before disable
 app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
 //TODO: add require password input and verification before change
-//      Use val/ver to check that new password (newPwd) and confirm password (confirmNewPwd) match each other...
+//      Use val/ver to check that new password (password) and confirm password (confirmPassword) match each other...
 app.post(
     '/admin/auth/settings/change/password',
-    //VALIDATE (new pwd),
+    //VALIDATE (currentPassword, password, confirmPassword),
     userController.passwordChange
 );
 
@@ -443,14 +465,23 @@ app.post(
 
 app.post(
     '/admin/login/password',
+    // VALIDATE (email, password)?
+    // handleValidationErrors ?? (sending back form validation errors?)
     passport.session(),
     cleanSession,
     passportAuthenticate.passwordLogin,
     authController.login
-); //--> TODO: Add validation
+); //--> TODO: Add validation ?
+
+// app.use(
+//     'admin/login/mfa',
+//     //VALIDATE (mfa jwt token in header),
+//     // handleValidationErrors
+// );
 
 app.post(
     '/admin/login/mfa',
+    // VALIDATE (otp code)
     passportAuthenticate.mfaLogin,
     authController.login
 );
@@ -463,21 +494,25 @@ app.get(
 );
 
 // Send an email with a new OTP code
-// TODO: add validation for email (req.body.email)
+// TODO: add validation for email (email)
 // TODO: change Email OTP expires to 5 minutes (?) (mfa login token expires 5 minutes, atm...)
-app.post('/admin/login/mfa/email', async (req, res) => {
-    console.log('Send email route triggered...');
-    try {
-        const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
-        const user = await User.findOne({ email: req.body.email });
-        if (!user) throw new Error('User not found');
-        sendOTPCodeEmail(user._id, email);
-        res.json({ message: 'Success' });
-    } catch (error) {
-        console.log('Error sending OTP code email: ', error);
-        res.status(500).json({ message: 'Server error' });
+app.post(
+    '/admin/login/mfa/email',
+    // VALIDATE (email)
+    async (req, res) => {
+        console.log('Send email route triggered...');
+        try {
+            const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
+            const user = await User.findOne({ email: req.body.email });
+            if (!user) throw new Error('User not found');
+            sendOTPCodeEmail(user._id, email);
+            res.json({ message: 'Success' });
+        } catch (error) {
+            console.log('Error sending OTP code email: ', error);
+            res.status(500).json({ message: 'Server error' });
+        }
     }
-});
+);
 
 // User logout
 
@@ -519,7 +554,7 @@ app.get(
     authController.authCheck
 );
 
-// TODO: Add validation for session cookie...
+// TODO: Add validation for session cookie... Add to '/admin/auth' route
 
 //TEMP:
 app.get('/admin/auth/protectedroute', (req, res) => {
@@ -572,3 +607,6 @@ app.get('/admin/auth/user', async (req, res) => {
 // TODO: Helmet
 // TODO (?): logger?
 // TODO: "bouncer" -- limit the number of wrong attempts in given time, or given ip/user context?
+
+//TODO: Check that in all the endpoints where validation added
+// the other middleware is using the validated results (i.e. data = matchedData(req))

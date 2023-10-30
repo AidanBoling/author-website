@@ -12,6 +12,7 @@ import {
 } from '../utils/userUtilities.js';
 import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
 import sendOTPCodeEmail from '../utils/sendOTPemail.js';
+import { matchedData } from 'express-validator';
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
@@ -207,11 +208,11 @@ export const userController = {
     passwordChange: async (req, res) => {
         console.log('Starting password change request...');
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+        const { currentPassword, password } = matchedData(req);
 
         try {
             // Verify submitted current password matches password of user found in session
             const sessionUserEmail = req.user.email;
-            const currentPassword = req.body.currentPwd;
 
             const user = await User.authenticate(
                 sessionUserEmail,
@@ -224,7 +225,7 @@ export const userController = {
             }
 
             // Authenticated; Update user's password
-            user.password = req.body.newPwd;
+            user.password = password;
             user.markModified('password');
             await user.save();
 

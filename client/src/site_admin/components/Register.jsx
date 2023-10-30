@@ -52,6 +52,7 @@ export default function Register() {
                     name
                     email
                     password
+                    passwordLabel="Password"
                     hideable
                     hideForm={() => setFormSubmitted(true)}
                     formRouting={registerUserRouting}

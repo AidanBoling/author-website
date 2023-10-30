@@ -13,23 +13,53 @@ function setRequest(path, body, method = 'POST', headers = {}) {
     return request;
 }
 
-function handleResponse(response) {
-    // If unauthorized or other error:
-    if (response.status < 200 || response.status >= 300) {
-        if (
-            response.status === 400 ||
-            response.status === 401 ||
-            response.status === 403
-        )
-            throw new Error('Unauthorized');
+function parseResponse(response) {
+    return response
+        .json()
+        .then(data => ({ status: response.status, body: data }));
+}
 
+function handleResponse({ status, body }, passValidationErrors = false) {
+    console.log('Response content: ', body);
+
+    // If unauthorized or other error:
+    // function handleStatusNotOk(res)
+    if (status < 200 || status >= 300) {
+        if (
+            status === 400 &&
+            body.errorType === 'validation' &&
+            passValidationErrors
+        ) {
+            return { validationError: body.error };
+        } else if (status === 400 || status === 401 || status === 403)
+            throw new Error('Unauthorized');
         console.log('Request failed');
-        throw new Error(`${response.status}`);
+        throw new Error(`${status}`);
     }
 
     // If success:
-    return response.json();
+    return body;
 }
+
+// function handleResponse(response) {
+
+//     // If unauthorized or other error:
+//     function handleStatusNotOk(res)
+//     if (response.status < 200 || response.status >= 300) {
+//         if (response.status === 401 || response.status === 403)
+//             throw new Error('Unauthorized');
+//         else if (response.status === 400) {
+//             const resContent = response.json();
+//             console.log('400 Error response content: ', resContent);
+//             throw new Error(`${resContent.error}`);
+//         }
+//         console.log('Request failed');
+//         throw new Error(`${response.status}`);
+//     }
+
+//     // If success:
+//     return response.json();
+// }
 
 function handleIsAuthenticated() {
     // const redirectUrl = localStorage.getItem('redirect');
@@ -49,6 +79,7 @@ function handleIsAuthenticated() {
 
 function handlePwdLogin(request) {
     return fetch(request)
+        .then(response => parseResponse(response))
         .then(response => handleResponse(response))
         .then(data => {
             console.log('Login response: ', data);
@@ -84,6 +115,7 @@ function handlePwdLogin(request) {
 
 function handleMFALogin(request) {
     return fetch(request)
+        .then(response => parseResponse(response))
         .then(response => handleResponse(response))
         .then(data => {
             console.log('MFA response: ', data);
@@ -104,15 +136,18 @@ function handleMFALogin(request) {
 }
 
 // Used on custom methods when need to return error responses to user (via Notify)
-async function fetchWithThrowError(
+async function fetchWithThrow(
     request,
     errorUnauthorizedMsg,
-    errorMsg = 'Server error'
+    errorMsg = 'Server error',
+    passValidationErrors = false
 ) {
     try {
-        const data = await fetch(request).then(response =>
-            handleResponse(response)
-        );
+        const data = await fetch(request)
+            .then(response => parseResponse(response))
+            .then(response => handleResponse(response, passValidationErrors));
+        if (data.validationError)
+            return { validationError: data.validationError };
         return data.message;
     } catch (error) {
         console.log(error);
@@ -214,9 +249,9 @@ export const authProvider = {
             });
 
             try {
-                const data = await fetch(request).then(response =>
-                    handleResponse(response)
-                );
+                const data = await fetch(request)
+                    .then(response => parseResponse(response))
+                    .then(response => handleResponse(response));
                 return Promise.resolve();
             } catch (error) {
                 console.log(error.message);
@@ -257,9 +292,9 @@ export const authProvider = {
                 const request = setRequest(path, null, 'GET', header);
 
                 try {
-                    const data = await fetch(request).then(response =>
-                        handleResponse(response)
-                    );
+                    const data = await fetch(request)
+                        .then(response => parseResponse(response))
+                        .then(response => handleResponse(response));
                     console.log('Success');
                     return Promise.resolve();
                     // return Promise.resolve({ redirectTo: '/auth-callback' });
@@ -293,6 +328,7 @@ export const authProvider = {
 
                 try {
                     const response = await fetch(request)
+                        .then(response => parseResponse(response))
                         .then(response => handleResponse(response))
                         .then(() => Promise.resolve());
                 } catch (error) {
@@ -348,9 +384,9 @@ export const authProvider = {
         const request = setRequest('/auth/user', null, 'GET');
 
         try {
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
-            );
+            const data = await fetch(request)
+                .then(response => parseResponse(response))
+                .then(response => handleResponse(response));
 
             if (data) {
                 console.log('User data: ', data);
@@ -384,9 +420,9 @@ export const authProvider = {
 
             try {
                 // Will return otp code info (auth app), or send email with otp code
-                const data = await fetch(request).then(response =>
-                    handleResponse(response)
-                );
+                const data = await fetch(request)
+                    .then(response => parseResponse(response))
+                    .then(response => handleResponse(response));
                 return data;
             } catch (error) {
                 console.log(error);
@@ -408,27 +444,28 @@ export const authProvider = {
             });
             const errorUnauthorizedMsg = 'Code invalid or expired';
 
-            return fetchWithThrowError(request, errorUnauthorizedMsg);
+            return fetchWithThrow(request, errorUnauthorizedMsg);
         },
 
         disableMFA: async () => {
-            // ...
+            // TODO ...
         },
 
         changePassword: async formData => {
-            const { currentPassword, newPassword, confirmPassword } = formData;
+            const { currentPassword, password, confirmPassword } = formData;
             const request = setRequest('/auth/settings/change/password', {
-                currentPwd: currentPassword,
-                newPwd: newPassword,
-                confirmNewPwd: confirmPassword,
+                currentPassword: currentPassword,
+                password: password,
+                confirmPassword: confirmPassword,
             });
             const errorUnauthorizedMsg = 'Current password invalid';
             const errorOtherMsg = 'Server error. Password not changed.';
 
-            return fetchWithThrowError(
+            return fetchWithThrow(
                 request,
                 errorUnauthorizedMsg,
-                errorOtherMsg
+                errorOtherMsg,
+                true
             );
         },
 
@@ -440,11 +477,7 @@ export const authProvider = {
             const errorUnauthorizedMsg = 'Error: Unauthorized';
             const errorOtherMsg = 'Server error. User info not changed.';
 
-            return fetchWithThrowError(
-                request,
-                errorUnauthorizedMsg,
-                errorOtherMsg
-            );
+            return fetchWithThrow(request, errorUnauthorizedMsg, errorOtherMsg);
         },
     },
 
@@ -454,20 +487,25 @@ export const authProvider = {
             email: mfa.user,
         });
 
-        try {
-            console.log('Starting email send fetch...');
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
-            );
-            return data.message;
-        } catch (error) {
-            console.log(error);
-            if (error.message !== 'Unauthorized') {
-                console.log('Server error');
-                throw new Error('Server error');
-            }
-            throw new Error('Invalid credentials');
-        }
+        const errorUnauthorizedMsg = 'Invalid credentials';
+        const errorOtherMsg = 'Server error. Contact your site admin.';
+
+        console.log('Starting email send fetch...');
+        return fetchWithThrow(request, errorUnauthorizedMsg, errorOtherMsg);
+
+        // try {
+        //     const data = await fetch(request)
+        //         .then(response => parseResponse(response))
+        //         .then(response => handleResponse(response));
+        //     return data.message;
+        // } catch (error) {
+        //     console.log(error);
+        //     if (error.message !== 'Unauthorized') {
+        //         console.log('Server error');
+        //         throw new Error('Server error');
+        //     }
+        //     throw new Error('Invalid credentials');
+        // }
     },
 
     // TODO: Test this route
@@ -476,9 +514,9 @@ export const authProvider = {
 
         // Only logging server error, b/c not taking actions on success/failure
         try {
-            const data = await fetch(request).then(response =>
-                handleResponse(response)
-            );
+            const data = await fetch(request)
+                .then(response => parseResponse(response))
+                .then(response => handleResponse(response));
         } catch (error) {
             console.log(error);
             if (error.message !== 'Unauthorized') {
@@ -489,11 +527,11 @@ export const authProvider = {
 
     preAuthUser: {
         register: async (formData, params) => {
-            const { name, email, newPassword, confirmPassword } = formData;
+            const { name, email, password, confirmPassword } = formData;
             const request = setRequest('/mod/register', {
                 name: name,
                 email: email,
-                password: newPassword,
+                password: password,
                 confirmPassword: confirmPassword,
                 purpose: 'register',
                 ...params,
@@ -502,18 +540,19 @@ export const authProvider = {
             // Q: Need to change this? Need different error handling/routing, for security?
             const errorUnauthorizedMsg = 'Invalid or expired credentials';
             const errorOtherMsg = 'Server error. Contact your site admin.';
-            return fetchWithThrowError(
+            return fetchWithThrow(
                 request,
                 errorUnauthorizedMsg,
-                errorOtherMsg
+                errorOtherMsg,
+                true
             );
         },
 
         resetPassword: async (formData, params) => {
-            const { email, newPassword, confirmPassword } = formData;
+            const { email, password, confirmPassword } = formData;
             const request = setRequest('/mod/password-reset', {
                 email: email,
-                password: newPassword,
+                password: password,
                 confirmPassword: confirmPassword,
                 purpose: 'passwordReset',
                 ...params,
@@ -522,10 +561,11 @@ export const authProvider = {
             // Q: Need to change this? Need different error handling/routing, for security?
             const errorUnauthorizedMsg = 'Invalid or expired credentials';
             const errorOtherMsg = 'Server error. Contact your site admin.';
-            return fetchWithThrowError(
+            return fetchWithThrow(
                 request,
                 errorUnauthorizedMsg,
-                errorOtherMsg
+                errorOtherMsg,
+                true
             );
         },
     },
