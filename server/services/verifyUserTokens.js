@@ -4,12 +4,10 @@ import Code from '../model/Code.js';
 import { validationResult, matchedData } from 'express-validator';
 
 export const verify = {
-    // Verifies existence of a submitted access code (for password reset or registration).
-    // Returns user linked to code.
-    // TODO: Preceded by validation middleware.
+    // Verifies existence of a submitted access code (for password reset
+    // or registration). Returns user linked to code.
     accessCode: async (req, res, next) => {
-        const data = matchedData(req); //CHECK variables -- depends on validation output...
-        // const data = req.body;
+        const data = matchedData(req);
         console.log(data);
 
         // ...Check for code, return purpose and userId
@@ -42,18 +40,9 @@ export const verify = {
     // Verifies token + user match from submission of registration & password reset forms
     // TODO: Preceded by validation middleware (id, token(??), purpose)
     userUpdateToken: async (req, res, next) => {
-        // try {
-        //     const result = myValidationResult(req).throw();
-        //     console.log('Validation result: ', result);
-        // } catch (e) {
-        //     console.log('Error:', e.mapped());
-        //     throw new Error('Validation error')
-        //     // res.status(400).json({ error: e.mapped() });
-        // }
-
-        const data = matchedData(req);
         console.log('Starting user update token verification...');
 
+        const data = matchedData(req);
         console.log('Validated data: ', data);
 
         try {

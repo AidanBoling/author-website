@@ -1,8 +1,6 @@
-import { validationResult, matchedData } from 'express-validator';
+import { matchedData } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
-import qrcode from 'qrcode';
-import mongoose from 'mongoose';
 import User from '../model/User.js';
 import EmailOTP from '../model/emailOTP.js';
 import passport from 'passport';
@@ -101,13 +99,13 @@ export const passportAuthenticate = {
                 // JWT verified, now check OTP code:
                 console.log('JWT verified, checking OTP code...');
 
-                const code = req.body.OTPcode.replaceAll(' ', ''); // --> TODO: Replace with express-validator middleware
+                const { method, otpCode } = matchedData(req);
                 let isValid;
 
-                if (req.body.method === 'authApp') {
-                    isValid = authenticator.check(code, user.mfaAppSecret);
-                } else if (req.body.method === 'email') {
-                    isValid = await EmailOTP.verifyEmailOTP(user._id, code);
+                if (method === 'authApp') {
+                    isValid = authenticator.check(otpCode, user.mfaAppSecret);
+                } else if (method === 'email') {
+                    isValid = await EmailOTP.verifyEmailOTP(user._id, otpCode);
                 }
 
                 if (isValid) {
@@ -138,8 +136,6 @@ export const authController = {
         return res.json({
             message: 'Success',
             user: req.user.email,
-            // mfaEnabled: req.user.mfaEnabled,
-            // sessionID: req.session.id(?) // FOR TESTING ONLY -- remove.
         });
     },
 

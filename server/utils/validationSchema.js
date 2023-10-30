@@ -62,5 +62,7 @@ export const validationSchema = {
         },
         in: ['body'],
     },
-    name: {},
+    name: { in: ['body'] },
 };
+
+// const code = req.body.OTPcode.replaceAll(' ', '');

@@ -23,7 +23,6 @@ const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
 export const userController = {
     // Used to handle (admin-created) codes. Initiates registration and password reset process.
-    // TODO: input is an alphanumeric code -> validate & sanitize with middleware first
     // Preceded by checking code with custom middleware (verify.accessCode)
     accessRequest: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
@@ -46,12 +45,12 @@ export const userController = {
                     message: `Success - email for ${req.codePurpose} should have been sent`,
                 });
             } else {
+                // superfluous, with earlier validation
                 throw new Error('Invalid purpose');
             }
-
-            // res.json({ message: 'Success' });
         } catch (error) {
             if (error.message === 'Invalid purpose') {
+                // superfluous, with earlier validation
                 res.status(401).json({ error: 'Invalid' });
             } else {
                 console.log(`Error with ${req.codePurpose} request: `, error);
@@ -61,26 +60,23 @@ export const userController = {
     },
 
     // Final route taken when user updates their info via approved account registration
-    // TODO: Preceded by validation middleware, then
     // Preceded by dedicated custom middleware (verify.userUpdateToken) to verify token valid, and that
     // the user linked to the token matches the email submitted by the user.
     // TODO: Also delete admin-created token on success
     completeAccountSetup: async (req, res) => {
         const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+        const { id, name, email, password } = req.data;
 
         try {
-            const user = await User.verifyIdEmailMatch(
-                req.data.id,
-                req.data.email
-            );
+            const user = await User.verifyIdEmailMatch(id, email);
             if (!user) {
                 throw new Error('Invalid');
             }
 
             // Update user's information, only if user doesn't yet have password set
             if (!user.password) {
-                user.name = req.data.name;
-                user.password = req.data.password;
+                user.name = name;
+                user.password = password;
                 user.markModified('password'); // this triggers it to be hashed on save()
                 await user.save();
 
@@ -127,7 +123,9 @@ export const userController = {
         await req.token
             .deleteOne()
             .catch(() =>
-                console.log('There was an error in deleting the access token!')
+                console.log(
+                    'There was an error in deleting the register token!'
+                )
             );
     },
 
@@ -197,11 +195,13 @@ export const userController = {
             });
         }
 
-        // Delete email token (whether reset is sucessful or not)
+        // Delete emailed token (whether reset is sucessful or not)
         await req.token
             .deleteOne()
             .catch(() =>
-                console.log('There was an error in deleting the access token!')
+                console.log(
+                    'There was an error in deleting the password reset token!'
+                )
             );
     },
 
@@ -259,18 +259,16 @@ export const userController = {
 
     setUpMfa: async (req, res) => {
         const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
-
-        // ...receives mfaMethod (either AuthApp, or Email) --> req.body.method
+        const { method } = matchedData(req);
         console.log('Starting mfa setup route...');
 
         try {
             // Find the user (from session info)
             const user = await User.findById(req.user.id);
             console.log('found user: ', user.email);
-            console.log('req.body: ', req.body);
 
             // For Authentication App:
-            if (req.body.method === 'authApp') {
+            if (method === 'authApp') {
                 // if user doesn't have an appSecret yet, then generate new. Otherwise, use existing.
 
                 let secret;
@@ -290,7 +288,6 @@ export const userController = {
 
                 // Enable method, if not yet enabled
                 if (!user.mfaMethods.authApp.enabled) {
-                    // save new method to user (with verified = false)
                     user.mfaMethods.authApp = {
                         enabled: true,
                         verified: false,
@@ -305,10 +302,9 @@ export const userController = {
                 });
             }
             // For Email:
-            else if (req.body.method === 'email') {
+            else if (method === 'email') {
                 // Enable method, if not yet enabled
                 if (!user.mfaMethods.email.enabled) {
-                    // save new method to user (with verified = false)
                     user.mfaMethods.email = {
                         enabled: true,
                         verified: false,
@@ -338,7 +334,7 @@ export const userController = {
         const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
 
         console.log('Starting MFA method verification...');
-        const { method, code } = req.body;
+        const { method, otpCode } = matchedData(req);
 
         try {
             // Find verified user
@@ -351,7 +347,7 @@ export const userController = {
             // Verify authenticator app:
             if (method === 'authApp') {
                 // const otpCode = req.body.code.replaceAll(' ', ''); //--> TODO: replace with express-validator middleware
-                isValid = authenticator.check(code, user.mfaAppSecret);
+                isValid = authenticator.check(otpCode, user.mfaAppSecret);
                 if (isValid) {
                     user.mfaMethods.authApp.verified = true;
                     await user.save();
@@ -359,7 +355,7 @@ export const userController = {
             }
             // Verify email code:
             if (method === 'email') {
-                isValid = await EmailOTP.verifyEmailOTP(user._id, code);
+                isValid = await EmailOTP.verifyEmailOTP(user._id, otpCode);
                 if (isValid) {
                     user.mfaMethods.email.verified = true;
                     // user.mfaMethodsVerified = user.mfaMethodsVerified + 1;
@@ -417,11 +413,11 @@ export const userController = {
         }
     },
 
-    // TODO: add validation for name
     changeName: async (req, res) => {
+        const { name } = matchedData(req);
         try {
             const user = await User.findOne({ email: req.user.email });
-            user.name = req.body.name;
+            user.name = name;
             await user.save();
 
             return res.json({
@@ -437,6 +433,7 @@ export const userController = {
     },
 };
 
+// TODO: Move these to another file (userUtilities?)
 async function generateMfaSecret(user) {
     try {
         const secret = authenticator.generateSecret();

@@ -178,7 +178,7 @@ export const authProvider = {
 
             const { preAuthToken } = JSON.parse(localStorage.getItem('mfa'));
             reqPath = '/login/mfa';
-            reqBody = { method: formInput.method, OTPcode: formInput.code };
+            reqBody = { method: formInput.method, otpCode: formInput.code };
             reqHeaders = { Authorization: `Bearer ${preAuthToken}` };
         } else {
             localStorage.removeItem('mfa');
@@ -440,7 +440,7 @@ export const authProvider = {
         verifyMFAMethod: async (method, code) => {
             const request = setRequest('/auth/settings/mfa/verify', {
                 method: method,
-                code: code,
+                otpCode: code,
             });
             const errorUnauthorizedMsg = 'Code invalid or expired';
 
@@ -510,7 +510,7 @@ export const authProvider = {
 
     // TODO: Test this route
     submitAccessCode: async code => {
-        const request = setRequest('/mod/code', { code: code });
+        const request = setRequest('/use/code', { code: code });
 
         // Only logging server error, b/c not taking actions on success/failure
         try {

@@ -375,8 +375,9 @@ app.delete('/admin/tags/:id', tagController.delete);
 
 // Initiate register or password reset using admin-created temp code
 app.post(
-    '/admin/mod/code',
+    '/admin/use/code',
     checkSchema({ code: validationSchema.accessCode }),
+    handleValidationErrors,
     verify.accessCode,
     userController.accessRequest
 );
@@ -432,14 +433,21 @@ app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 // CHECK (later): Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
 app.post(
     '/admin/auth/settings/mfa/setup',
-    // VALIDATE (method)
+    checkSchema({
+        method: validationSchema.method,
+    }),
+    handleValidationErrors,
     userController.setUpMfa
 );
 
 // Triggered when users submit otp code to verify a new mfa method
 app.post(
     '/admin/auth/settings/mfa/verify',
-    // VALIDATE (code)
+    checkSchema({
+        method: validationSchema.method,
+        otpCode: validationSchema.otpCode,
+    }),
+    handleValidationErrors,
     userController.verifyMfaMethod
 );
 
@@ -449,13 +457,21 @@ app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 //      Use val/ver to check that new password (password) and confirm password (confirmPassword) match each other...
 app.post(
     '/admin/auth/settings/change/password',
-    //VALIDATE (currentPassword, password, confirmPassword),
+    checkSchema({
+        currentPassword: validationSchema.password,
+        password: validationSchema.password,
+        confirmPassword: validationSchema.confirmPassword,
+    }),
+    handleValidationErrors,
     userController.passwordChange
 );
 
 app.post(
     '/admin/auth/settings/change/name',
-    //VALIDATE (name),
+    checkSchema({
+        name: validationSchema.name,
+    }),
+    handleValidationErrors,
     userController.changeName
 );
 
@@ -481,11 +497,14 @@ app.post(
 
 app.post(
     '/admin/login/mfa',
-    // VALIDATE (otp code)
+    checkSchema({
+        method: validationSchema.method,
+        otpCode: validationSchema.otpCode,
+    }),
+    handleValidationErrors,
     passportAuthenticate.mfaLogin,
     authController.login
 );
-//--> ^TODO: Add validation (OTPcode)
 
 app.get(
     '/admin/login/mfa/checkAuth',
@@ -498,7 +517,7 @@ app.get(
 // TODO: change Email OTP expires to 5 minutes (?) (mfa login token expires 5 minutes, atm...)
 app.post(
     '/admin/login/mfa/email',
-    // VALIDATE (email)
+    // VALIDATE (email ??)
     async (req, res) => {
         console.log('Send email route triggered...');
         try {

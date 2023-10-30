@@ -37,7 +37,7 @@ export function handleValidationErrors(req, res, next) {
                 errorType: 'validation',
             });
         } else {
-            res.status(400).json({ message: 'Invalid request' });
+            res.status(400).json({ message: 'Invalid' });
         }
     }
 }
