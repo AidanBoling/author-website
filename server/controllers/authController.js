@@ -170,6 +170,27 @@ export const authController = {
         // });
     },
 
+    emailOTP: async (req, res) => {
+        console.log('Send email route triggered...');
+
+        // TODO (production prep):
+        // const { email } = matchedData(req)
+        // if (!email) {throw new Error('Invalid email')}
+        const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
+
+        try {
+            const user = await User.findOne({ email: req.body.email });
+            if (!user) throw new Error('User not found');
+            sendOTPCodeEmail(user._id, email);
+            res.json({ message: 'Success' });
+        } catch (error) {
+            console.log('Error sending OTP code email: ', error);
+            res.status(500).json({
+                message: 'Server error. Contact your site admin.',
+            });
+        }
+    },
+
     authCheck: (req, res) => {
         console.log('Auth check: OK');
         res.json({ message: 'Security check ok' });

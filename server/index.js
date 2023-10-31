@@ -269,6 +269,7 @@ app.get('/events', async (req, res) => {
 // -- Form routes
 
 //TODO (later): move sanitize middleware to another file
+// TODO: check (refactor if needed) sanitization process.
 app.post(
     '/form/contact',
     (req, res, next) => {
@@ -453,8 +454,6 @@ app.post(
 
 app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
-//TODO: add require password input and verification before change
-//      Use val/ver to check that new password (password) and confirm password (confirmPassword) match each other...
 app.post(
     '/admin/auth/settings/change/password',
     checkSchema({
@@ -481,17 +480,23 @@ app.post(
 
 app.post(
     '/admin/login/password',
-    // VALIDATE (email, password)?
-    // handleValidationErrors ?? (sending back form validation errors?)
+    checkSchema({
+        email: validationSchema.email,
+        password: validationSchema.password,
+    }),
+    // --> let non-valid become null (continue with middleware)
     passport.session(),
     cleanSession,
     passportAuthenticate.passwordLogin,
     authController.login
-); //--> TODO: Add validation ?
+);
 
 // app.use(
 //     'admin/login/mfa',
-//     //VALIDATE (mfa jwt token in header),
+//     // VALIDATE (mfa jwt token in header):
+//     // checkSchema({
+//     ???: validationSchema.jwt,
+// }),
 //     // handleValidationErrors
 // );
 
@@ -513,24 +518,14 @@ app.get(
 );
 
 // Send an email with a new OTP code
-// TODO: add validation for email (email)
 // TODO: change Email OTP expires to 5 minutes (?) (mfa login token expires 5 minutes, atm...)
 app.post(
     '/admin/login/mfa/email',
-    // VALIDATE (email ??)
-    async (req, res) => {
-        console.log('Send email route triggered...');
-        try {
-            const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
-            const user = await User.findOne({ email: req.body.email });
-            if (!user) throw new Error('User not found');
-            sendOTPCodeEmail(user._id, email);
-            res.json({ message: 'Success' });
-        } catch (error) {
-            console.log('Error sending OTP code email: ', error);
-            res.status(500).json({ message: 'Server error' });
-        }
-    }
+    checkSchema({
+        email: validationSchema.email,
+    }),
+    handleValidationErrors,
+    authController.emailOTP
 );
 
 // User logout
@@ -543,21 +538,15 @@ app.listen(PORT, () => {
 
 // User Auth Checks
 
-// --Not logged in, but token from email required for these routes:
+// TODO: Add validation for session cookie... Add to '/admin/auth' route:
 
-// NOTE: The below two can be removed, I think replaced in earlier section
-// app.get(
-//     '/admin/mod/register',
-//     //VALIDATE params (id, token, purpose),
-//     verify.userUpdateToken,
-//     authController.authCheck
-// );
-
-// app.get(
-//     '/admin/mod/password-reset',
-//     //VALIDATE params (id, token, purpose),
-//     verify.userUpdateToken,
-//     authController.authCheck
+// app.use(
+//     'admin/auth',
+//     // VALIDATE (session id in cookie):
+//     // checkSchema({
+//     ???: validationSchema.jwt,
+// }),
+//     // handleValidationErrors
 // );
 
 //Route used by front end authCheck when loading security settings page
@@ -572,27 +561,6 @@ app.get(
     loginTimeCheck.fifteen,
     authController.authCheck
 );
-
-// TODO: Add validation for session cookie... Add to '/admin/auth' route
-
-//TEMP:
-app.get('/admin/auth/protectedroute', (req, res) => {
-    console.log('session ID: ', req.sessionID);
-    console.log(req.session);
-    console.log('MaxAge: ', req.session.cookie.maxAge);
-    console.log('Authenticated: ', req.isAuthenticated());
-    res.send('<h1>Protected Page</h1>');
-});
-
-// TEMP (?):
-app.post('/admin/auth/checkAuth', (req, res) => {
-    console.log('Check auth route was called');
-    console.log('session ID: ', req.sessionID);
-    console.log(req.session);
-    console.log('MaxAge: ', req.session.cookie.maxAge);
-    console.log('Authenticated: ', req.isAuthenticated());
-    res.json({ message: 'Authenticated' });
-});
 
 // User Get Info
 
@@ -626,6 +594,52 @@ app.get('/admin/auth/user', async (req, res) => {
 // TODO: Helmet
 // TODO (?): logger?
 // TODO: "bouncer" -- limit the number of wrong attempts in given time, or given ip/user context?
+// And/or load-limiter -- limit max request size.
 
 //TODO: Check that in all the endpoints where validation added
 // the other middleware is using the validated results (i.e. data = matchedData(req))
+
+//
+//
+//
+// TEMP Archive -------------------------------
+//
+// User Auth Checks
+
+// --Not logged in, but token from email required for these routes:
+
+// NOTE: The below two can be removed, I think replaced in earlier section
+// app.get(
+//     '/admin/mod/register',
+//     //VALIDATE params (id, token, purpose),
+//     verify.userUpdateToken,
+//     authController.authCheck
+// );
+
+// app.get(
+//     '/admin/mod/password-reset',
+//     //VALIDATE params (id, token, purpose),
+//     verify.userUpdateToken,
+//     authController.authCheck
+// );
+
+//
+//
+// //TEMP:
+// app.get('/admin/auth/protectedroute', (req, res) => {
+//     console.log('session ID: ', req.sessionID);
+//     console.log(req.session);
+//     console.log('MaxAge: ', req.session.cookie.maxAge);
+//     console.log('Authenticated: ', req.isAuthenticated());
+//     res.send('<h1>Protected Page</h1>');
+// });
+
+// // TEMP (?):
+// app.post('/admin/auth/checkAuth', (req, res) => {
+//     console.log('Check auth route was called');
+//     console.log('session ID: ', req.sessionID);
+//     console.log(req.session);
+//     console.log('MaxAge: ', req.session.cookie.maxAge);
+//     console.log('Authenticated: ', req.isAuthenticated());
+//     res.json({ message: 'Authenticated' });
+// });

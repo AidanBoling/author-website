@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 
-const myValidationResult = validationResult.withDefaults({
+export const myValidationResult = validationResult.withDefaults({
     formatter: error => error.msg,
 });
 
