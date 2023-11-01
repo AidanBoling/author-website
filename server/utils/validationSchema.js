@@ -3,77 +3,125 @@ const confirmationPasswordMatches = (value, { req }) => {
 };
 
 export const validationSchema = {
+    id: {
+        in: ['body', 'params'],
+        // exists: true,
+        trim: true,
+        isLength: {
+            options: { min: 22, max: 24 },
+        },
+        // isAlphanumeric: { locale: 'en-US' },
+        isHexadecimal: true,
+    },
+
+    resources: {
+        page: {
+            in: ['params'],
+            toInt: true,
+            isNumeric: true,
+            isLength: {
+                options: { max: 3 },
+            },
+        },
+
+        limit: {
+            in: ['params'],
+            isIn: { options: [['2', '10', '20', '30']] },
+        },
+
+        category: {
+            in: ['params'],
+            isIn: { options: [['fiction', 'non-fiction']] },
+        },
+    },
+    // tags: {
+    //     in: ['params'],
+    //     isIn: { options: [['', '']] },
+    // },
+
     accessCode: {
+        in: ['body'],
+        trim: true,
         isLength: {
             options: { min: 8, max: 16 },
         },
         isAlphanumeric: { locale: 'en-US' },
-        in: ['body'],
-    },
-
-    id: {
-        exists: true,
-        isEmpty: { negated: true },
-        isAlphanumeric: { locale: 'en-US' },
-        in: ['body'],
     },
 
     otpCode: {
-        exists: true,
+        in: ['body'],
+        // exists: true,
         // isEmpty: { negated: true },
         isLength: {
             options: { min: 6, max: 6 },
         },
         isNumeric: { options: { no_symbols: true } },
         // ...remove whitespace...
-        in: ['body'],
     },
 
     token: {
-        exists: true,
-        isEmpty: { negated: true },
+        in: ['body'],
+        trim: true,
+        // exists: true,
+        // isEmpty: { negated: true },
+        isByteLength: {
+            options: { min: 50, max: 64 },
+        },
         isAlphanumeric: { locale: 'en-US' },
     },
 
     purpose: {
-        isIn: { options: [['register', 'passwordReset']] },
         in: ['body'],
+        // exists: true,
+        trim: true,
+        isIn: { options: [['register', 'passwordReset']] },
     },
 
     method: {
-        isIn: { options: [['authApp', 'email']] },
         in: ['body'],
+        // exists: true,
+        trim: true,
+        isIn: { options: [['authApp', 'email']] },
     },
 
     email: {
-        exists: true,
-        // isEmpty: { negated: true },
-        isEmail: true,
+        errorMessage: 'Not a valid email',
         in: ['body'],
+        // exists: true,
+        trim: true,
+        // isEmpty: { negated: true },
         isLength: {
             options: { min: 6, max: 64 },
+        },
+        isEmail: {
+            options: {
+                blacklisted_chars: '<>\'"()=\\',
+                allow_ip_domain: false,
+            },
         },
         // trim/get rid of whitespaces...
     },
 
+    // TODO: increase minimum to 12-14
     password: {
-        exists: true,
+        in: ['body'],
+        // exists: true,
         // isEmpty: { negated: true },
         isLength: {
             options: { min: 8, max: 64 },
             errorMessage: 'Password must at least 8 characters',
         },
-        in: ['body'],
     },
 
     // match the below with the above -- if no match, throw error
     confirmPassword: {
+        in: ['body'],
+        // exists: true,
         matchesNewPassword: {
             custom: confirmationPasswordMatches,
             bail: true,
             errorMessage: 'Passwords do not match.',
         },
-        in: ['body'],
     },
 
     name: {
@@ -82,11 +130,25 @@ export const validationSchema = {
         // should be escaped?
     },
 
-    jwtHeader: {
-        exists: true,
-        // ...
-        in: ['header'],
-    },
+    // jwtHeader: {
+    //             in: ['headers'],
+    //     // exists: true,
+    //     isJWT: true
 
-    sessionCookie: { in: ['cookie'] },
+    //     // ...
+    // },
+
+    // sessionCookie: { in: ['cookies'] },
 };
+
+// isHash('SHA256'):
+
+// isAlpha(locale?: AlphaLocale, options?: {
+//     ignore?: string | string[] | RegExp;
+//   }): ValidationChain
+
+// isAlphanumeric(locale?: AlphanumericLocale, options?: {
+//     ignore?: string | RegExp;
+//   }): ValidationChain
+
+//

@@ -4,6 +4,8 @@ import {
     transformAdminGetList,
 } from '../utils/sharedControllerFunctions.js';
 
+// const mainSiteBookController
+
 const bookController = {
     // Create a book
     create: async (req, res) => {
@@ -40,10 +42,12 @@ const bookController = {
     // Get a single book
     get: async (req, res) => {
         try {
+            // book = await getItemByValidatedId(Book, req, res, true)
             const bookId = req.params.id;
-            const book = await Book.findById(bookId);
+            const book = await Book.findById(id);
             sendResponse(Book, 'books', book, res, 200);
         } catch (e) {
+            console.log(e);
             res.status(500).send(e);
         }
     },

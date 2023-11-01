@@ -18,7 +18,7 @@ export default async function Page({ searchParams }) {
     // console.log('Articles page results: ', pageInfo);
 
     return (
-        <PageWrapper header="Books">
+        <PageWrapper header="Books" pagination={pageInfo}>
             <Suspense fallback={<ResourcesListSkeleton />}>
                 <Books books={items} />
             </Suspense>

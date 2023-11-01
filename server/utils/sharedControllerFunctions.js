@@ -41,3 +41,8 @@ export function transformAdminGetList(request) {
 
     return { queryFilter, options };
 }
+
+export function handleGetItemsError(error, res) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
+}

@@ -4,12 +4,17 @@ import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
-function BookPage() {
-    const params = useParams();
+function BookPage({ book }) {
+    // if (!book) {
+    //     notFound();
+    // }
+
+    // const params = useParams();
     // console.log(bookId);
-    const [book, setBook] = useState('');
+    // const [book, setBook] = useState('');
 
     const breakpoint = 'md';
     const coverWidth = { xs: '75vw', sm: 400, [breakpoint]: 300 };
@@ -23,14 +28,14 @@ function BookPage() {
         </div>
     );
 
-    useEffect(() => {
-        async function fetchItem() {
-            const foundItem = await getById(params.id, 'books');
-            // console.log(foundItem);
-            setBook(foundItem);
-        }
-        fetchItem();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchItem() {
+    //         const foundItem = await getById(params.id, 'books');
+    //         // console.log(foundItem);
+    //         setBook(foundItem);
+    //     }
+    //     fetchItem();
+    // }, []);
 
     return (
         <>

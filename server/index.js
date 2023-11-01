@@ -4,16 +4,9 @@ import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import nodemailer from 'nodemailer';
 import sanitizeHtml from 'sanitize-html';
-import {
-    body,
-    validationResult,
-    matchedData,
-    checkSchema,
-} from 'express-validator';
+import { validationResult, matchedData, checkSchema } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
-// import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
-// import session from 'express-session';
 // import { passportStrategy } from './services/passport.js';
 import { initializePassport } from './utils/passportHelper.js';
 import cookieParser from 'cookie-parser';
@@ -26,6 +19,7 @@ import tagController from './controllers/tagController.js';
 import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
 import getFilteredResourceList from './utils/getFilteredResourceList.js';
+import getItemByValidatedId from './utils/getItemById.js';
 
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
@@ -41,11 +35,12 @@ import {
 import { userController } from './controllers/userController.js';
 import { verify } from './services/verifyUserTokens.js';
 import { loginTimeCheck } from './services/loginCheck.js';
-import sendOTPCodeEmail from './utils/sendOTPemail.js';
+// import sendOTPCodeEmail from './utils/sendOTPemail.js';
 // import { errorMonitor } from 'events';
 // import processCookies from './services/parseCookies.js';
 import { validationSchema } from './utils/validationSchema.js';
 import { handleValidationErrors } from './services/validation.js';
+import { handleGetItemsError } from './utils/sharedControllerFunctions.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -124,7 +119,7 @@ app.use(
     })
 );
 
-// Checks sessions for user object; if not found then not authenticated, routing process halted
+// Checks sessions for user object; if not found, then not authenticated, routing process halted
 // app.use('/admin', passport.session());
 app.use('/admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
@@ -183,65 +178,79 @@ app.get('/', (req, res) => {
 //     res.json(allPosts);
 // });
 
-app.get('/posts', (req, res) => {
+const listPageValidation = {
+    page: validationSchema.resources.page,
+    limit: validationSchema.resources.limit,
+};
+
+//TODO: validation -- check incoming queries/params (site frontend)
+app.get('/posts', checkSchema({ ...listPageValidation }), (req, res) => {
     const overrides = { filter: { published: true } };
     const defaultSort = { datePublished: -1 };
 
     try {
         getFilteredResourceList(Post, req, res, defaultSort, overrides);
     } catch (error) {
-        res.status(500).send(error);
-        console.log(error);
+        handleGetItemsError(error, res);
     }
 });
 
-app.get('/posts/id/:id', async (req, res) => {
-    const post = await Post.findById(`${req.params.id}`);
-    if (post) {
-        res.json(post);
-    } else {
-        res.json({ title: 'Post Not Found' });
+app.get(
+    '/posts/id/:id',
+    checkSchema({ id: validationSchema.id }),
+    async (req, res) => {
+        try {
+            await getItemByValidatedId(Post, req, res);
+        } catch (error) {
+            handleGetItemsError(error, res);
+        }
     }
-});
+);
 
 // -- Books routes
 
-app.get('/books', async (req, res) => {
-    // const overrides = null;
-    const defaultSort = { datePublished: -1 };
+app.get(
+    '/books',
+    checkSchema({
+        ...listPageValidation,
+        category: validationSchema.resources.category,
+    }),
+    async (req, res) => {
+        const defaultSort = { datePublished: -1 };
 
-    try {
-        getFilteredResourceList(Book, req, res, defaultSort);
-    } catch (error) {
-        res.status(500).send(error);
-        console.log(error);
+        try {
+            getFilteredResourceList(Book, req, res, defaultSort);
+        } catch (error) {
+            handleGetItemsError(error, res);
+        }
+
+        // const allBooks = await Book.find();
+        // // console.log(allBooks);
+        // res.json(allBooks);
     }
+);
 
-    // const allBooks = await Book.find();
-    // // console.log(allBooks);
-    // res.json(allBooks);
-});
-
-app.get('/books/id/:id', async (req, res) => {
-    const book = await Book.findById(`${req.params.id}`);
-    if (book) {
-        res.json(book);
-    } else {
-        res.json({ title: 'Book Not Found' });
+app.get(
+    '/books/id/:id',
+    checkSchema({ id: validationSchema.id }),
+    async (req, res) => {
+        try {
+            await getItemByValidatedId(Book, req, res);
+        } catch (error) {
+            handleGetItemsError(error, res);
+        }
     }
-});
+);
 
 // -- Articles routes
 
-app.get('/articles', (req, res) => {
-    // const overrides = { filter: { published: true } };
+app.get('/articles', checkSchema({ ...listPageValidation }), (req, res) => {
     const defaultSort = { datePublished: -1 };
 
     try {
         getFilteredResourceList(Article, req, res, defaultSort);
     } catch (error) {
-        res.status(500).send(error);
-        console.log(error);
+        handleGetItemsError(error, res);
     }
 
     // const allArticles = await Article.find();
@@ -249,27 +258,35 @@ app.get('/articles', (req, res) => {
     // res.json(allArticles);
 });
 
-app.get('/articles/id/:id', async (req, res) => {
-    const article = await Article.findById(`${req.params.id}`);
-    if (article) {
-        res.json(article);
-    } else {
-        res.json({ title: 'Article Not Found' });
+app.get(
+    '/articles/id/:id',
+    checkSchema({ id: validationSchema.id }),
+    async (req, res) => {
+        try {
+            await getItemByValidatedId(Article, req, res);
+        } catch (error) {
+            handleGetItemsError(error, res);
+        }
     }
-});
+);
 
 // -- Events routes
 
-app.get('/events', async (req, res) => {
-    const allEvents = await Event.find();
-    console.log(allEvents);
-    res.json(allEvents);
+//TODO: Tweak events resource (here, controller, frontend, etc)
+app.get('/events', checkSchema({ ...listPageValidation }), async (req, res) => {
+    try {
+        const allEvents = await Event.find();
+        console.log(allEvents);
+        res.json(allEvents);
+    } catch {
+        handleGetItemsError(error, res);
+    }
 });
 
 // -- Form routes
 
-//TODO (later): move sanitize middleware to another file
 // TODO: check (refactor if needed) sanitization process.
+//TODO (later): move sanitize middleware to another file
 app.post(
     '/form/contact',
     (req, res, next) => {
@@ -537,17 +554,6 @@ app.listen(PORT, () => {
 });
 
 // User Auth Checks
-
-// TODO: Add validation for session cookie... Add to '/admin/auth' route:
-
-// app.use(
-//     'admin/auth',
-//     // VALIDATE (session id in cookie):
-//     // checkSchema({
-//     ???: validationSchema.jwt,
-// }),
-//     // handleValidationErrors
-// );
 
 //Route used by front end authCheck when loading security settings page
 app.get(

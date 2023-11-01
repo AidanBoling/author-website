@@ -1,3 +1,5 @@
+import { matchedData } from 'express-validator';
+
 async function getFilteredResourceList(
     model,
     req,
@@ -5,7 +7,10 @@ async function getFilteredResourceList(
     defaultSort,
     overrides
 ) {
-    const { page = 1, limit = 10, ...query } = req.query;
+    // TODO (later): When add query, add validate
+    const { page = 1, limit = 2, ...query } = matchedData(req);
+
+    // const { page = 1, limit = 10, ...query } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const filter =
         overrides && overrides.filter

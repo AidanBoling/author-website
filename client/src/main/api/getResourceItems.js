@@ -17,7 +17,11 @@ export async function getList(resource, params) {
 }
 
 export async function getById(id, resource) {
-    return await fetch(`${BASE_URL}/${resource}/id/${id}`).then(response => {
-        return response.json();
+    return await fetch(`${BASE_URL}/${resource}/id/${id}`).then(res => {
+        if (res.status >= 200 && res.status < 300) {
+            return res.json();
+        } else {
+            return undefined;
+        }
     });
 }

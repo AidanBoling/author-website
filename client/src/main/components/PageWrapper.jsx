@@ -15,7 +15,8 @@ import InnerPageContainer, { pagePaddingX } from './InnerPageContainer';
 import Pagination from '@mui/material/Pagination';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-const pageLimitOptions = ['10', '20', '30'];
+// TODO: (Production prep) Remove "2" as option
+const pageLimitOptions = ['2', '10', '20', '30'];
 
 function PageWrapper(props) {
     const initialPageLimitOption = props.pagination
