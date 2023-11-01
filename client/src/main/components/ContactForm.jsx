@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { sendFormData } from '../api/sendFormData';
 import FormSubmitSuccessScreen from '@/main/components/FormSubmitSuccessScreen';
 
+// TODO (later): turn submit button into progress button
 export default function ContactForm() {
     const [sendSuccessful, setSendSuccessful] = useState(false);
     const [sendError, setSendError] = useState(false);
@@ -55,10 +56,10 @@ export default function ContactForm() {
                         className="contactform"
                         // component="form"
                         container
-                        spacing={2}
+                        spacing={3}
                         // onSubmit={handleSubmit}
                     >
-                        <Grid xs={12} sm={6}>
+                        {/* <Grid xs={12} sm={6}>
                             <TextFieldElement
                                 name="fName"
                                 label="First Name"
@@ -66,16 +67,16 @@ export default function ContactForm() {
                                 size="small"
                                 required
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid xs={12} sm={6}>
                             <TextFieldElement
-                                name="lName"
-                                label="Last Name"
+                                name="name"
+                                label="Name"
                                 variant="outlined"
                                 size="small"
                             />
                         </Grid>
-                        <Grid xs={12}>
+                        <Grid xs={12} sm={6}>
                             <TextFieldElement
                                 name="email"
                                 label="Email"

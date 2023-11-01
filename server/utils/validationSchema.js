@@ -2,6 +2,7 @@ const confirmationPasswordMatches = (value, { req }) => {
     return value === req.body.password;
 };
 
+// TODO:
 export const validationSchema = {
     id: {
         in: ['body', 'params'],
@@ -12,6 +13,7 @@ export const validationSchema = {
         },
         // isAlphanumeric: { locale: 'en-US' },
         isHexadecimal: true,
+        // Or just use isMongoId ??
     },
 
     resources: {
@@ -95,11 +97,12 @@ export const validationSchema = {
         },
         isEmail: {
             options: {
-                blacklisted_chars: '<>\'"()=\\',
+                blacklisted_chars: '<>\'"()=\\/&%$^',
                 allow_ip_domain: false,
             },
         },
         // trim/get rid of whitespaces...
+        // to lowercase...
     },
 
     // TODO: increase minimum to 12-14

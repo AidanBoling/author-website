@@ -2,24 +2,13 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
-import nodemailer from 'nodemailer';
-import sanitizeHtml from 'sanitize-html';
+// import nodemailer from 'nodemailer';
+// import sanitizeHtml from 'sanitize-html';
 import { validationResult, matchedData, checkSchema } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
-// import { passportStrategy } from './services/passport.js';
 import { initializePassport } from './utils/passportHelper.js';
 import cookieParser from 'cookie-parser';
-
-import postController from './controllers/postController.js';
-import bookController from './controllers/bookController.js';
-import articleController from './controllers/articleController.js';
-import eventController from './controllers/eventController.js';
-import tagController from './controllers/tagController.js';
-import contactFormController from './controllers/contactFormController.js';
-import subscribeMailingListController from './controllers/subscribeController.js';
-import getFilteredResourceList from './utils/getFilteredResourceList.js';
-import getItemByValidatedId from './utils/getItemById.js';
 
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
@@ -28,19 +17,35 @@ import Book from './model/Book.js';
 import Article from './model/Article.js';
 import Event from './model/Event.js';
 import User from './model/User.js';
+
+import postController from './controllers/postController.js';
+import bookController from './controllers/bookController.js';
+import articleController from './controllers/articleController.js';
+import eventController from './controllers/eventController.js';
+import tagController from './controllers/tagController.js';
+import contactFormController from './controllers/contactFormController.js';
+import subscribeMailingListController from './controllers/subscribeController.js';
+
+import getFilteredResourceList from './utils/getFilteredResourceList.js';
+import getItemByValidatedId from './utils/getItemById.js';
+import { handleGetItemsError } from './utils/sharedControllerFunctions.js';
+import {
+    sanitizeContactFormInput,
+    sanitizeSubscribeFormInput,
+} from './services/sanitizeFormInput.js';
+
+// import { errorMonitor } from 'events';
+// import processCookies from './services/parseCookies.js';
+import { userController } from './controllers/userController.js';
 import {
     authController,
     passportAuthenticate,
 } from './controllers/authController.js';
-import { userController } from './controllers/userController.js';
+import { checkAuth, cleanSession } from './services/auth.js';
 import { verify } from './services/verifyUserTokens.js';
 import { loginTimeCheck } from './services/loginCheck.js';
-// import sendOTPCodeEmail from './utils/sendOTPemail.js';
-// import { errorMonitor } from 'events';
-// import processCookies from './services/parseCookies.js';
 import { validationSchema } from './utils/validationSchema.js';
 import { handleValidationErrors } from './services/validation.js';
-import { handleGetItemsError } from './utils/sharedControllerFunctions.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -72,7 +77,8 @@ mailchimp.setConfig({
 // }
 // pingMC();
 
-const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+// const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+
 mongoose.connect(
     `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
 );
@@ -124,46 +130,6 @@ app.use(
 app.use('/admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
 
-// TODO: move checkAuth and cleanSession to another file(s) --> Services > auth.js
-function checkAuth(req, res, next) {
-    console.log('A protected route was called; checking auth...');
-    console.log('Session is authenticated: ', req.isAuthenticated());
-    if (!req.isAuthenticated()) {
-        res.status(401).json({ message: 'Not authorized' });
-    } else {
-        console.log('session ID: ', req.sessionID);
-        console.log('user object: ', req.session.passport);
-        console.log('Cookie expires: ', req.session.cookie._expires);
-        next();
-    }
-}
-
-function cleanSession(req, res, next) {
-    try {
-        if (req.isAuthenticated() && req.user) {
-            console.log('Session found at login: ', req.sessionID);
-            console.log(req.session);
-
-            console.log('Clearing cookie, destroying old session, ...');
-            req.session.cookie.maxAge = 1;
-            req.logout(error => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('User logged out');
-                }
-            });
-            next();
-            // req.session.destroy(() => next());
-        } else {
-            next();
-        }
-    } catch (err) {
-        console.log(err);
-        next(err);
-    }
-}
-
 // MAIN APP
 
 app.get('/', (req, res) => {
@@ -171,12 +137,6 @@ app.get('/', (req, res) => {
 });
 
 // -- Posts routes
-
-// app.get('/posts', async (req, res) => {
-//     const allPosts = await Post.find().where('published').equals('true');
-//     // console.log(allPosts);
-//     res.json(allPosts);
-// });
 
 const listPageValidation = {
     page: validationSchema.resources.page,
@@ -223,10 +183,6 @@ app.get(
         } catch (error) {
             handleGetItemsError(error, res);
         }
-
-        // const allBooks = await Book.find();
-        // // console.log(allBooks);
-        // res.json(allBooks);
     }
 );
 
@@ -252,10 +208,6 @@ app.get('/articles', checkSchema({ ...listPageValidation }), (req, res) => {
     } catch (error) {
         handleGetItemsError(error, res);
     }
-
-    // const allArticles = await Article.find();
-    // // console.log(allArticles);
-    // res.json(allArticles);
 });
 
 app.get(
@@ -286,44 +238,21 @@ app.get('/events', checkSchema({ ...listPageValidation }), async (req, res) => {
 // -- Form routes
 
 // TODO: check (refactor if needed) sanitization process.
-//TODO (later): move sanitize middleware to another file
 app.post(
     '/form/contact',
-    (req, res, next) => {
-        // console.log(req.body);
-
-        const data = {
-            name:
-                sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
-                ' ' +
-                sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
-            email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
-            message: sanitizeHtml(req.body.message, sanitizeOptionsNoHTML),
-        };
-
-        console.log(data);
-
-        req.data = { ...data, messageArray: data.message.split(/\n+/) };
-        next();
-    },
+    checkSchema({ name: validationSchema.name, email: validationSchema.email }),
+    sanitizeContactFormInput,
     contactFormController
 );
 
-//TODO (later): see if can split the following function into two functions --> sanitize middleware, controller.
-app.post('/form/subscribe', (req, res) => {
-    console.log(req.body);
-
-    const listId = process.env.MAILCHIMP_AUDIENCE_ID;
-    const subscriber = {
-        firstName: sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML),
-        lastName: sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
-        email: sanitizeHtml(req.body.email, sanitizeOptionsNoHTML),
-    };
-
-    // req.subscriber = subscriber
-
-    subscribeMailingListController(listId, subscriber, mailchimp, res);
-});
+// CHECK: Need to add name validation? Or sanitization sufficient?
+app.post(
+    '/form/subscribe',
+    checkSchema({ email: validationSchema.email }),
+    handleValidationErrors,
+    sanitizeSubscribeFormInput,
+    subscribeMailingListController
+);
 
 // ADMIN APP
 

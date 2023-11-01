@@ -2,15 +2,17 @@ import { contactEmailTemplate } from '../utils/emailTemplates.js';
 import sendEmail from '../utils/sendEmail.js';
 
 function contactFormController(req, res) {
-    const { email, name, message } = req.data;
+    const { email, name, message, messageArray } = req.data;
 
     const mailDetails = {
         from: `"Post Service" <${process.env.GMAIL_USER}>`,
         to: `${process.env.GMAIL_USER}`,
         replyTo: email,
         subject: `New contact form response, from: ${name}`,
-        html: contactEmailTemplate(req.data),
-        text: `New message from ${name} (${email}): \n\n` + message,
+        // html: contactEmailTemplate({ email, name, messageArray }),
+        text:
+            `You've received a message from ${name} (${email}): \n\n\n` +
+            message,
     };
 
     try {
