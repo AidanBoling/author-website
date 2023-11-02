@@ -1,3 +1,5 @@
+import { matchedData } from 'express-validator';
+
 export async function sendResponse(
     model,
     dbCollection,
@@ -19,24 +21,34 @@ export async function sendResponse(
         .send(data);
 }
 
-export function transformAdminGetList(request) {
-    console.log(request.query);
-    let { filter, range, sort } = request.query;
-    const { id, ...queryFilter } = JSON.parse(filter);
-    // console.log(id);
-    // console.log(queryFilter);
-    // console.log(sort);
+export function formatAdminGetListQuery(request) {
+    const data = matchedData(request);
+    console.log('Validated data: ', data);
+
+    let { range, sort, id, q, name, ...queryFilter } = matchedData(request);
+    // console.log('Get-list queryFilter: ', queryFilter);
+
     let options = {};
-    if (range) {
-        range = JSON.parse(range);
-        // options = { ...options, limit: range[1], skip: range[0] };
-        // const limit = range[1];
-        // const skip = range[0];
-    }
+    // let options = { sanitizeFilter: true };
+
+    // if (range) {
+    //     range = JSON.parse(range);
+    //     // options = { ...options, limit: range[1], skip: range[0] };
+    //     // const limit = range[1];
+    //     // const skip = range[0];
+    // }
     if (sort) {
-        sort = JSON.parse(request.query.sort);
+        // sort = JSON.parse(request.query.sort);
         options = { ...options, sort: { [sort[0]]: sort[1] } };
         // console.log(options);
+    }
+
+    if (q) {
+        queryFilter = { ...queryFilter, $text: { $search: q } };
+    }
+
+    if (name) {
+        queryFilter = { ...queryFilter, name: name };
     }
 
     return { queryFilter, options };

@@ -1,7 +1,7 @@
 import Tag from '../model/Tag.js';
 import {
     sendResponse,
-    transformAdminGetList,
+    formatAdminGetListQuery,
 } from '../utils/sharedControllerFunctions.js';
 
 const tagController = {
@@ -22,7 +22,7 @@ const tagController = {
     // Get the list of tags
     fetch: async (req, res) => {
         console.log('Started get list for tags');
-        let { queryFilter, options } = transformAdminGetList(req);
+        let { queryFilter, options } = formatAdminGetListQuery(req);
 
         try {
             let tags;
@@ -39,7 +39,8 @@ const tagController = {
                 queryFilter = { name: { $in: tagNames } };
                 // console.log(queryFilter);
             } else {
-                tags = await Tag.find(queryFilter, null, options);
+                // tags = await Tag.find(queryFilter, null, options);
+                tags = await Tag.find(queryFilter).setOptions(options);
             }
             sendResponse(Tag, 'tags', tags, res, 200, queryFilter);
         } catch (error) {
@@ -52,8 +53,8 @@ const tagController = {
     get: async (req, res) => {
         console.log('Started getID for a tag');
         try {
-            const tagId = req.params.id;
-            const tag = await Tag.findById(tagId);
+            const { id } = matchedData(request);
+            const tag = await Tag.findById(id);
             sendResponse(Tag, 'tags', tag, res, 200);
         } catch (e) {
             res.status(500).send(e);
@@ -62,12 +63,12 @@ const tagController = {
 
     // Update a tag
     update: async (req, res) => {
-        const tagId = req.params.id;
+        const { id } = matchedData(request);
         let updates = req.body;
         // console.log('Updates:', updates);
 
         try {
-            const tagToUpdate = await Tag.findByIdAndUpdate(tagId, updates);
+            const tagToUpdate = await Tag.findByIdAndUpdate(id, updates);
 
             sendResponse(Tag, 'tags', { data: tagToUpdate }, res, 200);
         } catch (e) {
@@ -78,9 +79,9 @@ const tagController = {
     // Delete a tag
     delete: async (req, res) => {
         try {
-            const tagId = req.params.id;
-            const tagToDelete = await Tag.findById(tagId);
-            await Tag.findByIdAndDelete(tagId);
+            const { id } = matchedData(request);
+            const tagToDelete = await Tag.findById(id);
+            await Tag.findByIdAndDelete(id);
             sendResponse(Tag, 'tags', { data: tagToDelete }, res, 200);
         } catch (e) {
             res.status(500).send(e);

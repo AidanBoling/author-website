@@ -4,7 +4,12 @@ import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 // import nodemailer from 'nodemailer';
 // import sanitizeHtml from 'sanitize-html';
-import { validationResult, matchedData, checkSchema } from 'express-validator';
+import {
+    validationResult,
+    matchedData,
+    checkSchema,
+    query,
+} from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
 import { initializePassport } from './utils/passportHelper.js';
@@ -46,6 +51,7 @@ import { verify } from './services/verifyUserTokens.js';
 import { loginTimeCheck } from './services/loginCheck.js';
 import { validationSchema } from './utils/validationSchema.js';
 import { handleValidationErrors } from './services/validation.js';
+import parseQuery from './services/parseAdminQuery.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -237,15 +243,18 @@ app.get('/events', checkSchema({ ...listPageValidation }), async (req, res) => {
 
 // -- Form routes
 
-// TODO: check (refactor if needed) sanitization process.
+// TODO: check (refactor if needed) sanitization settings/process.
 app.post(
     '/form/contact',
-    checkSchema({ name: validationSchema.name, email: validationSchema.email }),
+    checkSchema({
+        name: validationSchema.textShort,
+        email: validationSchema.email,
+    }),
+    // TODO: add handleErrors -> kick back to user with error
     sanitizeContactFormInput,
     contactFormController
 );
 
-// CHECK: Need to add name validation? Or sanitization sufficient?
 app.post(
     '/form/subscribe',
     checkSchema({ email: validationSchema.email }),
@@ -254,7 +263,11 @@ app.post(
     subscribeMailingListController
 );
 
+//
 // ADMIN APP
+//
+
+// TODO: make sure mongoose to throws error if validation fails for create & update
 
 // -- POSTS routes
 
@@ -264,56 +277,141 @@ app.use('/admin/posts', checkAuth);
 app.post('/admin/posts', postController.create);
 
 // get a list
-app.get('/admin/posts', postController.fetch);
+app.get(
+    '/admin/posts',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    postController.fetch
+);
 
 // get one
-app.get('/admin/posts/:id', postController.get);
+app.get(
+    '/admin/posts/:id',
+    checkSchema({ id: validationSchema.id }),
+    postController.get
+);
 
 // update one
-app.put('/admin/posts/:id', postController.update);
+app.put(
+    '/admin/posts/:id',
+    checkSchema({ id: validationSchema.id }),
+    postController.update
+);
 
 // delete one
-app.delete('/admin/posts/:id', postController.delete);
+app.delete(
+    '/admin/posts/:id',
+    checkSchema({ id: validationSchema.id }),
+    postController.delete
+);
 
 // -- BOOKS routes
 
 app.use('/admin/books', passport.session(), checkAuth);
 
 app.post('/admin/books', bookController.create);
-app.get('/admin/books', bookController.fetch);
-app.get('/admin/books/:id', bookController.get);
-app.put('/admin/books/:id', bookController.update);
-app.delete('/admin/books/:id', bookController.delete);
+app.get(
+    '/admin/books',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    bookController.fetch
+);
+app.get(
+    '/admin/books/:id',
+    checkSchema({ id: validationSchema.id }),
+    bookController.get
+);
+app.put(
+    '/admin/books/:id',
+    checkSchema({ id: validationSchema.id }),
+    bookController.update
+);
+app.delete(
+    '/admin/books/:id',
+    checkSchema({ id: validationSchema.id }),
+    bookController.delete
+);
 
 // -- ARTICLES routes
 
 app.use('/admin/articles', passport.session(), checkAuth);
 
 app.post('/admin/articles', articleController.create);
-app.get('/admin/articles', articleController.fetch);
-app.get('/admin/articles/:id', articleController.get);
-app.put('/admin/articles/:id', articleController.update);
-app.delete('/admin/articles/:id', articleController.delete);
+app.get(
+    '/admin/articles',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    articleController.fetch
+);
+app.get(
+    '/admin/articles/:id',
+    checkSchema({ id: validationSchema.id }),
+    articleController.get
+);
+app.put(
+    '/admin/articles/:id',
+    checkSchema({ id: validationSchema.id }),
+    articleController.update
+);
+app.delete(
+    '/admin/articles/:id',
+    checkSchema({ id: validationSchema.id }),
+    articleController.delete
+);
 
 // -- EVENTS routes
 
 app.use('/admin/events', passport.session(), checkAuth);
 
 app.post('/admin/events', eventController.create);
-app.get('/admin/events', eventController.fetch);
-app.get('/admin/events/:id', eventController.get);
-app.put('/admin/events/:id', eventController.update);
-app.delete('/admin/events/:id', eventController.delete);
+app.get(
+    '/admin/events',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    eventController.fetch
+);
+app.get(
+    '/admin/events/:id',
+    checkSchema({ id: validationSchema.id }),
+    eventController.get
+);
+app.put(
+    '/admin/events/:id',
+    checkSchema({ id: validationSchema.id }),
+    eventController.update
+);
+app.delete(
+    '/admin/events/:id',
+    checkSchema({ id: validationSchema.id }),
+    eventController.delete
+);
 
 // -- TAGS routes
 
 app.use('/admin/tags', passport.session(), checkAuth);
 
 app.post('/admin/tags', tagController.create);
-app.get('/admin/tags', tagController.fetch);
-app.get('/admin/tags/:id', tagController.get);
-app.put('/admin/tags/:id', tagController.update);
-app.delete('/admin/tags/:id', tagController.delete);
+app.get(
+    '/admin/tags',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    tagController.fetch
+);
+app.get(
+    '/admin/tags/:id',
+    checkSchema({ id: validationSchema.id }),
+    tagController.get
+);
+app.put(
+    '/admin/tags/:id',
+    checkSchema({ id: validationSchema.id }),
+    tagController.update
+);
+app.delete(
+    '/admin/tags/:id',
+    checkSchema({ id: validationSchema.id }),
+    tagController.delete
+);
 
 //
 // -- USER routes
@@ -414,7 +512,7 @@ app.post(
 app.post(
     '/admin/auth/settings/change/name',
     checkSchema({
-        name: validationSchema.name,
+        name: validationSchema.textShort,
     }),
     handleValidationErrors,
     userController.changeName

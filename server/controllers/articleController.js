@@ -1,7 +1,7 @@
 import Article from '../model/Article.js';
 import {
     sendResponse,
-    transformAdminGetList,
+    formatAdminGetListQuery,
 } from '../utils/sharedControllerFunctions.js';
 
 const articleController = {
@@ -27,9 +27,12 @@ const articleController = {
 
     // Get a list of articles
     fetch: async (req, res) => {
-        const { queryFilter, options } = transformAdminGetList(req);
+        const { queryFilter, options } = formatAdminGetListQuery(req);
         try {
-            const articles = await Article.find(queryFilter, null, options);
+            // const articles = await Article.find(queryFilter, null, options);
+            const articles = await Article.find(queryFilter).setOptions(
+                options
+            );
             sendResponse(Article, 'articles', articles, res, 200, queryFilter);
         } catch (error) {
             console.log('Error getting articles: ', error);
@@ -40,8 +43,8 @@ const articleController = {
     // Get a single article
     get: async (req, res) => {
         try {
-            const articleId = req.params.id;
-            const article = await Article.findById(articleId);
+            const { id } = matchedData(request);
+            const article = await Article.findById(id);
             sendResponse(Article, 'articles', article, res, 200);
         } catch (e) {
             res.status(500).send(e);
@@ -50,7 +53,7 @@ const articleController = {
 
     // Update an article
     update: async (req, res) => {
-        const articleId = req.params.id;
+        const { id } = matchedData(request);
         let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
 
@@ -61,7 +64,7 @@ const articleController = {
 
         try {
             const articleToUpdate = await Article.findByIdAndUpdate(
-                articleId,
+                id,
                 updates
             );
             sendResponse(
@@ -79,9 +82,9 @@ const articleController = {
     // Delete an article
     delete: async (req, res) => {
         try {
-            const articleId = req.params.id;
-            const articleToDelete = await Article.findById(articleId);
-            await Article.findByIdAndDelete(articleId);
+            const { id } = matchedData(request);
+            const articleToDelete = await Article.findById(id);
+            await Article.findByIdAndDelete(id);
             sendResponse(
                 Article,
                 'articles',

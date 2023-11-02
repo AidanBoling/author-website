@@ -1,3 +1,37 @@
+import { ExpressValidator } from 'express-validator';
+
+// const parseJSON = value => JSON.parse(value);
+
+const arrayItemsAreInt = array => {
+    array.forEach(item => {
+        if (typeof item === 'number') {
+            return true;
+        } else {
+            throw new Error('Array items must be numbers');
+        }
+    });
+    return true;
+};
+
+const arrayItemsAreAlphanumStr = array => {
+    array.forEach(item => {
+        if (typeof item === 'string' && item.match(/^[a-zA-Z0-9]+$/)) {
+            return true;
+        } else {
+            throw new Error(
+                'One or more items in array are not alphanumeric string'
+            );
+        }
+    });
+    return true;
+};
+
+const sortOrderIsValid = array => {
+    const sortOrder = array[1].toLowerCase();
+    if (sortOrder === 'asc' || sortOrder === 'desc') return true;
+    throw new Error('Sort order is not valid');
+};
+
 const confirmationPasswordMatches = (value, { req }) => {
     return value === req.body.password;
 };
@@ -41,6 +75,29 @@ export const validationSchema = {
     //     isIn: { options: [['', '']] },
     // },
 
+    adminQuery: {
+        id: { isArray: true },
+
+        range: {
+            in: ['query'],
+            isArray: { options: { max: 2 } },
+            custom: { options: arrayItemsAreInt },
+            exists: true,
+        },
+
+        sort: {
+            in: ['query'],
+            isArray: { options: { max: 2 } },
+            custom: { options: arrayItemsAreAlphanumStr },
+        },
+        // or do each individual... sort[0]: {isAlpha: true}, etc??
+
+        published: { in: ['query'], isBoolean: true },
+
+        q: { in: ['query'], isString: true, isAlphanumeric: true },
+        name: { in: ['query'] },
+    },
+
     accessCode: {
         in: ['body'],
         trim: true,
@@ -74,14 +131,12 @@ export const validationSchema = {
 
     purpose: {
         in: ['body'],
-        // exists: true,
         trim: true,
         isIn: { options: [['register', 'passwordReset']] },
     },
 
     method: {
         in: ['body'],
-        // exists: true,
         trim: true,
         isIn: { options: [['authApp', 'email']] },
     },
@@ -89,9 +144,7 @@ export const validationSchema = {
     email: {
         errorMessage: 'Not a valid email',
         in: ['body'],
-        // exists: true,
         trim: true,
-        // isEmpty: { negated: true },
         isLength: {
             options: { min: 6, max: 64 },
         },
@@ -127,11 +180,22 @@ export const validationSchema = {
         },
     },
 
-    name: {
+    textShort: {
         in: ['body'],
-        // alphanumeric plus... what characters?
+        trim: true,
+        isLength: {
+            options: { max: 64 },
+            errorMessage: 'Name is too long',
+        },
+        // remove/replace: ^±!@£$%^&*_+§€#¢§¶•ªº«\\/<>?:;|=.,
+        // and/or just escape?
         // should be escaped?
     },
+
+    // textLong: {
+    //     trim: true,
+    //     // isString?
+    // },
 
     // jwtHeader: {
     //             in: ['headers'],
@@ -145,13 +209,3 @@ export const validationSchema = {
 };
 
 // isHash('SHA256'):
-
-// isAlpha(locale?: AlphaLocale, options?: {
-//     ignore?: string | string[] | RegExp;
-//   }): ValidationChain
-
-// isAlphanumeric(locale?: AlphanumericLocale, options?: {
-//     ignore?: string | RegExp;
-//   }): ValidationChain
-
-//

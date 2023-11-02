@@ -1,7 +1,6 @@
 export function contactEmailTemplate(data) {
-    const body = data.messageArray
-        .map(paragraph => `<p>${paragraph}</p>`)
-        .join('');
+    const messageArray = data.message.split(/\n+/);
+    const body = messageArray.map(paragraph => `<p>${paragraph}</p>`).join('');
     // console.log(body);
 
     const emailContent = `<p>You've received a new message from your Contact form. </p>

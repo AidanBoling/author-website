@@ -1,7 +1,7 @@
 import Book from '../model/Book.js';
 import {
     sendResponse,
-    transformAdminGetList,
+    formatAdminGetListQuery,
 } from '../utils/sharedControllerFunctions.js';
 
 // const mainSiteBookController
@@ -28,10 +28,11 @@ const bookController = {
 
     // Get the list of books
     fetch: async (req, res) => {
-        const { queryFilter, options } = transformAdminGetList(req);
+        const { queryFilter, options } = formatAdminGetListQuery(req);
 
         try {
-            const books = await Book.find(queryFilter, null, options);
+            // const books = await Book.find(queryFilter, null, options);
+            const books = await Book.find(queryFilter).setOptions(options);
             sendResponse(Book, 'books', books, res, 200, queryFilter);
         } catch (error) {
             console.log('Error getting posts: ', error);
@@ -43,7 +44,7 @@ const bookController = {
     get: async (req, res) => {
         try {
             // book = await getItemByValidatedId(Book, req, res, true)
-            const bookId = req.params.id;
+            const { id } = matchedData(request);
             const book = await Book.findById(id);
             sendResponse(Book, 'books', book, res, 200);
         } catch (e) {
@@ -54,7 +55,7 @@ const bookController = {
 
     // Update a book
     update: async (req, res) => {
-        const bookId = req.params.id;
+        const { id } = matchedData(request);
         let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
 
@@ -64,7 +65,7 @@ const bookController = {
         }
 
         try {
-            const bookToUpdate = await Book.findByIdAndUpdate(bookId, updates);
+            const bookToUpdate = await Book.findByIdAndUpdate(id, updates);
             sendResponse(Book, 'books', { data: bookToUpdate }, res, 200);
         } catch (e) {
             res.status(500).send(e);
@@ -74,9 +75,9 @@ const bookController = {
     // Delete a book
     delete: async (req, res) => {
         try {
-            const bookId = req.params.id;
-            const bookToDelete = await Book.findById(bookId);
-            await Book.findByIdAndDelete(bookId);
+            const { id } = matchedData(request);
+            const bookToDelete = await Book.findById(id);
+            await Book.findByIdAndDelete(id);
             sendResponse(Book, 'posts', { data: bookToDelete }, res, 200);
         } catch (e) {
             res.status(500).send(e);

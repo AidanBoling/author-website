@@ -2,6 +2,11 @@ import sanitizeHtml from 'sanitize-html';
 import { matchedData } from 'express-validator';
 
 const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+const sanitizeOptionsEscapeAll = {
+    allowedTags: [],
+    allowedAttributes: {},
+    disallowedTagsMode: 'recursiveEscape',
+};
 
 export function sanitizeContactFormInput(req, res, next) {
     const valData = matchedData(req);
@@ -10,14 +15,14 @@ export function sanitizeContactFormInput(req, res, next) {
         // sanitizeHtml(req.body.fName, sanitizeOptionsNoHTML) +
         // ' ' +
         // sanitizeHtml(req.body.lName, sanitizeOptionsNoHTML),
-        email: sanitizeHtml(valData.email, sanitizeOptionsNoHTML),
-        message: sanitizeHtml(req.body.message, sanitizeOptionsNoHTML),
+        email: sanitizeHtml(valData.email, sanitizeOptionsEscapeAll),
+        messageClean: sanitizeHtml(req.body.message, sanitizeOptionsNoHTML),
     };
 
     console.log(data);
 
     // Note, currently only sending messages as plaintext, so messageArray not used atm
-    req.data = { ...data, messageArray: data.message.split(/\n+/) };
+    req.data = data;
     next();
 }
 

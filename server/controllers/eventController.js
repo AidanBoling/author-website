@@ -1,7 +1,7 @@
 import Event from '../model/Event.js';
 import {
     sendResponse,
-    transformAdminGetList,
+    formatAdminGetListQuery,
 } from '../utils/sharedControllerFunctions.js';
 
 const eventController = {
@@ -26,10 +26,11 @@ const eventController = {
 
     // Get the list of events
     fetch: async (req, res) => {
-        const { queryFilter, options } = transformAdminGetList(req);
+        const { queryFilter, options } = formatAdminGetListQuery(req);
 
         try {
-            const events = await Event.find(queryFilter, null, options);
+            // const events = await Event.find(queryFilter, null, options);
+            const events = await Event.find(queryFilter).setOptions(options);
             sendResponse(Event, 'events', events, res, 200, queryFilter);
         } catch (error) {
             console.log('Error getting events: ', error);
@@ -40,8 +41,8 @@ const eventController = {
     // Get a single event
     get: async (req, res) => {
         try {
-            const eventId = req.params.id;
-            const event = await Event.findById(eventId);
+            const { id } = matchedData(request);
+            const event = await Event.findById(id);
             sendResponse(Event, 'events', event, res, 200);
         } catch (e) {
             res.status(500).send(e);
@@ -50,7 +51,7 @@ const eventController = {
 
     // Update a book
     update: async (req, res) => {
-        const eventId = req.params.id;
+        const { id } = matchedData(request);
         let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
 
@@ -60,10 +61,7 @@ const eventController = {
         // }
 
         try {
-            const eventToUpdate = await Event.findByIdAndUpdate(
-                eventId,
-                updates
-            );
+            const eventToUpdate = await Event.findByIdAndUpdate(id, updates);
             sendResponse(Event, 'events', { data: eventToUpdate }, res, 200);
         } catch (e) {
             res.status(500).send(e);
@@ -73,9 +71,9 @@ const eventController = {
     // Delete a book
     delete: async (req, res) => {
         try {
-            const eventId = req.params.id;
-            const eventToDelete = await Event.findById(eventId);
-            await Event.findByIdAndDelete(eventId);
+            const { id } = matchedData(request);
+            const eventToDelete = await Event.findById(id);
+            await Event.findByIdAndDelete(id);
             sendResponse(Event, 'posts', { data: eventToDelete }, res, 200);
         } catch (e) {
             res.status(500).send(e);

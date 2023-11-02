@@ -34,8 +34,8 @@ const tagColors = [
 ];
 
 function randomColor() {
-    randomIndex = Math.floor(Math.random() * tagColors.length);
-    return tagColors[index];
+    const randomIndex = Math.floor(Math.random() * tagColors.length);
+    return tagColors[randomIndex];
 }
 
 export default function CreateTagDialog({
