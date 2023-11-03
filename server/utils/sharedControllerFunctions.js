@@ -26,7 +26,6 @@ export function formatAdminGetListQuery(request) {
     // console.log('Validated data: ', data);
 
     let { range, sort, id, q, name, ...queryFilter } = matchedData(request);
-    // console.log('Get-list queryFilter: ', queryFilter);
 
     let options = {};
     // let options = { sanitizeFilter: true };

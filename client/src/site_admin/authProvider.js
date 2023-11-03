@@ -589,6 +589,9 @@ export const authProvider = {
 
 // TODO: check all admin components that need it have 'use client'
 
+// TODO: Add 429 code to error handler, so that 'too many attempts'
+//      shows up on login page
+
 //
 //
 // TEMP Archive ------------------------------

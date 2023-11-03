@@ -1,9 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import helmet from 'helmet';
 import mailchimp from '@mailchimp/mailchimp_marketing';
-// import nodemailer from 'nodemailer';
-// import sanitizeHtml from 'sanitize-html';
 import { checkSchema, query } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
@@ -57,16 +56,20 @@ if (isDev) {
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const corsOrigin = 'http://app.localhost:3000';
-// const corsOrigin = process.env.CLIENT_URL;
+const corsOrigin = process.env.CLIENT_URL;
 
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.GMAIL_USER,
-//         pass: process.env.GMAIL_APP_PASSWORD,
-//     },
-// });
+// Note: Depending on production domain setup, may need to change Cross-Origin-Resource-Policy to same-site
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                'script-src': ["'self'"],
+                'style-src': ["'self'", 'https://fonts.googleapis.com'],
+                'font-src': ["'self'", 'https://fonts.gstatic.com'],
+            },
+        },
+    })
+);
 
 mailchimp.setConfig({
     apiKey: process.env.MAILCHIMP_API_KEY,
@@ -79,15 +82,13 @@ mailchimp.setConfig({
 // }
 // pingMC();
 
-// const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
-
 mongoose.connect(
     `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.DB}?retryWrites=true&w=majority`
 );
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({ limit: 50000 })); // limit request size to 50kB
 app.use(cookieParser());
 app.use(
     cors({
@@ -99,7 +100,7 @@ app.use(
     })
 );
 
-//TODO: move session details to separate file
+//TODO (later): move session details to separate file
 app.use(
     '/admin',
     session({
@@ -133,8 +134,6 @@ initializePassport(app, passport);
 
 // MAIN APP
 
-// TODO (later): add global rate limiter (or slower) to main app
-
 app.get('/', (req, res) => {
     res.send('<h1>Hello, World</h1>');
 });
@@ -146,7 +145,6 @@ const listPageValidation = {
     limit: validationSchema.resources.limit,
 };
 
-//TODO: validation -- check incoming queries/params (site frontend)
 app.get('/posts', checkSchema({ ...listPageValidation }), (req, res) => {
     const overrides = { filter: { published: true } };
     const defaultSort = { datePublished: -1 };
@@ -281,7 +279,6 @@ const adminLimiter = rateLimit({
     max: 20,
     standardHeaders: true,
     legacyHeaders: false,
-    // message: 'Too many submissions, please wait 15 minutes', // TODO: check if/how message shows up to user on contact form
 });
 
 const adminLimitWarn = rateLimit({
@@ -461,6 +458,8 @@ app.post(
 
 // User Registration (--> user account pwd set):
 
+//TODO: Add limiter for register, password reset, and access code endpoints (/admin/mod)
+
 app.use(
     '/admin/mod',
     checkSchema({
@@ -505,7 +504,7 @@ app.post(
 // Checks that user's most recent login was <15min for all security settings routes
 app.use('/admin/auth/settings', loginTimeCheck.fifteen);
 
-// This route triggered when users click "enable mfa" (and select method to register),
+// Route triggered when users click "enable mfa" (and select method to register),
 // OR when users "register 2nd method" (if already enabled)
 // CHECK (later): Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
 app.post(
@@ -530,6 +529,7 @@ app.post(
 
 app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
+// TODO: add limiter
 app.post(
     '/admin/auth/settings/change/password',
     checkSchema({
@@ -576,15 +576,6 @@ app.post(
     passportAuthenticate.passwordLogin,
     authController.login
 );
-
-// app.use(
-//     'admin/login/mfa',
-//     // VALIDATE (mfa jwt token in header):
-//     // checkSchema({
-//     ???: validationSchema.jwt,
-// }),
-//     // handleValidationErrors
-// );
 
 app.post(
     '/admin/login/mfa',
@@ -667,13 +658,16 @@ app.get('/admin/auth/user', async (req, res) => {
     }
 });
 
-// TODO: Helmet
-// TODO (?): logger?
-// TODO: "bouncer" -- limit the number of wrong attempts in given time, or given ip/user context?
-// And/or load-limiter -- limit max request size.
+// TODO (later): Add logger
+// TODO (later): Add GLOBAL rate limiter (or slower - express-slow-down) to main app endpoints
+// TODO (later): Snyk? (libraries/dependencies security alerts...)
 
 //TODO: Check that in all the endpoints where validation added
 // the other middleware is using the validated results (i.e. data = matchedData(req))
+
+// TODO (later): change mailchimp to Convert...
+
+// TODO (later): Add device fingerprinting, to improve ux re: MFA (clientjs, or get-browser-fingerprint)
 
 //
 //
@@ -719,3 +713,12 @@ app.get('/admin/auth/user', async (req, res) => {
 //     console.log('Authenticated: ', req.isAuthenticated());
 //     res.json({ message: 'Authenticated' });
 // });
+
+// app.use(
+//     'admin/login/mfa',
+//     // VALIDATE (mfa jwt token in header):
+//     // checkSchema({
+//     ???: validationSchema.jwt,
+// }),
+//     // handleValidationErrors
+// );
