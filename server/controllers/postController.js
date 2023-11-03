@@ -7,8 +7,8 @@ import {
 
 const postController = {
     // Create a post
-    create: async (request, response) => {
-        const post = request.body;
+    create: async (req, res) => {
+        const post = req.body;
         // let contentPlain = post.content.plain;
         console.log('New post content: ', post.content);
 
@@ -32,10 +32,10 @@ const postController = {
 
         try {
             const newPost = await Post.create(newPostData);
-            sendResponse(Post, 'posts', newPost, response, 201);
+            sendResponse(Post, 'posts', newPost, res, 201);
         } catch (error) {
             console.log(error);
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 
@@ -55,25 +55,25 @@ const postController = {
     },
 
     // Get a single post
-    get: async (request, response) => {
+    get: async (req, res) => {
         console.log('Started fetching a single post...');
         try {
-            const { id } = matchedData(request);
-            // const postId = request.params.id;
+            const { id } = matchedData(req);
+            // const postId = req.params.id;
             const post = await Post.findById(id);
-            sendResponse(Post, 'posts', post, response, 200);
+            sendResponse(Post, 'posts', post, res, 200);
         } catch (error) {
             console.log('Error getting post: ', error);
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 
     // Update a post
-    update: async (request, response) => {
-        const { id } = matchedData(request);
+    update: async (req, res) => {
+        const { id } = matchedData(req);
 
-        // const postId = request.params.id;
-        let updates = { ...request.body, updatedAt: new Date() };
+        // const postId = req.params.id;
+        let updates = { ...req.body, updatedAt: new Date() };
         if (updates.published && !updates.datePublished) {
             updates = { ...updates, datePublished: new Date() };
         }
@@ -82,22 +82,22 @@ const postController = {
         try {
             const postToUpdate = await Post.findByIdAndUpdate(id, updates);
             // const postToUpdate = await Post.findById(postId);
-            sendResponse(Post, 'posts', { data: postToUpdate }, response, 200);
+            sendResponse(Post, 'posts', { data: postToUpdate }, res, 200);
         } catch (e) {
-            response.status(500).send(e);
+            res.status(500).send(e);
         }
     },
 
     // Delete a post
-    delete: async (request, response) => {
+    delete: async (req, res) => {
         try {
-            const { id } = matchedData(request);
-            // const postId = request.params.id;
+            const { id } = matchedData(req);
+            // const postId = req.params.id;
             const postToDelete = await Post.findById(id);
             await Post.findByIdAndDelete(id);
-            sendResponse(Post, 'posts', { data: postToDelete }, response, 200);
+            sendResponse(Post, 'posts', { data: postToDelete }, res, 200);
         } catch (error) {
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 };

@@ -1,3 +1,4 @@
+import { matchedData } from 'express-validator';
 import Event from '../model/Event.js';
 import {
     sendResponse,
@@ -41,7 +42,7 @@ const eventController = {
     // Get a single event
     get: async (req, res) => {
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const event = await Event.findById(id);
             sendResponse(Event, 'events', event, res, 200);
         } catch (e) {
@@ -51,7 +52,7 @@ const eventController = {
 
     // Update a book
     update: async (req, res) => {
-        const { id } = matchedData(request);
+        const { id } = matchedData(req);
         let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
 
@@ -71,7 +72,7 @@ const eventController = {
     // Delete a book
     delete: async (req, res) => {
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const eventToDelete = await Event.findById(id);
             await Event.findByIdAndDelete(id);
             sendResponse(Event, 'posts', { data: eventToDelete }, res, 200);

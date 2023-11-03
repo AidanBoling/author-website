@@ -4,12 +4,7 @@ import cors from 'cors';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 // import nodemailer from 'nodemailer';
 // import sanitizeHtml from 'sanitize-html';
-import {
-    validationResult,
-    matchedData,
-    checkSchema,
-    query,
-} from 'express-validator';
+import { checkSchema, query } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
 import { initializePassport } from './utils/passportHelper.js';
@@ -98,7 +93,7 @@ app.use(
     cors({
         origin: corsOrigin,
         exposedHeaders: 'Content-Range,X-Total-Count',
-        methods: 'GET,POST',
+        methods: 'GET,POST,PUT,DELETE',
         // allowedHeaders: 'Content-Type,Authorization',
         credentials: true,
     })
@@ -133,11 +128,12 @@ app.use(
 );
 
 // Checks sessions for user object; if not found, then not authenticated, routing process halted
-// app.use('/admin', passport.session());
 app.use('/admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
 
 // MAIN APP
+
+// TODO (later): add global rate limiter (or slower) to main app
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello, World</h1>');
@@ -278,11 +274,36 @@ app.post(
 // ADMIN APP
 //
 
-// TODO: make sure mongoose to throws error if validation fails for create & update
+// TODO (?): make sure mongoose to throws error if validation fails for create & update
+
+const adminLimiter = rateLimit({
+    windowMs: 1 * 10 * 1000, // 1 minute
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    // message: 'Too many submissions, please wait 15 minutes', // TODO: check if/how message shows up to user on contact form
+});
+
+const adminLimitWarn = rateLimit({
+    windowMs: 1 * 10 * 1000, // 1 minute
+    max: 15,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res, next, options) => {
+        // TODO: Add this to logger...
+        console.log(
+            '\nRATE LIMIT alert (15r/10s): "/admin" route at ',
+            new Date()
+        );
+        next();
+    },
+});
+
+app.use('/admin', adminLimitWarn, adminLimiter);
 
 // -- POSTS routes
 
-app.use('/admin/posts', checkAuth);
+app.use('/admin/posts', passport.session(), checkAuth);
 
 // create one
 app.post('/admin/posts', postController.create);

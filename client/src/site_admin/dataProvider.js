@@ -16,8 +16,8 @@ const httpClient = (url, options = {}) => {
     }
     options.credentials = 'include';
 
-    console.log('Request URL: ', url);
-    console.log('Request options: ', options);
+    // console.log('Request URL: ', url);
+    // console.log('Request options: ', options);
     return fetchUtils.fetchJson(url, options);
 };
 const countHeader = 'Content-Range';

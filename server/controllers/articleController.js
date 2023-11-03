@@ -1,3 +1,4 @@
+import { matchedData } from 'express-validator';
 import Article from '../model/Article.js';
 import {
     sendResponse,
@@ -6,22 +7,21 @@ import {
 
 const articleController = {
     // Create an article
-    create: async (request, response) => {
-        const newArticleData = request.body;
+    create: async (req, res) => {
+        const newArticleData = req.body;
         // console.log('Article: ', newArticleData);
 
         // Fix date by adding dummy time (if no time included, date will be incorrect when translated *back* from UTC, client-side)
         if (newArticleData.datePublished) {
-            newArticleData.datePublished =
-                request.body.datePublished + 'T12:00';
+            newArticleData.datePublished = req.body.datePublished + 'T12:00';
         }
 
         try {
             const newArticle = await Article.create(newArticleData);
-            sendResponse(Article, 'articles', newArticle, response, 201);
+            sendResponse(Article, 'articles', newArticle, res, 201);
         } catch (error) {
             console.log(error);
-            response.status(500).send(error);
+            res.status(500).send(error);
         }
     },
 
@@ -43,7 +43,7 @@ const articleController = {
     // Get a single article
     get: async (req, res) => {
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const article = await Article.findById(id);
             sendResponse(Article, 'articles', article, res, 200);
         } catch (e) {
@@ -53,7 +53,7 @@ const articleController = {
 
     // Update an article
     update: async (req, res) => {
-        const { id } = matchedData(request);
+        const { id } = matchedData(req);
         let updates = { ...req.body, updatedAt: new Date() };
         // console.log('Updates:', updates);
 
@@ -82,7 +82,7 @@ const articleController = {
     // Delete an article
     delete: async (req, res) => {
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const articleToDelete = await Article.findById(id);
             await Article.findByIdAndDelete(id);
             sendResponse(

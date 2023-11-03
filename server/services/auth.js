@@ -6,8 +6,8 @@ export function checkAuth(req, res, next) {
     if (!req.isAuthenticated()) {
         res.status(401).json({ message: 'Not authorized' });
     } else {
-        console.log('session ID: ', req.sessionID);
-        console.log('user object: ', req.session.passport);
+        // console.log('session ID: ', req.sessionID);
+        // console.log('user object: ', req.session.passport);
         console.log('Cookie expires: ', req.session.cookie._expires);
         next();
     }

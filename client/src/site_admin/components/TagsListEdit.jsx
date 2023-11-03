@@ -340,7 +340,7 @@ export default function TagsListEdit(props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     // const [recordTags, setRecordTags] = useState();
     const record = useRecordContext();
-    // const [update] = useUpdate();
+    const [update] = useUpdate();
     // const [newRecordTags, setNewRecordTags] = useState([]);
 
     // const { data: tags, isLoading: isLoadingRecordTags } = useGetMany(

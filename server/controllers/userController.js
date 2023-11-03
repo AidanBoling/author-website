@@ -1,20 +1,19 @@
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import User from '../model/User.js';
 import Code from '../model/Code.js';
-import Token from '../model/Token.js';
+// import Token from '../model/Token.js';
 import EmailOTP from '../model/emailOTP.js';
 import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
 import {
     generateEmailOtpCode,
     generateTokenLink,
 } from '../utils/userUtilities.js';
-import sanitizeHtml from 'sanitize-html'; // --> express-validator? --> Yes
 import sendOTPCodeEmail from '../utils/sendOTPemail.js';
 import { matchedData } from 'express-validator';
 
-const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+// const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
 
 // TODO: (production prep) Update instances of email to input email, not TEST_EMAIL
 // TODO: Make sure initial access Code is deleted at an appropriate point

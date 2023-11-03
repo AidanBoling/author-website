@@ -1,5 +1,6 @@
 export default function parseQuery(req, res, next) {
-    console.log('Raw request.query: ', req.query);
+    // console.log('Starting new resource query')
+    // console.log('Raw request.query: ', req.query);
 
     let { range, sort } = req.query;
     let { id, q, published, name, ...filter } = JSON.parse(req.query.filter);
@@ -17,7 +18,7 @@ export default function parseQuery(req, res, next) {
         name: name,
         q: q,
     };
-    console.log('JSON-parsed req.query: ', req.query);
+    // console.log('JSON-parsed req.query: ', req.query);
 
     next();
 }

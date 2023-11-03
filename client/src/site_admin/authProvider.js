@@ -20,7 +20,8 @@ function parseResponse(response) {
 }
 
 function handleResponse({ status, body }, passValidationErrors = false) {
-    console.log('Response content: ', body);
+    console.log('Handling response...');
+    // console.log('Response content: ', body);
 
     // If unauthorized or other error:
     // function handleStatusNotOk(res)
@@ -86,7 +87,7 @@ function handlePwdLogin(request) {
 
             // If returns mfa indicator, redirect to mfa page
             if (data.challenge === 'MFA') {
-                console.log('mfa info: ', data.mfa);
+                // console.log('mfa info: ', data.mfa);
                 localStorage.setItem(
                     'mfa',
                     JSON.stringify({
@@ -118,7 +119,7 @@ function handleMFALogin(request) {
         .then(response => parseResponse(response))
         .then(response => handleResponse(response))
         .then(data => {
-            console.log('MFA response: ', data);
+            // console.log('MFA response: ', data);
             handleIsAuthenticated();
         })
         .catch(error => {
@@ -231,14 +232,14 @@ export const authProvider = {
             if (passwordResetHash.test(location.hash)) {
                 purpose = 'passwordReset';
             }
-            console.log('Hash matches a pattern. Purpose: ', purpose);
+            // console.log('Hash matches a pattern. Purpose: ', purpose);
 
             // If no params, do nothing (pages set to send urlsearchparams)
             if (Object.keys(params).length === 0) {
                 return;
             }
 
-            console.log('Params: ', params);
+            // console.log('Params: ', params);
 
             // TODO: Add some sort of validation of id and token params here, so if
             // not correct format, doesn't even go to api (may help with DDoS or something?? Check...)
@@ -389,7 +390,7 @@ export const authProvider = {
                 .then(response => handleResponse(response));
 
             if (data) {
-                console.log('User data: ', data);
+                // console.log('User data: ', data);
                 const { id, fullName, avatar, email, lastLogin, mfa } = data;
                 return Promise.resolve({
                     id,

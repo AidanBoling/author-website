@@ -1,3 +1,4 @@
+import { matchedData } from 'express-validator';
 import Tag from '../model/Tag.js';
 import {
     sendResponse,
@@ -53,7 +54,7 @@ const tagController = {
     get: async (req, res) => {
         console.log('Started getID for a tag');
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const tag = await Tag.findById(id);
             sendResponse(Tag, 'tags', tag, res, 200);
         } catch (e) {
@@ -63,7 +64,7 @@ const tagController = {
 
     // Update a tag
     update: async (req, res) => {
-        const { id } = matchedData(request);
+        const { id } = matchedData(req);
         let updates = req.body;
         // console.log('Updates:', updates);
 
@@ -79,7 +80,7 @@ const tagController = {
     // Delete a tag
     delete: async (req, res) => {
         try {
-            const { id } = matchedData(request);
+            const { id } = matchedData(req);
             const tagToDelete = await Tag.findById(id);
             await Tag.findByIdAndDelete(id);
             sendResponse(Tag, 'tags', { data: tagToDelete }, res, 200);
