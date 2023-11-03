@@ -100,7 +100,7 @@ export const userController = {
                 // Send email notifying of account created
                 sendAccountInfoEmail(
                     { name: user.name },
-                    emailRecipient, // for TESTING only. Change to --> user.email
+                    emailRecipient, // for TESTING only. TODO (production prep): Change to --> user.email
                     'register',
                     'success'
                 );

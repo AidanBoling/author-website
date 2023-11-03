@@ -26,11 +26,11 @@ const arrayItemsAreAlphanumStr = array => {
     return true;
 };
 
-const sortOrderIsValid = array => {
-    const sortOrder = array[1].toLowerCase();
-    if (sortOrder === 'asc' || sortOrder === 'desc') return true;
-    throw new Error('Sort order is not valid');
-};
+// const sortOrderIsValid = array => {
+//     const sortOrder = array[1].toLowerCase();
+//     if (sortOrder === 'asc' || sortOrder === 'desc') return true;
+//     throw new Error('Sort order is not valid');
+// };
 
 const confirmationPasswordMatches = (value, { req }) => {
     return value === req.body.password;
@@ -69,20 +69,25 @@ export const validationSchema = {
             in: ['params'],
             isIn: { options: [['fiction', 'non-fiction']] },
         },
+
+        tags: {
+            in: ['params'],
+            isArray: true,
+            custom: { options: arrayItemsAreAlphanumStr },
+            //     isIn: { options: [['', '']] },
+        },
     },
-    // tags: {
-    //     in: ['params'],
-    //     isIn: { options: [['', '']] },
-    // },
 
     adminQuery: {
-        id: { isArray: true },
+        id: {
+            in: ['query'],
+            isArray: true,
+        },
 
         range: {
             in: ['query'],
             isArray: { options: { max: 2 } },
             custom: { options: arrayItemsAreInt },
-            exists: true,
         },
 
         sort: {
@@ -90,12 +95,15 @@ export const validationSchema = {
             isArray: { options: { max: 2 } },
             custom: { options: arrayItemsAreAlphanumStr },
         },
-        // or do each individual... sort[0]: {isAlpha: true}, etc??
 
         published: { in: ['query'], isBoolean: true },
 
         q: { in: ['query'], isString: true, isAlphanumeric: true },
-        name: { in: ['query'] },
+
+        name: {
+            in: ['query'],
+            isString: true,
+        },
     },
 
     accessCode: {
@@ -145,12 +153,13 @@ export const validationSchema = {
         errorMessage: 'Not a valid email',
         in: ['body'],
         trim: true,
+        isString: true,
         isLength: {
             options: { min: 6, max: 64 },
         },
         isEmail: {
             options: {
-                blacklisted_chars: '<>\'"()=\\/&%$^',
+                blacklisted_chars: '<>\'"(){}=\\/&%$^',
                 allow_ip_domain: false,
             },
         },
@@ -163,6 +172,7 @@ export const validationSchema = {
         in: ['body'],
         // exists: true,
         // isEmpty: { negated: true },
+        isString: true,
         isLength: {
             options: { min: 8, max: 64 },
             errorMessage: 'Password must at least 8 characters',
@@ -183,13 +193,12 @@ export const validationSchema = {
     textShort: {
         in: ['body'],
         trim: true,
+        isString: true,
         isLength: {
             options: { max: 64 },
             errorMessage: 'Name is too long',
         },
         // remove/replace: ^±!@£$%^&*_+§€#¢§¶•ªº«\\/<>?:;|=.,
-        // and/or just escape?
-        // should be escaped?
     },
 
     // textLong: {

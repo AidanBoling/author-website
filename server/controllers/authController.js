@@ -19,6 +19,9 @@ export const passportAuthenticate = {
             'login',
             { failureMessage: true },
             async (error, user, info) => {
+                // // TEMP TEST:
+                // console.log('Login request info: ', req);
+                // //
                 if (!user) {
                     console.log('Message: ', info);
                     return res.status(401).json({
@@ -174,14 +177,18 @@ export const authController = {
         console.log('Send email route triggered...');
 
         // TODO (production prep):
-        // const { email } = matchedData(req)
-        // if (!email) {throw new Error('Invalid email')}
-        const email = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
+        const { email } = matchedData(req);
+        if (!email) {
+            throw new Error('Invalid email');
+        }
+
+        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
 
         try {
-            const user = await User.findOne({ email: req.body.email });
+            const user = await User.findOne({ email: { $eq: email } });
             if (!user) throw new Error('User not found');
-            sendOTPCodeEmail(user._id, email);
+            // TODO (production prep): emailRecipient -> user.email
+            sendOTPCodeEmail(user._id, emailRecipient);
             res.json({ message: 'Success' });
         } catch (error) {
             console.log('Error sending OTP code email: ', error);

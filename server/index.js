@@ -14,6 +14,7 @@ import session from 'express-session';
 import passport from 'passport';
 import { initializePassport } from './utils/passportHelper.js';
 import cookieParser from 'cookie-parser';
+import { rateLimit } from 'express-rate-limit';
 
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
@@ -243,9 +244,18 @@ app.get('/events', checkSchema({ ...listPageValidation }), async (req, res) => {
 
 // -- Form routes
 
-// TODO: check (refactor if needed) sanitization settings/process.
+const mainSiteFormLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 3, // Limit each IP to 3 requests per `window`
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many submissions, please wait 15 minutes', // TODO: check if/how message shows up to user on contact form
+    skipFailedRequests: true, // Don't count 'failed' -- so just prevents spamming emails.
+});
+
 app.post(
     '/form/contact',
+    mainSiteFormLimiter,
     checkSchema({
         name: validationSchema.textShort,
         email: validationSchema.email,
@@ -257,6 +267,7 @@ app.post(
 
 app.post(
     '/form/subscribe',
+    mainSiteFormLimiter,
     checkSchema({ email: validationSchema.email }),
     handleValidationErrors,
     sanitizeSubscribeFormInput,
@@ -522,8 +533,18 @@ app.post(
 
 // User Login (name, pwd):
 
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 4,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many failed login attempts. Please wait at least 15 minutes.',
+    skipSuccessfulRequests: true,
+});
+
 app.post(
     '/admin/login/password',
+    loginLimiter,
     checkSchema({
         email: validationSchema.email,
         password: validationSchema.password,
@@ -546,6 +567,7 @@ app.post(
 
 app.post(
     '/admin/login/mfa',
+    // loginLimiter,
     checkSchema({
         method: validationSchema.method,
         otpCode: validationSchema.otpCode,

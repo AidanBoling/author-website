@@ -97,7 +97,7 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.static('authenticate', async (username, plainTextPassword) => {
-    const user = await User.findOne({ email: username });
+    const user = await User.findOne({ email: { $eq: username } });
 
     if (!user) {
         await argon2.hash(process.env.DUMMY_PWD, {
