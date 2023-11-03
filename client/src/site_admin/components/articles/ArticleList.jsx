@@ -3,6 +3,7 @@ import {
     List,
     ReferenceField,
     TextField,
+    TextInput,
     EditButton,
     DateField,
     UrlField,
@@ -14,11 +15,15 @@ import {
 import { useMediaQuery, Chip } from '@mui/material';
 import TagField from '../TagField';
 
+const articleFilters = [<TextInput label="Search" source="q" alwaysOn />];
+
 function ArticleList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
     return (
-        <List sort={{ field: 'datePublished', order: 'DESC' }}>
+        <List
+            filters={articleFilters}
+            sort={{ field: 'datePublished', order: 'DESC' }}>
             {isMobile ? (
                 <SimpleList
                     primaryText={record => record.title}

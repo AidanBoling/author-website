@@ -7,9 +7,11 @@ import {
     DateField,
 } from 'react-admin';
 
+const eventFilters = [<TextInput label="Search" source="q" alwaysOn />];
+
 function EventList() {
     return (
-        <List>
+        <List filters={eventFilters}>
             <Datagrid rowClick="show">
                 <TextField source="title" />
 

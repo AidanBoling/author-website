@@ -12,11 +12,15 @@ import {
 import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
+const bookFilters = [<TextInput label="Search" source="q" alwaysOn />];
+
 function BookList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
     return (
-        <List sort={{ field: 'datePublished', order: 'DESC' }}>
+        <List
+            filters={bookFilters}
+            sort={{ field: 'datePublished', order: 'DESC' }}>
             {isMobile ? (
                 <SimpleList
                     primaryText={record => record.title}

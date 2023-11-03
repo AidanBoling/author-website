@@ -6,6 +6,7 @@ import {
     ReferenceField,
     TextField,
     ChipField,
+    // TextInput,
     FunctionField,
     useRecordContext,
     WithRecord,
@@ -13,32 +14,36 @@ import {
 import { Box, Chip } from '@mui/material';
 import TagField, { TagChip } from '../TagField';
 
+// const tagFilters = [<TextInput label="Search" source="q" alwaysOn />];
+
 export default function TagList() {
     const record = useRecordContext();
-    function TagColor() {
-        const record = useRecordContext();
-        if (!record) return null;
-        return (
-            <Box display="flex">
-                <Box
-                    sx={{
-                        bgcolor: record.color,
-                        width: 15,
-                        height: 15,
-                        borderRadius: 15,
-                        alignSelf: 'center',
-                        flexShrink: 0,
-                        display: 'inline-block',
-                        m: '.2rem',
-                        // mt: '.4rem',
-                    }}
-                />
-            </Box>
-        );
-    }
+    // function TagColor() {
+    //     const record = useRecordContext();
+    //     if (!record) return null;
+    //     return (
+    //         <Box display="flex">
+    //             <Box
+    //                 sx={{
+    //                     bgcolor: record.color,
+    //                     width: 15,
+    //                     height: 15,
+    //                     borderRadius: 15,
+    //                     alignSelf: 'center',
+    //                     flexShrink: 0,
+    //                     display: 'inline-block',
+    //                     m: '.2rem',
+    //                     // mt: '.4rem',
+    //                 }}
+    //             />
+    //         </Box>
+    //     );
+    // }
 
     return (
-        <List sort={{ field: 'name', order: 'ASC' }}>
+        <List
+            // filters={tagFilters}
+            sort={{ field: 'name', order: 'ASC' }}>
             {/* <SimpleList
                 primaryText={record => (
                     <Chip
