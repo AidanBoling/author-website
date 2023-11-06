@@ -447,9 +447,26 @@ app.delete(
 
 // User UPDATES --
 
+const accessCodeLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 3,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests. Please wait at least 15 minutes.',
+});
+
+const adminUserFormsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests. Please wait at least 15 minutes.',
+});
+
 // Initiate register or password reset using admin-created temp code
 app.post(
     '/admin/use/code',
+    accessCodeLimiter,
     checkSchema({ code: validationSchema.accessCode }),
     handleValidationErrors,
     verify.accessCode,
@@ -457,8 +474,6 @@ app.post(
 );
 
 // User Registration (--> user account pwd set):
-
-//TODO: Add limiter for register, password reset, and access code endpoints (/admin/mod)
 
 app.use(
     '/admin/mod',
@@ -476,6 +491,7 @@ app.post('/admin/mod/checkAuth', authController.authCheck);
 
 app.post(
     '/admin/mod/register',
+    adminUserFormsLimiter,
     checkSchema({
         email: validationSchema.email,
         password: validationSchema.password,
@@ -489,6 +505,7 @@ app.post(
 // User Password Reset
 app.post(
     '/admin/mod/password-reset',
+    adminUserFormsLimiter,
     checkSchema({
         email: validationSchema.email,
         password: validationSchema.password,
@@ -499,7 +516,7 @@ app.post(
     userController.passwordReset
 );
 
-// User MFA enable, setup, etc...
+// User MFA enable, setup, etc.
 
 // Checks that user's most recent login was <15min for all security settings routes
 app.use('/admin/auth/settings', loginTimeCheck.fifteen);
@@ -517,6 +534,7 @@ app.post(
 );
 
 // Triggered when users submit otp code to verify a new mfa method
+// TODO (later): add limiter + admin authprovider tweaks so user can try entering code up to two(?) times before booted to login
 app.post(
     '/admin/auth/settings/mfa/verify',
     checkSchema({
@@ -529,9 +547,9 @@ app.post(
 
 app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
 
-// TODO: add limiter
 app.post(
     '/admin/auth/settings/change/password',
+    adminUserFormsLimiter,
     checkSchema({
         currentPassword: validationSchema.password,
         password: validationSchema.password,
@@ -658,12 +676,12 @@ app.get('/admin/auth/user', async (req, res) => {
     }
 });
 
+//TODO: Check that in all the endpoints where validation added
+// the other middleware is using the validated results (i.e. data = matchedData(req))
+
 // TODO (later): Add logger
 // TODO (later): Add GLOBAL rate limiter (or slower - express-slow-down) to main app endpoints
 // TODO (later): Snyk? (libraries/dependencies security alerts...)
-
-//TODO: Check that in all the endpoints where validation added
-// the other middleware is using the validated results (i.e. data = matchedData(req))
 
 // TODO (later): change mailchimp to Convert...
 
