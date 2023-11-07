@@ -1,17 +1,17 @@
 import { matchedData } from 'express-validator';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import User from '../model/User.js';
-import EmailOTP from '../model/emailOTP.js';
+import EmailOTP from '../model/EmailOTP.js';
 import passport from 'passport';
 import {
-    getAuthToken,
-    getFingerprint,
-    getFingerprintHash,
+    // getAuthToken,
+    // getFingerprint,
+    // getFingerprintHash,
     getMFALoginToken,
     FPT_COOKIE_OPTIONS,
 } from '../utils/authUtilities.js';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 
 export const passportAuthenticate = {
     passwordLogin: (req, res, next) => {

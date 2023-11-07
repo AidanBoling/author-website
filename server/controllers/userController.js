@@ -4,7 +4,7 @@ import qrcode from 'qrcode';
 import User from '../model/User.js';
 import Code from '../model/Code.js';
 // import Token from '../model/Token.js';
-import EmailOTP from '../model/emailOTP.js';
+import EmailOTP from '../model/EmailOTP.js';
 import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
 import {
     generateEmailOtpCode,

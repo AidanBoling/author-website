@@ -1,6 +1,6 @@
 import Token from '../model/Token.js';
-import { randomBytes, randomInt } from 'node:crypto';
-import EmailOTP from '../model/emailOTP.js';
+import { randomBytes } from 'node:crypto';
+import EmailOTP from '../model/EmailOTP.js';
 
 export async function generateTokenLink(purpose, userId) {
     // Check if user has existing reset or registration token, delete if found
