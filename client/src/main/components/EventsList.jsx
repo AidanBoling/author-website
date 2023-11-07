@@ -1,5 +1,4 @@
 'use client';
-import { Stack, Typography } from '@mui/material';
 import EventCard from './cards/EventCard';
 import NoItemsMessage from './NoItemsMessage';
 

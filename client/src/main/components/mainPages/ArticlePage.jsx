@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import DOMPurify from 'dompurify';
+// import DOMPurify from 'dompurify';
 import { getById } from '@/main/api/getResourceItems';
 import PeriodicalsHeading from '@/main/components/PeriodicalsHeading';
 import PeriodicalsBody from '../PeriodicalsBody';
@@ -9,7 +9,7 @@ import PeriodicalsBody from '../PeriodicalsBody';
 import { Box, Typography, Link } from '@mui/material';
 import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
 
-function ArticlePage(props) {
+function ArticlePage() {
     const params = useParams();
     console.log('Id: ', params.id);
 

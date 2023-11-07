@@ -1,12 +1,11 @@
 import {
-    ReferenceField,
     Show,
     SimpleShowLayout,
     TextField,
     RichTextField,
     DateField,
-    ImageField,
-    UrlField,
+    // ImageField,
+    // UrlField,
     useRecordContext,
     WrapperField,
 } from 'react-admin';

@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { Button, useMediaQuery } from '@mui/material';
+import { Button } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function PostCard(props) {
-    const isSmall = useMediaQuery(theme => theme.breakpoints.down('sm'));
+    // const isSmall = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
     // console.log('Received post: ', props.post);
 

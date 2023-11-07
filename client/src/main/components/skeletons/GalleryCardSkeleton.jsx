@@ -2,7 +2,7 @@
 // import { useState } from 'react';
 import { Card, Skeleton } from '@mui/material';
 
-function GalleryCardSkeleton(props) {
+function GalleryCardSkeleton() {
     return (
         <Card
             className={'card gallery skeleton resource-card media'}
@@ -38,4 +38,4 @@ function GalleryCardSkeleton(props) {
     );
 }
 
-export default ResourceCardSkeleton;
+export default GalleryCardSkeleton;

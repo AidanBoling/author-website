@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 // import Image from 'next/image';
 // import DOMPurify from 'dompurify';
-import { Box, Typography, Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
 import NewsletterForm from '@/main/components/NewsletterForm';
 import AboutAuthorMini from '@/main/components/AboutAuthorMini';
@@ -11,7 +11,7 @@ import AboutAuthorMini from '@/main/components/AboutAuthorMini';
 import PeriodicalsHeading from '@/main/components/PeriodicalsHeading';
 import PeriodicalsBody from '@/main/components/PeriodicalsBody';
 
-function PostPage(props) {
+function PostPage() {
     const params = useParams();
     const [post, setPost] = useState('');
     const [richText, setRichText] = useState('');

@@ -1,17 +1,10 @@
 'use client';
 import { useState, useCallback } from 'react';
-import {
-    Box,
-    Container,
-    Paper,
-    Button,
-    Menu,
-    MenuItem,
-    Tooltip,
-} from '@mui/material';
+import { Box, Container, Button, Menu, MenuItem, Tooltip } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PageTitle from './PageTitle';
-import InnerPageContainer, { pagePaddingX } from './InnerPageContainer';
+import InnerPageContainer from './InnerPageContainer';
+// import { pagePaddingX } from '../utils/pagePaddingX';
 import Pagination from '@mui/material/Pagination';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 

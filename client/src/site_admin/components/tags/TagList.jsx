@@ -1,23 +1,16 @@
 import {
     Datagrid,
-    DateField,
-    SimpleList,
     List,
-    ReferenceField,
-    TextField,
-    ChipField,
     // TextInput,
     FunctionField,
-    useRecordContext,
-    WithRecord,
+    // useRecordContext,
 } from 'react-admin';
-import { Box, Chip } from '@mui/material';
-import TagField, { TagChip } from '../TagField';
+import { TagChip } from '../TagField';
 
 // const tagFilters = [<TextInput label="Search" source="q" alwaysOn />];
 
 export default function TagList() {
-    const record = useRecordContext();
+    // const record = useRecordContext();
     // function TagColor() {
     //     const record = useRecordContext();
     //     if (!record) return null;
@@ -79,7 +72,10 @@ export default function TagList() {
                 <FunctionField
                     label="Name"
                     source="name"
-                    render={record => <TagChip outlined />}
+                    render={() => <TagChip outlined />}
+                    // TODO: Check use of record here. Replaced with above b/c react linter
+                    // yelled at me on build, but will probably break something...
+                    // render={record => <TagChip outlined />}
                 />
                 {/* <TagColor />
                 <TextField source="name" /> */}

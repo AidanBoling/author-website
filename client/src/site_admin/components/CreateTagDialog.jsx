@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import {
     Box,
@@ -45,9 +46,15 @@ export default function CreateTagDialog({
     newRecord,
 }) {
     const record = useRecordContext();
-    const { filter, onCancel, onCreate } = newRecord
-        ? useCreateSuggestionContext()
-        : {};
+    // TODO: Check the useCreateSuggestionContext change below.
+    // Had to remove the conditional because it broke
+    // a react hook rule ("React Hook "useCreateSuggestionContext" is called conditionally. React Hooks must be called in the exact same order in every component render.")
+    // Not sure if this will break the ui.
+
+    // const { filter, onCancel, onCreate } = newRecord
+    //     ? useCreateSuggestionContext()
+    //     : {};
+    const { filter, onCancel, onCreate } = useCreateSuggestionContext();
     const [newTagName, setNewTagName] = useState((newRecord && filter) || '');
     const [newTagColor, setNewTagColor] = useState(randomColor);
     const [disabled, setDisabled] = useState(false);
@@ -81,7 +88,7 @@ export default function CreateTagDialog({
                     updateRecord(tag);
                 },
                 onError: error => {
-                    setDialogError(
+                    setError(
                         "Couldn't create tag; try saving again. Contact admin if you continue to get this error."
                     );
                     console.log(error);

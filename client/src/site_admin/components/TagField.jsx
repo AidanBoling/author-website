@@ -1,6 +1,7 @@
+'use client';
 import {
-    ReferenceArrayField,
-    SingleFieldList,
+    // ReferenceArrayField,
+    // SingleFieldList,
     FunctionField,
     useRecordContext,
 } from 'react-admin';

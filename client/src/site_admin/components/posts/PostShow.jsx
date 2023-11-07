@@ -1,13 +1,4 @@
-import {
-    ReferenceField,
-    Show,
-    SimpleShowLayout,
-    TextField,
-    RichTextField,
-    DateField,
-    Labeled,
-    WithRecord,
-} from 'react-admin';
+import { Show, SimpleShowLayout, DateField, WithRecord } from 'react-admin';
 import { Typography } from '@mui/material';
 import PostTitle from './PostPageTitle';
 import PostContentField from './postContentField';

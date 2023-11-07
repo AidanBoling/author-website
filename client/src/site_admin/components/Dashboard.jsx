@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+'use client';
 import {
     Container,
     Box,
@@ -8,8 +8,7 @@ import {
     CardHeader,
 } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import { Button, useAuthState, useRedirect } from 'react-admin';
-import LoadingPage from './LoadingPage';
+import { Button } from 'react-admin';
 
 function Dashboard() {
     // const { isLoading, authenticated } = useAuthState();

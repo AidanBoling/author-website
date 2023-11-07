@@ -1,24 +1,13 @@
-import * as React from 'react';
+'use client';
 import { useState, useEffect } from 'react';
 import {
     useAuthenticated,
     useLogin,
     useNotify,
-    Notification,
     useAuthProvider,
     useRedirect,
 } from 'react-admin';
-import {
-    Container,
-    Paper,
-    Box,
-    Stack,
-    Form,
-    Typography,
-    Button,
-    TextField,
-    Divider,
-} from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SendIcon from '@mui/icons-material/Send';
 import OtpCodeField from './OtpCodeFieldSubmit';
@@ -83,15 +72,17 @@ function MethodInfo({ method }) {
 
 //TODO: fix so that the "back" button takes to login page, NOT dashboard
 
-function MyLoginPage({ theme }) {
+function MyLoginPage() {
     useAuthenticated(); // redirects to login if not authenticated
     // const { isLoading, authenticated } = useAuthState();
     // const methodInit = !isLoading
     const mfa = JSON.parse(localStorage.getItem('mfa'));
-    const [useMethod, setUseMethod] = useState(mfa && mfa.info.defaultMethod);
+    const useMethod = mfa && mfa.info.defaultMethod;
+    // TODO: Check setUseMethod, handleToggleMethod -- not being used atm
+    // const [useMethod, setUseMethod] = useState(mfa && mfa.info.defaultMethod);
     // const [otherMethod, setOtherMethod] = useState(mfa.info.defaultMethod)
     const [code, setCode] = useState('');
-    const [submitted, setSubmitted] = useState(true);
+    // const [submitted, setSubmitted] = useState(true);
 
     const notUsed = ['authApp', 'email'].filter(method => method !== useMethod);
     const otherMethod = notUsed[0];
@@ -102,12 +93,12 @@ function MyLoginPage({ theme }) {
     const notify = useNotify();
     const redirect = useRedirect();
     // const navigate = useNavigate();
-    const authProvider = useAuthProvider();
+    // const authProvider = useAuthProvider();
 
-    function handleToggleMethod() {
-        // Check: ...if otherMethod updates when useMethod updates
-        setUseMethod(otherMethod);
-    }
+    // function handleToggleMethod() {
+    //     // Check: ...if otherMethod updates when useMethod updates
+    //     setUseMethod(otherMethod);
+    // }
 
     useEffect(() => {
         // Delete mfa after 5 minutes (when it expires anyways)

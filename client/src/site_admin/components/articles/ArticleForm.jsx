@@ -1,15 +1,9 @@
 import {
-    ReferenceInput,
     TabbedForm,
     TextInput,
-    ImageInput,
+    // ImageInput,
     DateInput,
-    SelectInput,
-    ArrayInput,
-    SimpleFormIterator,
-    FormGroupContextProvider,
-    Labeled,
-    FunctionField,
+    // SelectInput,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';

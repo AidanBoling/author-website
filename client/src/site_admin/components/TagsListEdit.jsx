@@ -4,24 +4,15 @@ import {
     Chip,
     Menu,
     MenuItem,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Button,
-    Typography,
+    // Dialog,
+    // DialogTitle,
+    // DialogContent,
+    // DialogActions,
+    // TextField,
+    // Button,
+    // Typography,
 } from '@mui/material';
-import {
-    Labeled,
-    useGetMany,
-    useGetManyReference,
-    useRecordContext,
-    useUpdate,
-    useGetList,
-    useCreate,
-    ReferenceArrayField,
-} from 'react-admin';
+import { Labeled, useRecordContext, useUpdate, useGetList } from 'react-admin';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import EditIcon from '@mui/icons-material/Edit';
 import CreateTagDialog from './CreateTagDialog';
@@ -354,7 +345,8 @@ export default function TagsListEdit(props) {
         sort: { field: 'name', order: 'ASC' },
     });
 
-    const recordTagIdsSource = props.recordNew ? newRecordTags : record.tags;
+    // const recordTagIdsSource = props.recordNew ? newRecordTags : record.tags;
+    const recordTagIdsSource = record.tags;
     const tags =
         allTags && allTags.filter(tag => recordTagIdsSource.includes(tag.id));
     const unselectedTags =

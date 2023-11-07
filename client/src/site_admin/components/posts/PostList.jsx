@@ -11,14 +11,14 @@ import {
 } from 'react-admin';
 import TagField from '../TagField';
 
-const postFilters = [
-    <TextInput label="Search" source="q" alwaysOn />,
-    <BooleanInput label="Published" source="published" alwaysOn />,
-];
-
 //TODO: troubleshoot how to get search filter field to show search button...
 
 function PostList() {
+    const postFilters = [
+        <TextInput label="Search" source="q" alwaysOn />,
+        <BooleanInput label="Published" source="published" alwaysOn />,
+    ];
+
     return (
         <List
             filters={postFilters}

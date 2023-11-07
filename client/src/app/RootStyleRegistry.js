@@ -1,9 +1,4 @@
 'use client';
-
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { useServerInsertedHTML } from 'next/navigation';
-import { useState } from 'react';
 import { ThemeProvider } from 'next-themes';
 import NextAppDirEmotionCacheProvider from './EmotionCacheProvider';
 

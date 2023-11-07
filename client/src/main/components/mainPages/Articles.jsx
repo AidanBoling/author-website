@@ -1,10 +1,10 @@
 'use client';
 import { Stack } from '@mui/material';
-import { Suspense } from 'react';
-import { getList } from '@/main/api/getResourceItems';
+// import { Suspense } from 'react';
+// import { getList } from '@/main/api/getResourceItems';
 import ArticleCard from '@/main/components/cards/ArticleCard';
 import NoItemsMessage from '@/main/components/NoItemsMessage';
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
+// import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 
 function Articles(props) {
     // const { items, ...pageData } = props.pageData;

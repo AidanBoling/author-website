@@ -1,8 +1,8 @@
+'use client';
 import {
-    ReferenceInput,
     SimpleForm,
     TextInput,
-    ImageInput,
+    // ImageInput,
     DateInput,
     SelectInput,
     ArrayInput,

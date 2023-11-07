@@ -4,10 +4,10 @@ import {
     Resource,
     Layout,
     CustomRoutes,
-    ListGuesser,
-    EditGuesser,
-    ShowGuesser,
-    defaultTheme,
+    // ListGuesser,
+    // EditGuesser,
+    // ShowGuesser,
+    // defaultTheme,
     Authenticated,
 } from 'react-admin';
 import { Route } from 'react-router-dom';
@@ -23,7 +23,7 @@ import myDataProvider from '../dataProvider';
 import { authProvider } from '../authProvider';
 
 import CustomMenu from './CustomMenu';
-import CustomAppBar, { MyAppBar } from './CustomAppBar';
+import CustomAppBar from './CustomAppBar';
 import Dashboard from './Dashboard';
 
 //Resources
@@ -61,7 +61,7 @@ import AccessCodeForm from './AccessCodePage';
 // const lightTheme = customLightTheme;
 // const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
 
-function DashboardRequireAuth(props) {
+function DashboardRequireAuth() {
     return (
         <Authenticated requireAuth>
             <Dashboard />

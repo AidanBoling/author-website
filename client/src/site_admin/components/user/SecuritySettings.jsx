@@ -3,12 +3,10 @@ import { useState, useEffect } from 'react';
 import {
     Box,
     Stack,
-    Divider,
     Typography,
     Button,
     Switch,
     FormControlLabel,
-    Link,
     List,
     ListItem,
     ListItemText,
@@ -16,14 +14,12 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {
-    Title,
     useGetIdentity,
     useAuthenticated,
     useRedirect,
     useAuthProvider,
     useNotify,
 } from 'react-admin';
-import { useNavigate } from 'react-router-dom';
 import UserSettingsPageWrapper, {
     UserSettingsSection,
 } from './UserSettingsUtilities';
@@ -31,7 +27,7 @@ import UserForm from '../UserForm';
 
 export default function SecuritySettings() {
     useAuthenticated();
-    const { isLoading, error, data, refetch } = useGetIdentity();
+    const { error, data } = useGetIdentity();
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [showConfirm, setShowConfirm] = useState({
         changeDefault: false,

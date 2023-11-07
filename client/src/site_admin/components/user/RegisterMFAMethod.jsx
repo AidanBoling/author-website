@@ -1,8 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import {
-    Container,
-    Paper,
     Box,
     Stack,
     Divider,
@@ -15,7 +13,6 @@ import {
     FormControlLabel,
 } from '@mui/material';
 import {
-    Title,
     useGetIdentity,
     useAuthenticated,
     useAuthProvider,
@@ -27,9 +24,9 @@ import UserSettingsPageWrapper from './UserSettingsUtilities';
 import OtpCodeField from '../OtpCodeFieldSubmit';
 
 export default function RegisterMFAMethod() {
-    const { error, data, refetch } = useGetIdentity();
+    const { data, refetch } = useGetIdentity();
     const [methodSelected, setMethodSelected] = useState('');
-    const [submitPending, setSubmitPending] = useState(false);
+    // const [submitPending, setSubmitPending] = useState(false);
     const [otpData, setOtpData] = useState(null);
     // const [code, setCode] = useState('');
     const redirect = useRedirect();
@@ -99,7 +96,7 @@ export default function RegisterMFAMethod() {
 
     async function handleMethodSubmit(event) {
         event.preventDefault();
-        setSubmitPending(true);
+        // setSubmitPending(true);
         getOtpData();
     }
 
@@ -113,20 +110,20 @@ export default function RegisterMFAMethod() {
                 setOtpData(res);
                 refetch();
             })
-            .catch(error => {
+            .catch(() => {
                 notify('Error enabling method.', { type: 'error' });
                 redirect('/user/security');
             });
-        setSubmitPending(false);
+        // setSubmitPending(false);
         // notify('Success', { type: 'success' });
     }
 
     async function handleResendEmailCode() {
-        setSubmitPending(true);
+        // setSubmitPending(true);
         await authProvider
             .sendEmailCode()
             .catch(error => notify(error.message, { type: 'error' }));
-        setSubmitPending(false);
+        // setSubmitPending(false);
         notify('Success! Email sent with new code', { type: 'success' });
     }
 
@@ -171,8 +168,8 @@ export default function RegisterMFAMethod() {
                                                   }}>
                                                   1. Save the one-time password
                                                   to your authenticator app (see
-                                                  your app's documentation for
-                                                  instructions).
+                                                  your app&apos;s documentation
+                                                  for instructions).
                                               </Typography>
                                               <Typography ml="1.2rem" my="1rem">
                                                   Scan this QR code with your
@@ -318,7 +315,8 @@ export default function RegisterMFAMethod() {
 function VerificationCodeForm({ text, methodSelected, indent }) {
     const { refetch } = useGetIdentity();
     const [code, setCode] = useState('');
-    const [submitPending, setSubmitPending] = useState(false);
+    // TODO: Turn all the submitPending back on when add loading button
+    // const [submitPending, setSubmitPending] = useState(false);
 
     const authProvider = useAuthProvider();
     const notify = useNotify();
@@ -327,7 +325,7 @@ function VerificationCodeForm({ text, methodSelected, indent }) {
 
     async function handleCodeSubmit(event) {
         event.preventDefault();
-        setSubmitPending(true);
+        // setSubmitPending(true);
 
         await authProvider.settings
             .verifyMFAMethod(methodSelected, code)
@@ -339,7 +337,7 @@ function VerificationCodeForm({ text, methodSelected, indent }) {
                 notify('Success! 2FA method verified', { type: 'success' });
             })
             .catch(error => notify(error.message, { type: 'error' }));
-        setSubmitPending(false);
+        // setSubmitPending(false);
     }
     return (
         <Box>

@@ -1,12 +1,11 @@
 {
     "compilerOptions": {
-      "baseUrl": "src/",
-      "paths": {
-        "@/styles/*": ["styles/*"],
-        "@/main/*": ["main/*"],
-        "@/admin/*": ["site_admin/*"],
-      }
+        "baseUrl": "src/",
+        "paths": {
+            "@/styles/*": ["styles/*"],
+            "@/main/*": ["main/*"],
+            "@/admin/*": ["site_admin/*"]
+        }
     }
-  }
-  
-  
+    // "exclude": ["node_modules"]
+}

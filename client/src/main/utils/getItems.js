@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import Articles from '@/main/components/mainPages/Articles';
 import { getList } from '@/main/api/getResourceItems';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
-import EventCard from '@/main/components/cards/EventCard';
 
 export default async function GetArticles() {
     const articles = await getList('articles');

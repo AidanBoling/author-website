@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Link as MuiLink, CardMedia } from '@mui/material';
-import OpenInNewSharpIcon from '@mui/icons-material/OpenInNewSharp';
+// import OpenInNewSharpIcon from '@mui/icons-material/OpenInNewSharp';
 import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
 
 function linkAriaLabel(props) {

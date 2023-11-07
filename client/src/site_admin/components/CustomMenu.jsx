@@ -1,8 +1,8 @@
 'use client';
 import { Menu } from 'react-admin';
-import BookIcon from '@mui/icons-material/Book';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+// import BookIcon from '@mui/icons-material/Book';
+// import NewspaperIcon from '@mui/icons-material/Newspaper';
+// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
 
 export default function CustomMenu() {

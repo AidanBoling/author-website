@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+// import { useState, useEffect } from 'react';
+// import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
-import { getById } from '@/main/api/getResourceItems';
-import { notFound } from 'next/navigation';
+// import { getById } from '@/main/api/getResourceItems';
+// import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
 function BookPage({ book }) {

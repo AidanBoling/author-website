@@ -1,8 +1,6 @@
 import {
     SimpleForm,
     TextInput,
-    DateInput,
-    SelectInput,
     ArrayInput,
     SimpleFormIterator,
     DateTimeInput,

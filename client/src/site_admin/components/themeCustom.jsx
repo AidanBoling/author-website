@@ -1,11 +1,4 @@
 import { defaultTheme, defaultLightTheme, defaultDarkTheme } from 'react-admin';
-// import { green, indigo } from '@mui/material/colors';
-import green from '@mui/material/colors/green';
-import indigo from '@mui/material/colors/indigo';
-import teal from '@mui/material/colors/indigo';
-
-import pink from '@mui/material/colors/pink';
-import red from '@mui/material/colors/red';
 import { grey } from '@mui/material/colors';
 
 export const customThemeInvariants = {

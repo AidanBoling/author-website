@@ -1,17 +1,10 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useTheme as useMuiTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import {
-    Container,
-    Box,
-    Paper,
-    Typography,
-    Button,
-    IconButton,
-} from '@mui/material';
+import { Box, Paper, Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
@@ -68,7 +61,7 @@ export default function ResourcesGalleryContainer(props) {
     const sideScroll = (element, speed, distance, step) => {
         let scrollAmount = 0;
 
-        const scrollMax = element.scrollWidth - element.offsetWidth;
+        // const scrollMax = element.scrollWidth - element.offsetWidth;
         // let setLeft = disableButton.left;
         // let setRight = disableButton.right;
 

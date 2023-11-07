@@ -1,6 +1,6 @@
 'use client';
-import { Box, GlobalStyles } from '@mui/material';
-import { css } from '@emotion/react';
+import { Box } from '@mui/material';
+// import { css } from '@emotion/react';
 
 export default function Background(props) {
     const footerHeight = '200px';

@@ -1,29 +1,13 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import {
-    useAuthenticated,
-    useLogin,
-    useNotify,
-    Notification,
-    useAuthProvider,
-    useRedirect,
-} from 'react-admin';
-import {
-    Container,
-    Paper,
-    Box,
-    Stack,
-    Form,
-    Typography,
-    Button,
-    TextField,
-} from '@mui/material';
-import { redirectDocument } from 'react-router-dom';
+'use client';
+import { useState } from 'react';
+import { useAuthProvider } from 'react-admin';
+import { Stack, Typography, Button, TextField } from '@mui/material';
+// import { redirectDocument } from 'react-router-dom';
 import FormPageWrapper from './FormNoLayoutPageWrapper';
 
 //TODO: update the form to use the OtpCodeField component
 
-export default function AccessCodeForm({ theme }) {
+export default function AccessCodeForm() {
     const [code, setCode] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 

@@ -118,7 +118,7 @@ function handleMFALogin(request) {
     return fetch(request)
         .then(response => parseResponse(response))
         .then(response => handleResponse(response))
-        .then(data => {
+        .then(() => {
             // console.log('MFA response: ', data);
             handleIsAuthenticated();
         })
@@ -250,7 +250,8 @@ export const authProvider = {
             });
 
             try {
-                const data = await fetch(request)
+                // const data =
+                await fetch(request)
                     .then(response => parseResponse(response))
                     .then(response => handleResponse(response));
                 return Promise.resolve();
@@ -293,7 +294,8 @@ export const authProvider = {
                 const request = setRequest(path, null, 'GET', header);
 
                 try {
-                    const data = await fetch(request)
+                    // const data =
+                    await fetch(request)
                         .then(response => parseResponse(response))
                         .then(response => handleResponse(response));
                     console.log('Success');
@@ -328,7 +330,8 @@ export const authProvider = {
                 // send ok, trigger logout.
 
                 try {
-                    const response = await fetch(request)
+                    // const response =
+                    await fetch(request)
                         .then(response => parseResponse(response))
                         .then(response => handleResponse(response))
                         .then(() => Promise.resolve());
@@ -515,7 +518,8 @@ export const authProvider = {
 
         // Only logging server error, b/c not taking actions on success/failure
         try {
-            const data = await fetch(request)
+            // const data =
+            await fetch(request)
                 .then(response => parseResponse(response))
                 .then(response => handleResponse(response));
         } catch (error) {

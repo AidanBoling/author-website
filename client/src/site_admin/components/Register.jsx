@@ -1,22 +1,17 @@
-import * as React from 'react';
+'use client';
 import { useState, useEffect } from 'react';
-import {
-    useAuthenticated,
-    useNotify,
-    Notification,
-    useAuthProvider,
-    useRedirect,
-} from 'react-admin';
-import { Container, Paper, Box, Stack, Form, Typography } from '@mui/material';
+import { useAuthenticated, useAuthProvider } from 'react-admin';
+import { Box, Typography } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import LoadingButton from '@mui/lab/LoadingButton';
-import SendIcon from '@mui/icons-material/Send';
+// import LoadingButton from '@mui/lab/LoadingButton';
+// import SendIcon from '@mui/icons-material/Send';
 import FormPageWrapper from './FormNoLayoutPageWrapper';
 import UserForm from './UserForm';
 
 export default function Register() {
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = useSearchParams();
+    // const [searchParams, setSearchParams] = useSearchParams();
     const params = {
         token: searchParams.get('token'),
         id: searchParams.get('id'),

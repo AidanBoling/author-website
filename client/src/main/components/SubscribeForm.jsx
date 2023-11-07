@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 // import Image from 'next/image';
-import { Box, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
 import { useForm } from 'react-hook-form';
@@ -20,21 +20,21 @@ export default function SubscribeForm(props) {
         console.log('Data:\n', formData);
         setSubscribeError(false);
 
+        function submitAction(res) {
+            // console.log(res);
+
+            if (res.status === 200) {
+                formContext.reset();
+                setSubscribeSuccessful(true);
+            } else {
+                setSubscribeError(true);
+            }
+        }
+
         try {
             sendFormData(formData, 'subscribe').then(res => {
                 submitAction(res);
             });
-
-            function submitAction(res) {
-                // console.log(res);
-
-                if (res.status === 200) {
-                    formContext.reset();
-                    setSubscribeSuccessful(true);
-                } else {
-                    setSubscribeError(true);
-                }
-            }
         } catch (error) {
             console.error('Error ', error);
             setSubscribeError(true);
@@ -101,8 +101,8 @@ export default function SubscribeForm(props) {
                                 <Typography color="error">
                                     Sorry, there was an error subscribing to the
                                     newsletter. Try again in a moment, or email
-                                    me at planetgoatpress@gmail.com and I'll add
-                                    you the old fashioned way.`
+                                    me at email@email.com and I&apos;ll add you
+                                    the old fashioned way.
                                 </Typography>
                             </Grid>
                         )}

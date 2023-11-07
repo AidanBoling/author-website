@@ -1,24 +1,13 @@
 import {
-    ReferenceField,
     Show,
     SimpleShowLayout,
     TextField,
-    RichTextField,
-    DateField,
-    FunctionField,
     Datagrid,
-    ReferenceArrayField,
-    Labeled,
     useRecordContext,
-    useListContext,
-    Pagination,
     ListBase,
     WithListContext,
-    SimpleList,
-    WithRecord,
 } from 'react-admin';
-import { Box, Typography, Button, Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Typography, Stack } from '@mui/material';
 
 const relatedResources = [
     { name: 'articles', label: 'Articles' },
@@ -30,7 +19,7 @@ function PageTitle() {
     const record = useRecordContext();
     // the record can be empty while loading
     if (!record) return null;
-    return <span>Tag: "{record.name}"</span>;
+    return <span>Tag: &quot;{record.name}&quot;</span>;
 }
 
 function TagColorCircle() {
@@ -61,7 +50,7 @@ function LinkedRecordsList({ refName }) {
         <>
             <ListBase resource={refName} filter={{ tags: record._id }}>
                 <WithListContext
-                    render={({ isLoading, data, total, defaultTitle }) =>
+                    render={({ isLoading, total, defaultTitle }) =>
                         !isLoading &&
                         total > 0 && (
                             <Box>
@@ -105,7 +94,7 @@ function LinkedRecordsList({ refName }) {
 }
 
 function TagShow() {
-    const record = useRecordContext();
+    // const record = useRecordContext();
     return (
         <Show title={<PageTitle />} emptyWhileLoading>
             <SimpleShowLayout>
@@ -118,8 +107,8 @@ function TagShow() {
                     />
                 </Box>
                 <Stack gap={4}>
-                    {relatedResources.map(resource => (
-                        <LinkedRecordsList refName={resource.name} />
+                    {relatedResources.map((resource, i) => (
+                        <LinkedRecordsList key={i} refName={resource.name} />
                     ))}
                 </Stack>
             </SimpleShowLayout>

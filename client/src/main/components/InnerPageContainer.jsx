@@ -1,9 +1,9 @@
 'use client';
 import { Container } from '@mui/material';
 
-export const pagePaddingX = { sm: '1rem', md: '2rem' };
-
 function InnerPageContainer(props) {
+    const pagePaddingX = { sm: '1rem', md: '2rem' };
+
     return (
         <Container
             className={props.className}
@@ -13,8 +13,12 @@ function InnerPageContainer(props) {
                 my: '2.5vh',
                 px: props.usePaper
                     ? 0
-                    : { sm: pagePaddingX.sm, md: pagePaddingX.md },
-                px: { xs: '.25rem' },
+                    : {
+                          xs: '.25rem',
+                          sm: pagePaddingX.sm,
+                          md: pagePaddingX.md,
+                      },
+                // px: { xs: '.25rem' },
                 ...props.sx,
             }}>
             {props.children}

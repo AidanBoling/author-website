@@ -1,19 +1,11 @@
 'use client';
 import { useState } from 'react';
-import {
-    Box,
-    Stack,
-    Typography,
-    Button,
-    FormControlLabel,
-    Link,
-    TextField,
-} from '@mui/material';
-import { useAuthProvider, useNotify, useGetIdentity } from 'react-admin';
+import { Box, Stack, Button, TextField } from '@mui/material';
+import { useNotify, useGetIdentity } from 'react-admin';
 
 export default function UserForm(props) {
     const { refetch } = useGetIdentity();
-    const [submitPending, setSubmitPending] = useState(false);
+    // const [submitPending, setSubmitPending] = useState(false);
     const [values, setValues] = useState({
         name: '',
         email: '',
@@ -23,7 +15,7 @@ export default function UserForm(props) {
     });
     const [errorMsg, setErrorMsg] = useState({});
     const notify = useNotify();
-    const authProvider = useAuthProvider();
+    // const authProvider = useAuthProvider();
 
     function handleChange(event) {
         const { id, value } = event.target;
@@ -42,9 +34,9 @@ export default function UserForm(props) {
         }
     }
 
-    async function handleSubmit(event, field) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        setSubmitPending(true);
+        // setSubmitPending(true);
         // ...
         console.log('Form values on submit: ', values);
         await props
@@ -66,7 +58,7 @@ export default function UserForm(props) {
                 console.log(error.message);
                 notify(error.message, { type: 'error' });
             });
-        setSubmitPending(false);
+        // setSubmitPending(false);
         if (props.refetchOnSubmit) {
             refetch();
         }

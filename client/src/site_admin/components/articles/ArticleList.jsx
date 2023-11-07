@@ -1,7 +1,7 @@
+'use client';
 import {
     Datagrid,
     List,
-    ReferenceField,
     TextField,
     TextInput,
     EditButton,
@@ -9,10 +9,9 @@ import {
     UrlField,
     ReferenceArrayField,
     SingleFieldList,
-    ChipField,
-    FunctionField,
+    SimpleList,
 } from 'react-admin';
-import { useMediaQuery, Chip } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
 const articleFilters = [<TextInput label="Search" source="q" alwaysOn />];

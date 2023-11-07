@@ -1,24 +1,15 @@
 'use client';
 import { useState } from 'react';
 import {
-    Container,
-    Paper,
     Box,
     Stack,
-    Divider,
     Typography,
     Button,
-    ToggleButton,
     Switch,
     FormControlLabel,
     Link,
 } from '@mui/material';
-import {
-    Title,
-    useGetIdentity,
-    useAuthenticated,
-    useAuthProvider,
-} from 'react-admin';
+import { useGetIdentity, useAuthenticated, useAuthProvider } from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
 import UserSettingsPageWrapper, {
     UserSettingsSection,
@@ -27,7 +18,7 @@ import UserForm from '../UserForm';
 
 // TODO (later): User info section into a List (mui)
 export default function AccountPage() {
-    const { isLoading, error, data, refetch } = useGetIdentity();
+    const { data } = useGetIdentity();
     const [nameEdit, setNameEdit] = useState(false);
     const authProvider = useAuthProvider();
     useAuthenticated();

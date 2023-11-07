@@ -1,5 +1,4 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -8,14 +7,12 @@ import {
     Paper,
     Stack,
     Typography,
-    Link as MuiLink,
     Button,
 } from '@mui/material';
 // import { useTheme, alpha, styled } from '@mui/material/styles';
 // import useMediaQuery from '@mui/material/useMediaQuery';
 // import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
-import { getList } from '../../api/getResourceItems';
 import ResourceGalleryCard from '../cards/ResourceGalleryCard';
 import ResourcesGalleryContainer from '../HomeResourcesGalleryContainer';
 
@@ -57,14 +54,14 @@ function Home(props) {
         md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
     };
 
-    const galleryContainerSX = {
-        display: 'flex',
-        gap: '1.5rem',
-        flexWrap: 'wrap',
-        border: '1px solid primary.main',
-        borderRadius: '.4rem',
-        padding: '2rem',
-    };
+    // const galleryContainerSX = {
+    //     display: 'flex',
+    //     gap: '1.5rem',
+    //     flexWrap: 'wrap',
+    //     border: '1px solid primary.main',
+    //     borderRadius: '.4rem',
+    //     padding: '2rem',
+    // };
 
     // function getAndSortResourceByDate(resourceName, returnMaxResults) {
     //     const resourceList = useResource(resourceName);
@@ -133,7 +130,7 @@ function Home(props) {
                             component="span"
                             color="primary.dark">
                             {' '}
-                            This is what I'm all about.
+                            This is what I&apos;m all about.
                         </Typography>
                     </Typography>
                 </Box>

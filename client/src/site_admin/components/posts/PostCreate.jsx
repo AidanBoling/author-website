@@ -1,18 +1,12 @@
 import {
-    Edit,
     Create,
-    ReferenceInput,
     ReferenceArrayInput,
     AutocompleteArrayInput,
     SimpleForm,
     TextInput,
     BooleanInput,
-    useRecordContext,
-    useChoicesContext,
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
-import { Box, Typography } from '@mui/material';
-import PostForm from './PostForm';
 import { TagChip } from '../TagField';
 import CreateTagDialog from '../CreateTagDialog';
 

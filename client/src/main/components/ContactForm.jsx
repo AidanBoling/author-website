@@ -2,7 +2,7 @@
 import { useState } from 'react';
 // import Link from 'next/link';
 // import Image from 'next/image';
-import { Box, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
 import { useForm } from 'react-hook-form';
@@ -25,21 +25,21 @@ export default function ContactForm() {
         console.log('Data:\n', formData);
         setSendError(false);
 
+        function submitAction(res) {
+            // console.log(res);
+
+            if (res.status === 200) {
+                formContext.reset();
+                setSendSuccessful(true);
+            } else {
+                setSendError(true);
+            }
+        }
+
         try {
             sendFormData(formData, 'contact').then(res => {
                 submitAction(res);
             });
-
-            function submitAction(res) {
-                // console.log(res);
-
-                if (res.status === 200) {
-                    formContext.reset();
-                    setSendSuccessful(true);
-                } else {
-                    setSendError(true);
-                }
-            }
         } catch (error) {
             console.error('Error ', error);
             setSendError(true);

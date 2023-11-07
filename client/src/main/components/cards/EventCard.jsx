@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DOMPurify from 'dompurify';
 import Link from 'next/link';
 import {
@@ -10,7 +10,6 @@ import {
     Box,
     Typography,
     Button,
-    IconButton,
     Collapse,
     List,
     ListItem,

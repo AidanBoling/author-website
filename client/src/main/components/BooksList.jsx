@@ -1,8 +1,6 @@
-import { Suspense } from 'react';
 import { getList } from '@/main/api/getResourceItems';
 import BookCard from '@/main/components/cards/BookCard';
 import NoItemsMessage from '@/main/components/NoItemsMessage';
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 
 export default async function BooksList() {
     const books = await getList('books');

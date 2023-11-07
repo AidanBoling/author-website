@@ -1,4 +1,4 @@
-import { Edit, SimpleForm, TextInput } from 'react-admin';
+import { Edit } from 'react-admin';
 import PageTitle from '../PageTitle';
 import BookForm from './BookForm';
 

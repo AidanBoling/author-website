@@ -1,16 +1,16 @@
 'use client';
 // import '@/main/styles/styles.css';
 
-import React, { useState, useEffect, useMemo, createContext } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState, useEffect } from 'react';
+// import useMediaQuery from '@mui/material/useMediaQuery';
 import {
     ThemeProvider,
-    createTheme,
-    responsiveFontSizes,
-    alpha,
+    // createTheme,
+    // responsiveFontSizes,
+    // alpha,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import getDesignTokens from '@/main/components/style/theme';
+// import getDesignTokens from '@/main/components/style/theme';
 import { darkTheme, lightTheme } from '@/main/components/style/theme';
 import { useTheme } from 'next-themes';
 

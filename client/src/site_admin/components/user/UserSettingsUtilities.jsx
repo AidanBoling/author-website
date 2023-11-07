@@ -7,7 +7,7 @@ import {
     Divider,
     Typography,
 } from '@mui/material';
-import { Title, useGetIdentity, useAuthenticated } from 'react-admin';
+import { Title, useGetIdentity } from 'react-admin';
 import LoadingPage from '../LoadingPage';
 
 export default function UserSettingsPageWrapper(props) {

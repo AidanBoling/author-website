@@ -1,19 +1,15 @@
-import * as React from 'react';
+'use client';
 import { useState, useEffect } from 'react';
-import {
-    useAuthenticated,
-    useNotify,
-    useAuthProvider,
-    useRedirect,
-} from 'react-admin';
-import { Box, Stack, Typography } from '@mui/material';
+import { useAuthenticated, useAuthProvider } from 'react-admin';
+import { Box, Typography } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import FormPageWrapper from './FormNoLayoutPageWrapper';
 import UserForm from './UserForm';
 
 export default function PasswordReset() {
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = useSearchParams();
+    // const [searchParams, setSearchParams] = useSearchParams();
     const params = {
         token: searchParams.get('token'),
         id: searchParams.get('id'),

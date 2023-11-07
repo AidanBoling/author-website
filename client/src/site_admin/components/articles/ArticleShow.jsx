@@ -1,5 +1,4 @@
 import {
-    ReferenceField,
     Show,
     TabbedShowLayout,
     TextField,
@@ -7,7 +6,6 @@ import {
     DateField,
     ImageField,
     UrlField,
-    Labeled,
 } from 'react-admin';
 import ArticleTitle from './ArticlePageTitle';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';

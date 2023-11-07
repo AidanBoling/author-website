@@ -1,5 +1,4 @@
-import { Edit, SimpleForm, TextInput } from 'react-admin';
-import { RichTextInput } from 'ra-input-rich-text';
+import { Edit } from 'react-admin';
 import ArticleTitle from './ArticlePageTitle';
 import ArticleForm from './ArticleForm';
 

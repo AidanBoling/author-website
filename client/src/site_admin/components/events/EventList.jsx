@@ -7,7 +7,7 @@ import {
     DateField,
 } from 'react-admin';
 
-const eventFilters = [<TextInput label="Search" source="q" alwaysOn />];
+const eventFilters = <TextInput label="Search" source="q" alwaysOn />;
 
 function EventList() {
     return (
