@@ -26,6 +26,9 @@ const arrayItemsAreAlphanumStr = array => {
     return true;
 };
 
+// TODO: custom validator that calls a function from tags
+// to return all tag names, and use that list to validate "tags" value
+
 // const sortOrderIsValid = array => {
 //     const sortOrder = array[1].toLowerCase();
 //     if (sortOrder === 'asc' || sortOrder === 'desc') return true;
@@ -52,7 +55,7 @@ export const validationSchema = {
 
     resources: {
         page: {
-            in: ['params'],
+            in: ['params', 'query'],
             toInt: true,
             isNumeric: true,
             isLength: {
@@ -61,17 +64,17 @@ export const validationSchema = {
         },
 
         limit: {
-            in: ['params'],
-            isIn: { options: [['2', '10', '20', '30']] },
+            in: ['params', 'query'],
+            isIn: { options: [['2', '5', '10', '20', '30']] },
         },
 
         category: {
-            in: ['params'],
+            in: ['params', 'query'],
             isIn: { options: [['fiction', 'non-fiction']] },
         },
 
         tags: {
-            in: ['params'],
+            in: ['params', 'query'],
             isArray: true,
             custom: { options: arrayItemsAreAlphanumStr },
             //     isIn: { options: [['', '']] },

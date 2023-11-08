@@ -17,7 +17,7 @@ async function getFilteredResourceList(
             : { ...query };
     const sort = defaultSort;
 
-    console.log(`Initial query: \n`, query);
+    console.log(`Query: \n`, query);
     console.log(`Skip: ${skip}\nLimit: ${limit}`);
     console.log('Filter: ', filter);
 
@@ -29,7 +29,7 @@ async function getFilteredResourceList(
         .exec();
 
     if (items) {
-        console.log(items);
+        console.log('Found items: ', items.length);
         const count = await model.estimatedDocumentCount(filter);
         // const count = items.length;
         const results = {

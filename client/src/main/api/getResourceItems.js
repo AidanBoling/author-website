@@ -1,5 +1,6 @@
 import { BASE_URL } from './config';
 import { cache } from 'react';
+// const BASE_URL = process.env.BASE_API_URL
 
 // TEST, get lists with preload, and cache:
 export const preloadGetList = (resource, params) => {
@@ -10,10 +11,7 @@ export const getListCache = cache(async (resource, params) => {
     let query = '';
     if (params) {
         const queryString = new URLSearchParams(params).toString();
-        // console.log(queryString);
-        // const queryString = Object.keys(params)
-        //     .map(key => key + '=' + params[key])
-        //     .join('&');
+        console.log(queryString);
         query = `?${queryString}`;
     }
 
@@ -28,10 +26,7 @@ export async function getList(resource, params) {
     let query = '';
     if (params) {
         const queryString = new URLSearchParams(params).toString();
-        // console.log(queryString);
-        // const queryString = Object.keys(params)
-        //     .map(key => key + '=' + params[key])
-        //     .join('&');
+        console.log(queryString);
         query = `?${queryString}`;
     }
 
