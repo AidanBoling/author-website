@@ -128,13 +128,15 @@ app.use(
     })
 );
 
+const BASE = process.env.BASE_API_PATH;
+
 // Checks sessions for user object; if not found, then not authenticated, routing process halted
-app.use('/admin/auth', passport.session(), checkAuth);
+app.use(BASE + 'admin/auth', passport.session(), checkAuth);
 initializePassport(app, passport);
 
 // MAIN APP
 
-app.get('/', (req, res) => {
+app.get(BASE, (req, res) => {
     res.send('<h1>Hello, World</h1>');
 });
 
@@ -145,7 +147,7 @@ const listPageValidation = {
     limit: validationSchema.resources.limit,
 };
 
-app.get('/posts', checkSchema({ ...listPageValidation }), (req, res) => {
+app.get(BASE + 'posts', checkSchema({ ...listPageValidation }), (req, res) => {
     const overrides = { filter: { published: true } };
     const defaultSort = { datePublished: -1 };
 
@@ -157,7 +159,7 @@ app.get('/posts', checkSchema({ ...listPageValidation }), (req, res) => {
 });
 
 app.get(
-    '/posts/id/:id',
+    BASE + 'posts/id/:id',
     checkSchema({ id: validationSchema.id }),
     async (req, res) => {
         try {
@@ -171,7 +173,7 @@ app.get(
 // -- Books routes
 
 app.get(
-    '/books',
+    BASE + 'books',
     checkSchema({
         ...listPageValidation,
         category: validationSchema.resources.category,
@@ -188,7 +190,7 @@ app.get(
 );
 
 app.get(
-    '/books/id/:id',
+    BASE + 'books/id/:id',
     checkSchema({ id: validationSchema.id }),
     async (req, res) => {
         try {
@@ -201,18 +203,22 @@ app.get(
 
 // -- Articles routes
 
-app.get('/articles', checkSchema({ ...listPageValidation }), (req, res) => {
-    const defaultSort = { datePublished: -1 };
+app.get(
+    BASE + 'articles',
+    checkSchema({ ...listPageValidation }),
+    (req, res) => {
+        const defaultSort = { datePublished: -1 };
 
-    try {
-        getFilteredResourceList(Article, req, res, defaultSort);
-    } catch (error) {
-        handleGetItemsError(error, res);
+        try {
+            getFilteredResourceList(Article, req, res, defaultSort);
+        } catch (error) {
+            handleGetItemsError(error, res);
+        }
     }
-});
+);
 
 app.get(
-    '/articles/id/:id',
+    BASE + 'articles/id/:id',
     checkSchema({ id: validationSchema.id }),
     async (req, res) => {
         try {
@@ -226,15 +232,19 @@ app.get(
 // -- Events routes
 
 //TODO: Tweak events resource (here, controller, frontend, etc)
-app.get('/events', checkSchema({ ...listPageValidation }), async (req, res) => {
-    try {
-        const allEvents = await Event.find();
-        console.log(allEvents);
-        res.json(allEvents);
-    } catch {
-        handleGetItemsError(error, res);
+app.get(
+    BASE + 'events',
+    checkSchema({ ...listPageValidation }),
+    async (req, res) => {
+        try {
+            const allEvents = await Event.find();
+            console.log(allEvents);
+            res.json(allEvents);
+        } catch {
+            handleGetItemsError(error, res);
+        }
     }
-});
+);
 
 // -- Form routes
 
@@ -248,7 +258,7 @@ const mainSiteFormLimiter = rateLimit({
 });
 
 app.post(
-    '/form/contact',
+    BASE + 'form/contact',
     mainSiteFormLimiter,
     checkSchema({
         name: validationSchema.textShort,
@@ -260,7 +270,7 @@ app.post(
 );
 
 app.post(
-    '/form/subscribe',
+    BASE + 'form/subscribe',
     mainSiteFormLimiter,
     checkSchema({ email: validationSchema.email }),
     handleValidationErrors,
@@ -296,18 +306,18 @@ const adminLimitWarn = rateLimit({
     },
 });
 
-app.use('/admin', adminLimitWarn, adminLimiter);
+app.use(BASE + 'admin', adminLimitWarn, adminLimiter);
 
 // -- POSTS routes
 
-app.use('/admin/posts', passport.session(), checkAuth);
+app.use(BASE + 'admin/posts', passport.session(), checkAuth);
 
 // create one
-app.post('/admin/posts', postController.create);
+app.post(BASE + 'admin/posts', postController.create);
 
 // get a list
 app.get(
-    '/admin/posts',
+    BASE + 'admin/posts',
     parseQuery,
     checkSchema(validationSchema.adminQuery),
     postController.fetch
@@ -315,129 +325,129 @@ app.get(
 
 // get one
 app.get(
-    '/admin/posts/:id',
+    BASE + 'admin/posts/:id',
     checkSchema({ id: validationSchema.id }),
     postController.get
 );
 
 // update one
 app.put(
-    '/admin/posts/:id',
+    BASE + 'admin/posts/:id',
     checkSchema({ id: validationSchema.id }),
     postController.update
 );
 
 // delete one
 app.delete(
-    '/admin/posts/:id',
+    BASE + 'admin/posts/:id',
     checkSchema({ id: validationSchema.id }),
     postController.delete
 );
 
 // -- BOOKS routes
 
-app.use('/admin/books', passport.session(), checkAuth);
+app.use(BASE + 'admin/books', passport.session(), checkAuth);
 
-app.post('/admin/books', bookController.create);
+app.post(BASE + 'admin/books', bookController.create);
 app.get(
-    '/admin/books',
+    BASE + 'admin/books',
     parseQuery,
     checkSchema(validationSchema.adminQuery),
     bookController.fetch
 );
 app.get(
-    '/admin/books/:id',
+    BASE + 'admin/books/:id',
     checkSchema({ id: validationSchema.id }),
     bookController.get
 );
 app.put(
-    '/admin/books/:id',
+    BASE + 'admin/books/:id',
     checkSchema({ id: validationSchema.id }),
     bookController.update
 );
 app.delete(
-    '/admin/books/:id',
+    BASE + 'admin/books/:id',
     checkSchema({ id: validationSchema.id }),
     bookController.delete
 );
 
 // -- ARTICLES routes
 
-app.use('/admin/articles', passport.session(), checkAuth);
+app.use(BASE + 'admin/articles', passport.session(), checkAuth);
 
-app.post('/admin/articles', articleController.create);
+app.post(BASE + 'admin/articles', articleController.create);
 app.get(
-    '/admin/articles',
+    BASE + 'admin/articles',
     parseQuery,
     checkSchema(validationSchema.adminQuery),
     articleController.fetch
 );
 app.get(
-    '/admin/articles/:id',
+    BASE + 'admin/articles/:id',
     checkSchema({ id: validationSchema.id }),
     articleController.get
 );
 app.put(
-    '/admin/articles/:id',
+    BASE + 'admin/articles/:id',
     checkSchema({ id: validationSchema.id }),
     articleController.update
 );
 app.delete(
-    '/admin/articles/:id',
+    BASE + 'admin/articles/:id',
     checkSchema({ id: validationSchema.id }),
     articleController.delete
 );
 
 // -- EVENTS routes
 
-app.use('/admin/events', passport.session(), checkAuth);
+app.use(BASE + 'admin/events', passport.session(), checkAuth);
 
-app.post('/admin/events', eventController.create);
+app.post(BASE + 'admin/events', eventController.create);
 app.get(
-    '/admin/events',
+    BASE + 'admin/events',
     parseQuery,
     checkSchema(validationSchema.adminQuery),
     eventController.fetch
 );
 app.get(
-    '/admin/events/:id',
+    BASE + 'admin/events/:id',
     checkSchema({ id: validationSchema.id }),
     eventController.get
 );
 app.put(
-    '/admin/events/:id',
+    BASE + 'admin/events/:id',
     checkSchema({ id: validationSchema.id }),
     eventController.update
 );
 app.delete(
-    '/admin/events/:id',
+    BASE + 'admin/events/:id',
     checkSchema({ id: validationSchema.id }),
     eventController.delete
 );
 
 // -- TAGS routes
 
-app.use('/admin/tags', passport.session(), checkAuth);
+app.use(BASE + 'admin/tags', passport.session(), checkAuth);
 
-app.post('/admin/tags', tagController.create);
+app.post(BASE + 'admin/tags', tagController.create);
 app.get(
-    '/admin/tags',
+    BASE + 'admin/tags',
     parseQuery,
     checkSchema(validationSchema.adminQuery),
     tagController.fetch
 );
 app.get(
-    '/admin/tags/:id',
+    BASE + 'admin/tags/:id',
     checkSchema({ id: validationSchema.id }),
     tagController.get
 );
 app.put(
-    '/admin/tags/:id',
+    BASE + 'admin/tags/:id',
     checkSchema({ id: validationSchema.id }),
     tagController.update
 );
 app.delete(
-    '/admin/tags/:id',
+    BASE + 'admin/tags/:id',
     checkSchema({ id: validationSchema.id }),
     tagController.delete
 );
@@ -465,7 +475,7 @@ const adminUserFormsLimiter = rateLimit({
 
 // Initiate register or password reset using admin-created temp code
 app.post(
-    '/admin/use/code',
+    BASE + 'admin/use/code',
     accessCodeLimiter,
     checkSchema({ code: validationSchema.accessCode }),
     handleValidationErrors,
@@ -476,7 +486,7 @@ app.post(
 // User Registration (--> user account pwd set):
 
 app.use(
-    '/admin/mod',
+    BASE + 'admin/mod',
     checkSchema({
         id: validationSchema.id,
         token: validationSchema.token,
@@ -487,10 +497,10 @@ app.use(
 );
 
 // Check token
-app.post('/admin/mod/checkAuth', authController.authCheck);
+app.post(BASE + 'admin/mod/checkAuth', authController.authCheck);
 
 app.post(
-    '/admin/mod/register',
+    BASE + 'admin/mod/register',
     adminUserFormsLimiter,
     checkSchema({
         email: validationSchema.email,
@@ -504,7 +514,7 @@ app.post(
 
 // User Password Reset
 app.post(
-    '/admin/mod/password-reset',
+    BASE + 'admin/mod/password-reset',
     adminUserFormsLimiter,
     checkSchema({
         email: validationSchema.email,
@@ -519,13 +529,13 @@ app.post(
 // User MFA enable, setup, etc.
 
 // Checks that user's most recent login was <15min for all security settings routes
-app.use('/admin/auth/settings', loginTimeCheck.fifteen);
+app.use(BASE + 'admin/auth/settings', loginTimeCheck.fifteen);
 
 // Route triggered when users click "enable mfa" (and select method to register),
 // OR when users "register 2nd method" (if already enabled)
 // CHECK (later): Need more security (like sending a jwt token)? Or is 10 min login check sufficient?
 app.post(
-    '/admin/auth/settings/mfa/setup',
+    BASE + 'admin/auth/settings/mfa/setup',
     checkSchema({
         method: validationSchema.method,
     }),
@@ -536,7 +546,7 @@ app.post(
 // Triggered when users submit otp code to verify a new mfa method
 // TODO (later): add limiter + admin authprovider tweaks so user can try entering code up to two(?) times before booted to login
 app.post(
-    '/admin/auth/settings/mfa/verify',
+    BASE + 'admin/auth/settings/mfa/verify',
     checkSchema({
         method: validationSchema.method,
         otpCode: validationSchema.otpCode,
@@ -545,10 +555,10 @@ app.post(
     userController.verifyMfaMethod
 );
 
-app.get('/admin/auth/settings/mfa/disable', userController.disableMfa);
+app.get(BASE + 'admin/auth/settings/mfa/disable', userController.disableMfa);
 
 app.post(
-    '/admin/auth/settings/change/password',
+    BASE + 'admin/auth/settings/change/password',
     adminUserFormsLimiter,
     checkSchema({
         currentPassword: validationSchema.password,
@@ -560,7 +570,7 @@ app.post(
 );
 
 app.post(
-    '/admin/auth/settings/change/name',
+    BASE + 'admin/auth/settings/change/name',
     checkSchema({
         name: validationSchema.textShort,
     }),
@@ -582,7 +592,7 @@ const loginLimiter = rateLimit({
 });
 
 app.post(
-    '/admin/login/password',
+    BASE + 'admin/login/password',
     loginLimiter,
     checkSchema({
         email: validationSchema.email,
@@ -596,7 +606,7 @@ app.post(
 );
 
 app.post(
-    '/admin/login/mfa',
+    BASE + 'admin/login/mfa',
     // loginLimiter,
     checkSchema({
         method: validationSchema.method,
@@ -608,7 +618,7 @@ app.post(
 );
 
 app.get(
-    '/admin/login/mfa/checkAuth',
+    BASE + 'admin/login/mfa/checkAuth',
     passportAuthenticate.mfaAuthCheck,
     authController.authCheck
 );
@@ -616,7 +626,7 @@ app.get(
 // Send an email with a new OTP code
 // TODO: change Email OTP expires to 5 minutes (?) (mfa login token expires 5 minutes, atm...)
 app.post(
-    '/admin/login/mfa/email',
+    BASE + 'admin/login/mfa/email',
     checkSchema({
         email: validationSchema.email,
     }),
@@ -626,7 +636,7 @@ app.post(
 
 // User logout
 
-app.post('/admin/logout', authController.logout);
+app.post(BASE + 'admin/logout', authController.logout);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
@@ -636,20 +646,20 @@ app.listen(PORT, () => {
 
 //Route used by front end authCheck when loading security settings page
 app.get(
-    '/admin/auth/check-login/1',
+    BASE + 'admin/auth/check-login/1',
     loginTimeCheck.ten,
     authController.authCheck
 );
 
 app.get(
-    '/admin/auth/check-login/2',
+    BASE + 'admin/auth/check-login/2',
     loginTimeCheck.fifteen,
     authController.authCheck
 );
 
 // User Get Info
 
-app.get('/admin/auth/user', async (req, res) => {
+app.get(BASE + 'admin/auth/user', async (req, res) => {
     console.log('Starting "get" user identity route...');
     try {
         const user = await User.findOne({ email: req.user.email });
