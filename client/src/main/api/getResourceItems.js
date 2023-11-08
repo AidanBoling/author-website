@@ -1,4 +1,28 @@
 import { BASE_URL } from './config';
+import { cache } from 'react';
+
+// TEST, get lists with preload, and cache:
+export const preloadGetList = (resource, params) => {
+    void getListCache(resource, params);
+};
+
+export const getListCache = cache(async (resource, params) => {
+    let query = '';
+    if (params) {
+        const queryString = new URLSearchParams(params).toString();
+        // console.log(queryString);
+        // const queryString = Object.keys(params)
+        //     .map(key => key + '=' + params[key])
+        //     .join('&');
+        query = `?${queryString}`;
+    }
+
+    return await fetch(`${BASE_URL}/${resource}${query}`).then(response => {
+        return response.json();
+    });
+});
+
+// Regular way to get list, without preload and cache (delete if test works):
 
 export async function getList(resource, params) {
     let query = '';

@@ -13,8 +13,8 @@ import {
 // import useMediaQuery from '@mui/material/useMediaQuery';
 // import { shadows } from '@mui/system';
 import InnerPageContainer from '../InnerPageContainer';
-import ResourceGalleryCard from '../cards/ResourceGalleryCard';
-import ResourcesGalleryContainer from '../HomeResourcesGalleryContainer';
+// import ResourceGalleryCard from '../cards/ResourceGalleryCard';
+// import ResourcesGalleryContainer from '../HomeResourcesGalleryContainer';
 
 // const HeroSectionPaper = styled(Paper)(({ theme }) => ({
 //     width: '100%',
@@ -79,8 +79,8 @@ function Home(props) {
     // const posts = getAndSortResourceByDate('posts', 4);
     // const articles = getAndSortResourceByDate('articles', 4);
 
-    const posts = props.posts;
-    const articles = props.articles;
+    // const posts = props.posts ? props.posts : null;
+    // const articles = props.articles ? props.articles : null;
 
     //TODO: fetch hero book via id (?)
     //[x] TODO: fetch articles and filter for only most recent
@@ -250,98 +250,38 @@ function Home(props) {
                     pb: '40px',
                 }}>
                 {/* {console.log(posts, articles)} */}
-                {articles && (
-                    <>
-                        <ResourcesGalleryContainer
-                            title="Recent Articles"
-                            mainPage={'/published/articles'}>
-                            {articles.length > 0 &&
-                                articles.map(article => (
-                                    <ResourceGalleryCard
-                                        key={article._id}
-                                        resource="article"
-                                        title={article.title}
-                                        image={article.image.url}
-                                        imageAlt={article.image.altText}
-                                        published={article.datePublished}
-                                        publisher={article.publisher.name}
-                                        // created={props.article.createdAt}
-                                        mainLinkTo={
-                                            article.url
-                                                ? article.url
-                                                : `/published/articles/id/${article._id}`
-                                        }
-                                        mainLinkIsLocal={
-                                            article.url ? false : true
-                                        }
-                                        mainLinkLabel={
-                                            article.url &&
-                                            `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
-                                        }
-                                        // actions={''}
-                                    />
-                                ))}
-                        </ResourcesGalleryContainer>
-                        {/* <Button
-                            component={Link}
-                            href={'/articles'}
-                            size={'large'}
-                            sx={{
-                                flexShrink: 0,
-                                transitionDuration: '50ms',
-                                pl: '1.5rem',
-                                backgroundColor: 'transparent',
-                                '&:hover': {
-                                    color: 'primary.light',
-                                    backgroundColor: 'greyAlpha10.main',
-                                },
-                            }}>
-                            More
-                            <ArrowRightAltIcon
-                                sx={{ pl: '.25rem', fontSize: '2rem' }}
-                            />
-                        </Button> */}
-                    </>
-                )}
-                {posts && (
-                    <ResourcesGalleryContainer
-                        title="Recent Posts"
-                        mainPage={'/published/posts'}>
-                        {posts.length > 0 &&
-                            posts.map(post => (
-                                <ResourceGalleryCard
-                                    key={post._id}
-                                    resource="post"
-                                    title={post.title}
-                                    image={
-                                        post.image && post.image.url
-                                            ? post.image.url
-                                            : null
-                                    }
-                                    imageAlt={
-                                        post.image && post.image.altText
-                                            ? post.image.altText
-                                            : null
-                                    }
-                                    published={post.datePublished}
-                                    created={post.createdAt}
-                                    mainLinkIsLocal={true}
-                                    mainLinkTo={`/published/posts/id/${post._id}`}
-                                    mainLinkLabel="Read full post"
-                                    // actions={
-                                    //     <Button
-                                    //         component={Link}
-                                    //         href={`/published/posts/id/${props.post._id}`}
-                                    //         className="link">
-                                    //         ➣ Read full post
-                                    //     </Button>}
-                                />
-                            ))}
-                    </ResourcesGalleryContainer>
-                )}
+
+                {props.children}
             </InnerPageContainer>
         </Container>
     );
 }
 
 export default Home;
+
+// TEMP archive ---------------------------
+
+// {articles && (
+//     <>
+
+//         {/* <Button
+//             component={Link}
+//             href={'/articles'}
+//             size={'large'}
+//             sx={{
+//                 flexShrink: 0,
+//                 transitionDuration: '50ms',
+//                 pl: '1.5rem',
+//                 backgroundColor: 'transparent',
+//                 '&:hover': {
+//                     color: 'primary.light',
+//                     backgroundColor: 'greyAlpha10.main',
+//                 },
+//             }}>
+//             More
+//             <ArrowRightAltIcon
+//                 sx={{ pl: '.25rem', fontSize: '2rem' }}
+//             />
+//         </Button> */}
+//     </>
+// )}
