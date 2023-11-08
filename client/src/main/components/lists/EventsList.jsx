@@ -1,6 +1,6 @@
 'use client';
-import EventCard from './cards/EventCard';
-import NoItemsMessage from './NoItemsMessage';
+import EventCard from '../cards/EventCard';
+import NoItemsMessage from '../NoItemsMessage';
 
 export default function EventsList(props) {
     return (

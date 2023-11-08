@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getById } from '@/main/api/getResourceItems';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import BookPage from '@/main/components/mainPages/BookPage';
 
 // async function getItemById(id, resource) {

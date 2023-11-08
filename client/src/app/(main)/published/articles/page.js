@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import Articles from '@/main/components/mainPages/Articles';
 import { getList } from '@/main/api/getResourceItems';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';

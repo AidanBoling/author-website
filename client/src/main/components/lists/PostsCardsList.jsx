@@ -3,7 +3,7 @@ import { getListCache } from '@/main/api/getResourceItems';
 
 export default async function PostsCards(props) {
     const posts = await getListCache('posts', props.listParams);
-    console.log('Posts found: ', posts);
+    // console.log('Posts found: ', posts);
 
     return posts.items.length > 0 ? (
         posts.items.map(post => (

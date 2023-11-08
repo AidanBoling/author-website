@@ -2,7 +2,7 @@
 // import { useState } from 'react';
 
 import { Box, Stack, Skeleton } from '@mui/material';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 

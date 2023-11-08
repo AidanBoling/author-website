@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
-import greenCheckmark from '../../assets/check_mark_green.png';
+import greenCheckmark from '../../../assets/check_mark_green.png';
 
 export default function FormSubmitSuccessScreen(props) {
     return (

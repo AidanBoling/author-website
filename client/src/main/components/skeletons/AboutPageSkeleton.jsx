@@ -1,6 +1,6 @@
 'use client';
 import { Box, Skeleton } from '@mui/material';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 
 export default function AboutPageSkeleton() {
     return (

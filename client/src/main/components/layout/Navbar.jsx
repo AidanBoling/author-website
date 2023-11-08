@@ -16,8 +16,8 @@ import {
     Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { NavbarModeButton, MenuModeToggle } from './ColorModeToggles';
-import BgPatternBox from './style/BgPatternBox';
+import { NavbarModeButton, MenuModeToggle } from '../ColorModeToggles';
+import BgPatternBox from '../style/BgPatternBox';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 

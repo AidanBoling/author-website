@@ -1,7 +1,7 @@
 'use client';
 import { Box, Container, Typography } from '@mui/material';
 // import InnerPageContainer from './InnerPageContainer';
-import BgPatternBox from './style/BgPatternBox';
+import BgPatternBox from '../style/BgPatternBox';
 
 function Footer(props) {
     return (

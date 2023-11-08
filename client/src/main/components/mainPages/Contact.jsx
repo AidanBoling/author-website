@@ -1,7 +1,7 @@
 'use client';
 // import { useState } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
-import ContactForm from '../ContactForm';
+import ContactForm from '../forms/ContactForm';
 
 function Contact() {
     // const [formData, setField] = useState({

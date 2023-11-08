@@ -1,4 +1,4 @@
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 
 export default function NotFound() {
     return (

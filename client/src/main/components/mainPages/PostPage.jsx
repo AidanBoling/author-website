@@ -5,11 +5,11 @@ import { useParams } from 'next/navigation';
 // import DOMPurify from 'dompurify';
 import { Box } from '@mui/material';
 import { getById } from '@/main/api/getResourceItems';
-import NewsletterForm from '@/main/components/NewsletterForm';
+import NewsletterForm from '@/main/components/forms/NewsletterForm';
 import AboutAuthorMini from '@/main/components/AboutAuthorMini';
 // import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
-import PeriodicalsHeading from '@/main/components/PeriodicalsHeading';
-import PeriodicalsBody from '@/main/components/PeriodicalsBody';
+import PeriodicalsHeading from '@/main/components/layout/PeriodicalsHeading';
+import PeriodicalsBody from '@/main/components/layout/PeriodicalsBody';
 
 function PostPage() {
     const params = useParams();

@@ -1,5 +1,5 @@
 'use client';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import Stack from '@mui/material/Stack';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 

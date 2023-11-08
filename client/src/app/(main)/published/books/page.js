@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { getList } from '@/main/api/getResourceItems';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import Books from '@/main/components/mainPages/Books';
 import { ResourcesListSkeleton } from '../../../../main/components/skeletons/LoadingResourcesListPage';
 

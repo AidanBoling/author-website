@@ -1,4 +1,4 @@
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import ArticlePage from '@/main/components/mainPages/ArticlePage';
 
 export default function Page() {

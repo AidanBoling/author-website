@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { getList } from '@/main/api/getResourceItems';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import Posts from '@/main/components/mainPages/Posts';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 // import PostsList from '@/main/components/PostsList';

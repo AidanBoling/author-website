@@ -1,5 +1,5 @@
 'use client';
-import PageWrapper from '@/main/components/PageWrapper';
+import PageWrapper from '@/main/components/layout/PageWrapper';
 import { Typography } from '@mui/material';
 
 export default function NotFound() {

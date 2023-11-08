@@ -6,9 +6,9 @@ import { Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
 import { useForm } from 'react-hook-form';
-import { sendFormData } from '../api/sendFormData';
+import { sendFormData } from '../../api/sendFormData';
 // import greenCheckmark from '../../assets/check_mark_green.png';
-import FormSubmitSuccessScreen from '@/main/components/FormSubmitSuccessScreen';
+import FormSubmitSuccessScreen from '@/main/components/forms/FormSubmitSuccessScreen';
 
 export default function SubscribeForm(props) {
     const [subscribeSuccessful, setSubscribeSuccessful] = useState(false);

@@ -1,6 +1,6 @@
 'use client';
-import Navbar from '@/main/components/Navbar';
-import Footer from '@/main/components/Footer';
+import Navbar from '@/main/components/layout/Navbar';
+import Footer from '@/main/components/layout/Footer';
 import ThemeWrapper from '@/main/components/style/ThemeWrapper';
 import Background from '../../main/components/style/Background';
 import '@/main/styles/styles.css';

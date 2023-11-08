@@ -9,78 +9,13 @@ import {
     Typography,
     Button,
 } from '@mui/material';
-// import { useTheme, alpha, styled } from '@mui/material/styles';
-// import useMediaQuery from '@mui/material/useMediaQuery';
-// import { shadows } from '@mui/system';
-import InnerPageContainer from '../InnerPageContainer';
-// import ResourceGalleryCard from '../cards/ResourceGalleryCard';
-// import ResourcesGalleryContainer from '../HomeResourcesGalleryContainer';
-
-// const HeroSectionPaper = styled(Paper)(({ theme }) => ({
-//     width: '100%',
-//     height: '100%',
-//     backgroundColor:
-//         theme.palette.mode === 'dark'
-//             ? `${alpha(theme.palette.forestgreen.main, 0.95)}`
-//             : `${alpha(theme.palette.forestgreen.light, 0.95)}`,
-//     color: theme.palette.mode === 'light' && theme.palette.primary.contrastText,
-// }));
-
-// function useResource(name) {
-//     const [resourceList, setResource] = useState(null);
-
-//     useEffect(() => {
-//         async function fetchItems() {
-//             const allItems = await getList(name);
-//             // console.log(allItems);
-//             // const sortedItems = allItems
-//             //     .slice()
-//             //     .sort(
-//             //         (a, b) =>
-//             //             new Date(b.datePublished) - new Date(a.datePublished)
-//             //     )
-//             //     .slice(0, 4);
-//             setResource(allItems);
-//         }
-//         fetchItems();
-//     }, []);
-
-//     return resourceList;
-// }
+import InnerPageContainer from '../layout/InnerPageContainer';
 
 function Home(props) {
     const headerImageMask = {
         xs: 'linear-gradient(to top, black, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
         md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
     };
-
-    // const galleryContainerSX = {
-    //     display: 'flex',
-    //     gap: '1.5rem',
-    //     flexWrap: 'wrap',
-    //     border: '1px solid primary.main',
-    //     borderRadius: '.4rem',
-    //     padding: '2rem',
-    // };
-
-    // function getAndSortResourceByDate(resourceName, returnMaxResults) {
-    //     const resourceList = useResource(resourceName);
-    //     if (resourceList) {
-    //         const sortedResourceList = resourceList
-    //             .sort(
-    //                 (a, b) =>
-    //                     new Date(b.datePublished) - new Date(a.datePublished)
-    //             )
-    //             .slice(0, returnMaxResults);
-    //         return sortedResourceList;
-    //     }
-    // }
-
-    // const posts = getAndSortResourceByDate('posts', 4);
-    // const articles = getAndSortResourceByDate('articles', 4);
-
-    // const posts = props.posts ? props.posts : null;
-    // const articles = props.articles ? props.articles : null;
 
     //TODO: fetch hero book via id (?)
     //[x] TODO: fetch articles and filter for only most recent
@@ -261,6 +196,70 @@ export default Home;
 
 // TEMP archive ---------------------------
 
+// const HeroSectionPaper = styled(Paper)(({ theme }) => ({
+//     width: '100%',
+//     height: '100%',
+//     backgroundColor:
+//         theme.palette.mode === 'dark'
+//             ? `${alpha(theme.palette.forestgreen.main, 0.95)}`
+//             : `${alpha(theme.palette.forestgreen.light, 0.95)}`,
+//     color: theme.palette.mode === 'light' && theme.palette.primary.contrastText,
+// }));
+
+// function useResource(name) {
+//     const [resourceList, setResource] = useState(null);
+
+//     useEffect(() => {
+//         async function fetchItems() {
+//             const allItems = await getList(name);
+//             // console.log(allItems);
+//             // const sortedItems = allItems
+//             //     .slice()
+//             //     .sort(
+//             //         (a, b) =>
+//             //             new Date(b.datePublished) - new Date(a.datePublished)
+//             //     )
+//             //     .slice(0, 4);
+//             setResource(allItems);
+//         }
+//         fetchItems();
+//     }, []);
+
+//     return resourceList;
+// }
+
+//
+// const galleryContainerSX = {
+//     display: 'flex',
+//     gap: '1.5rem',
+//     flexWrap: 'wrap',
+//     border: '1px solid primary.main',
+//     borderRadius: '.4rem',
+//     padding: '2rem',
+// };
+
+// function getAndSortResourceByDate(resourceName, returnMaxResults) {
+//     const resourceList = useResource(resourceName);
+//     if (resourceList) {
+//         const sortedResourceList = resourceList
+//             .sort(
+//                 (a, b) =>
+//                     new Date(b.datePublished) - new Date(a.datePublished)
+//             )
+//             .slice(0, returnMaxResults);
+//         return sortedResourceList;
+//     }
+// }
+
+// const posts = getAndSortResourceByDate('posts', 4);
+// const articles = getAndSortResourceByDate('articles', 4);
+
+// const posts = props.posts ? props.posts : null;
+// const articles = props.articles ? props.articles : null;
+//
+
+//
+//
 // {articles && (
 //     <>
 
