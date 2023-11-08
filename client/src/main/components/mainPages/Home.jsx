@@ -10,6 +10,7 @@ import {
     Button,
 } from '@mui/material';
 import InnerPageContainer from '../layout/InnerPageContainer';
+import pageContent from '../../content/homeContent.json';
 
 function Home(props) {
     const headerImageMask = {
@@ -59,13 +60,12 @@ function Home(props) {
                             mt: { xs: '10vh', md: '20vh' },
                             mx: '5vw',
                         }}>
-                        My Headline Message Here.{' '}
+                        {pageContent.headline.primary}
                         <Typography
                             variant="h2"
                             component="span"
                             color="primary.dark">
-                            {' '}
-                            This is what I&apos;m all about.
+                            {pageContent.headline.secondary}
                         </Typography>
                     </Typography>
                 </Box>
@@ -83,8 +83,8 @@ function Home(props) {
                     }}>
                     <Image
                         // className="home-header-image"
-                        src="https://picsum.photos/700/600?random=1"
-                        alt="A random image"
+                        src={pageContent.titleImage.url}
+                        alt={pageContent.titleImage.altText}
                         fill
                         priority
                         style={{ width: '100%', objectFit: 'cover' }}
@@ -113,7 +113,8 @@ function Home(props) {
                             }}>
                             <Box
                                 component="img"
-                                src="https://picsum.photos/400/500?random=2"
+                                src={pageContent.heroBook.imageUrl}
+                                alt="Book cover"
                                 className="hero book-cover"
                                 sx={{
                                     borderRadius: '.4rem',
@@ -137,21 +138,10 @@ function Home(props) {
                                     component="p"
                                     color={'lightgold.main'}
                                     textAlign={'center'}>
-                                    Book Title
+                                    {pageContent.heroBook.title}
                                 </Typography>
                                 <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Vivamus pharetra nisl
-                                    risus, in volutpat leo viverra vel.
-                                    Suspendisse ac posuere ex. Integer nunc
-                                    nisl, lobortis id ultrices euismod, pulvinar
-                                    in erat. Sed pharetra convallis massa
-                                    consectetur ullamcorper. Nulla lacinia
-                                    ultricies nibh, vel hendrerit dolor. Aenean
-                                    convallis nisi id arcu facilisis ultricies.
-                                    Integer sed nisi eget nunc elementum egestas
-                                    et eu lorem. Mauris mollis tortor id
-                                    eleifend dapibus.
+                                    {pageContent.heroBook.summary}
                                 </Typography>
                                 <Box mt={'2rem'}>
                                     <Stack
