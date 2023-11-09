@@ -48,13 +48,13 @@ function PageWrapper(props) {
         // Uncertain why this works, however -- only this particular name seems to work, and there's no matching element id
         router.push(url + '#listtop');
         router.replace(url);
-        console.log(url);
+        // console.log(url);
     }
 
     function handleLimitChange(value) {
         const url = pathname + '?' + createQueryString('limit', value);
         router.replace(url, { scroll: false });
-        console.log(url);
+        // console.log(url);
     }
 
     function handleLimitButtonClick(event) {

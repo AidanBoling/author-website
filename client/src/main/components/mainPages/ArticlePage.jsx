@@ -1,30 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-// import DOMPurify from 'dompurify';
-import { getById } from '@/main/api/getResourceItems';
 import PeriodicalsHeading from '@/main/components/layout/PeriodicalsHeading';
 import PeriodicalsBody from '../layout/PeriodicalsBody';
-// import Link from 'next/link';
 import { Box, Typography, Link } from '@mui/material';
 import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
 
-function ArticlePage() {
-    const params = useParams();
-    console.log('Id: ', params.id);
-
-    const [article, setArticle] = useState('');
-
-    useEffect(() => {
-        async function fetchItem() {
-            console.log('Fetching item...');
-            const foundItem = await getById(params.id, 'articles');
-            // console.log(foundItem);
-            setArticle(foundItem);
-        }
-        fetchItem();
-    }, []);
-
+function ArticlePage({ article }) {
     return (
         <>
             {article && (
@@ -34,40 +14,10 @@ function ArticlePage() {
                         title={article.title}
                         published={article.datePublished}
                     />
-                    {/* <Box className="article-header fullpage header">
-                        <h1>{article.title}</h1>
-                        <p>
-                            Published{' '}
-                            {new Date(article.datePublished).toLocaleDateString(
-                                'en-us',
-                                {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                }
-                            )}
-                        </p>
-                    </Box> */}
                     <PeriodicalsBody
                         periodical={article}
                         content={article.content}
                         contentFallback={article.descriptionShort}>
-                        {/* <div className="article-cover fullpage image">
-                        <img
-                            src={article.image.url}
-                            alt={article.image.altText}></img>
-                    </div>
-                    <div className="book-content">
-                        {article.content ? (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(article.content),
-                                }}
-                            />
-                        ) : (
-                            article.descriptionShort
-                        )}
-                    </div> */}
                         {article.publisher.name && (
                             <Box
                                 className="article details"
@@ -120,3 +70,60 @@ function ArticlePage() {
 }
 
 export default ArticlePage;
+
+//
+//
+// TEMP Archive ------------------
+//
+
+// const params = useParams();
+// console.log('Id: ', params.id);
+
+// const [article, setArticle] = useState('');
+
+// useEffect(() => {
+//     async function fetchItem() {
+//         console.log('Fetching item...');
+//         const foundItem = await getById(params.id, 'articles');
+//         // console.log(foundItem);
+//         setArticle(foundItem);
+//     }
+//     fetchItem();
+// }, []);
+
+//
+
+// {/* <Box className="article-header fullpage header">
+//     <h1>{article.title}</h1>
+//     <p>
+//         Published{' '}
+//         {new Date(article.datePublished).toLocaleDateString(
+//             'en-us',
+//             {
+//                 year: 'numeric',
+//                 month: 'long',
+//                 day: 'numeric',
+//             }
+//         )}
+//     </p>
+// </Box> */}
+
+//
+//
+
+//     {/* <div className="article-cover fullpage image">
+//     <img
+//         src={article.image.url}
+//         alt={article.image.altText}></img>
+// </div>
+// <div className="book-content">
+//     {article.content ? (
+//         <div
+//             dangerouslySetInnerHTML={{
+//                 __html: DOMPurify.sanitize(article.content),
+//             }}
+//         />
+//     ) : (
+//         article.descriptionShort
+//     )}
+// </div> */}
