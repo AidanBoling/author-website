@@ -5,7 +5,7 @@ import { Link as MuiLink, Typography } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function ArticleCard(props) {
-    console.log('Received article: ', props.article);
+    // console.log('Received article: ', props.article);
     // console.log(props.post._id);
 
     const summaryContent = props.article.content ? (

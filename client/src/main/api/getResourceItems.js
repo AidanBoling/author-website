@@ -1,6 +1,7 @@
-import { BASE_URL } from './config';
+// import { BASE_URL } from './config';
+import 'server-only';
 import { cache } from 'react';
-// const BASE_URL = process.env.BASE_API_URL
+const BASE_URL = process.env.BASE_API_URL;
 
 // TEST, get lists with preload, and cache:
 export const preloadGetList = (resource, params) => {
@@ -11,7 +12,7 @@ export const getListCache = cache(async (resource, params) => {
     let query = '';
     if (params) {
         const queryString = new URLSearchParams(params).toString();
-        console.log(queryString);
+        // console.log(queryString);
         query = `?${queryString}`;
     }
 

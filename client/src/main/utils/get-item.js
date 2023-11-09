@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import 'server-only';
-import { BASE_URL } from './config';
+// import { BASE_URL } from './config';
+const BASE_URL = process.env.BASE_API_URL;
 
 export const preload = (id, resource) => {
     void getItemById(id, resource);

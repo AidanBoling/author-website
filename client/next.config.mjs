@@ -12,6 +12,12 @@ const nextConfig = {
             },
         ],
     },
+
+    compiler: {
+        removeConsole: {
+            exclude: ['error'],
+        },
+    },
 };
 
 export default nextConfig;

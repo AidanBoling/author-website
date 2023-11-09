@@ -1,34 +1,34 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+// import { useState, useEffect } from 'react';
+// import { useParams } from 'next/navigation';
 // import Image from 'next/image';
 // import DOMPurify from 'dompurify';
 import { Box } from '@mui/material';
-import { getById } from '@/main/api/getResourceItems';
+// import { getById } from '@/main/api/getResourceItems';
 import NewsletterForm from '@/main/components/forms/NewsletterForm';
 import AboutAuthorMini from '@/main/components/AboutAuthorMini';
 // import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
 import PeriodicalsHeading from '@/main/components/layout/PeriodicalsHeading';
 import PeriodicalsBody from '@/main/components/layout/PeriodicalsBody';
 
-function PostPage() {
-    const params = useParams();
-    const [post, setPost] = useState('');
-    const [richText, setRichText] = useState('');
+function PostPage({ post }) {
+    // const params = useParams();
+    // const [post, setPost] = useState('');
+    // const [richText, setRichText] = useState('');
 
     let publishedDate = post.publishedDate
         ? post.publishedDate
         : post.createdAt;
 
-    useEffect(() => {
-        async function fetchItem() {
-            const foundItem = await getById(params.id, 'posts');
-            // console.log(foundItem);
-            setPost(foundItem);
-            setRichText(foundItem.content.richText);
-        }
-        fetchItem();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchItem() {
+    //         const foundItem = await getById(params.id, 'posts');
+    //         // console.log(foundItem);
+    //         setPost(foundItem);
+    //         setRichText(foundItem.content.richText);
+    //     }
+    //     fetchItem();
+    // }, []);
 
     return (
         <>
@@ -41,7 +41,7 @@ function PostPage() {
                     <PeriodicalsBody
                         periodical={post}
                         imageFloat="left"
-                        content={richText}
+                        content={post.content.richText}
                         contentFallback={
                             post.content.plain &&
                             post.content.plain.length > 0 &&

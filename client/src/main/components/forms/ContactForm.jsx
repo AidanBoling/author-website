@@ -52,22 +52,7 @@ export default function ContactForm() {
                 <FormContainer
                     formContext={formContext}
                     onSuccess={data => handleSubmit(data)}>
-                    <Grid
-                        className="contactform"
-                        // component="form"
-                        container
-                        spacing={3}
-                        // onSubmit={handleSubmit}
-                    >
-                        {/* <Grid xs={12} sm={6}>
-                            <TextFieldElement
-                                name="fName"
-                                label="First Name"
-                                variant="outlined"
-                                size="small"
-                                required
-                            />
-                        </Grid> */}
+                    <Grid className="contactform" container spacing={3}>
                         <Grid xs={12} sm={6}>
                             <TextFieldElement
                                 name="name"
@@ -99,16 +84,11 @@ export default function ContactForm() {
                         </Grid>
                         <Grid xs={3} ml={'auto'}>
                             <Button
-                                // component={Link}
                                 variant="contained"
                                 type="submit"
-                                // disabled={!watchEmail}
-                                // href="#"
                                 size="large"
                                 ml={'auto'}
-                                sx={{ width: '100%' }}
-                                // onClick={handleSubmit}
-                            >
+                                sx={{ width: '100%' }}>
                                 Submit
                             </Button>
                         </Grid>
@@ -134,3 +114,17 @@ export default function ContactForm() {
         </>
     );
 }
+
+//
+//
+// TEMP archive -------------------------
+//
+// {/* <Grid xs={12} sm={6}>
+//     <TextFieldElement
+//         name="fName"
+//         label="First Name"
+//         variant="outlined"
+//         size="small"
+//         required
+//     />
+// </Grid> */}

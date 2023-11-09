@@ -1,4 +1,5 @@
-import { BASE_URL } from './config';
+// import { BASE_URL } from './config';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
 export async function sendFormData(data, formName) {
     const body = JSON.stringify(data);
