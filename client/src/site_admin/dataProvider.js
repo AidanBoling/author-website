@@ -1,6 +1,7 @@
 import { stringify } from 'query-string';
 import { fetchUtils } from 'ra-core';
-import { API_URL } from './api/config';
+// import { API_URL } from './api/config';
+const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
 const apiUrl = API_URL;
 // Example of updating the httpClient so that auth tokens are sent in request header:

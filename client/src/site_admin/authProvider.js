@@ -1,4 +1,5 @@
-import { API_URL } from './api/config';
+// import { API_URL } from './api/config';
+const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
 function setRequest(path, body, method = 'POST', headers = {}) {
     headers = { 'Content-Type': 'application/json', ...headers };

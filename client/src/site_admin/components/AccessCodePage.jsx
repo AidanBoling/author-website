@@ -26,7 +26,7 @@ export default function AccessCodeForm() {
 
         // TODO (later): Fix and add author website homepage url
         // const timer = setTimeout(() => {
-        //     redirectDocument('http://app.localhost:3000/admin#/login');
+        //     redirectDocument([...]/admin#/login');
         // }, 1 * 60 * 1000);
     }
 

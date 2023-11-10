@@ -110,7 +110,7 @@ app.use(
         saveUninitialized: false,
         rolling: true,
         cookie: {
-            domain: isDev ? '.app.localhost' : null, //Remove in Production
+            domain: isDev ? '.localhost' : null, //Remove in Production
             path: '/admin',
             httpOnly: true,
             // secure: true,
