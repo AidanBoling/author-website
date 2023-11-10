@@ -12,7 +12,7 @@ import {
 import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
-const bookFilters = <TextInput label="Search" source="q" alwaysOn />;
+const bookFilters = [<TextInput label="Search" source="q" alwaysOn />];
 
 function BookList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));

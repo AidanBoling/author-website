@@ -46,7 +46,7 @@ export default function CreateTagDialog({
     newRecord,
 }) {
     const record = useRecordContext();
-    // TODO: Check the useCreateSuggestionContext change below.
+    // [-] TODO: Check the useCreateSuggestionContext change below.
     // Had to remove the conditional because it broke
     // a react hook rule ("React Hook "useCreateSuggestionContext" is called conditionally. React Hooks must be called in the exact same order in every component render.")
     // Not sure if this will break the ui.
@@ -54,7 +54,11 @@ export default function CreateTagDialog({
     // const { filter, onCancel, onCreate } = newRecord
     //     ? useCreateSuggestionContext()
     //     : {};
-    const { filter, onCancel, onCreate } = useCreateSuggestionContext();
+    let createSuggestionContext = useCreateSuggestionContext();
+    const { filter, onCancel, onCreate } = newRecord
+        ? createSuggestionContext
+        : {};
+
     const [newTagName, setNewTagName] = useState((newRecord && filter) || '');
     const [newTagColor, setNewTagColor] = useState(randomColor);
     const [disabled, setDisabled] = useState(false);
