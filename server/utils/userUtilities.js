@@ -39,7 +39,7 @@ export async function generateEmailOtpCode(userId) {
         await oldCode.deleteOne(); //<-- TODO: Check syntax
     }
 
-    const otpCode = parseInt(randomBytes(3).toString('hex'), 16)
+    const otpCode = parseInt(randomBytes(4).toString('hex'), 16)
         .toString()
         .substring(0, 6);
 

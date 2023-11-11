@@ -36,7 +36,6 @@ function MethodInfo({ method }) {
     return (
         <Box
             sx={{
-                mx: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -70,16 +69,15 @@ function MethodInfo({ method }) {
     );
 }
 
-//TODO: fix so that the "back" button takes to login page, NOT dashboard
-
+// [-] TODO: fix so that the "back" button takes to login page, NOT dashboard
+// TODO (later): Fix button "Use {otherMethod} instead" so that authapp is Auth App
 function MyLoginPage() {
     useAuthenticated(); // redirects to login if not authenticated
     // const { isLoading, authenticated } = useAuthState();
     // const methodInit = !isLoading
     const mfa = JSON.parse(localStorage.getItem('mfa'));
-    const useMethod = mfa && mfa.info.defaultMethod;
-    // TODO: Check setUseMethod, handleToggleMethod -- not being used atm
-    // const [useMethod, setUseMethod] = useState(mfa && mfa.info.defaultMethod);
+    const [useMethod, setUseMethod] = useState(mfa && mfa.info.defaultMethod);
+    // const useMethod = mfa && mfa.info.defaultMethod;
     // const [otherMethod, setOtherMethod] = useState(mfa.info.defaultMethod)
     const [code, setCode] = useState('');
     // const [submitted, setSubmitted] = useState(true);
@@ -92,13 +90,10 @@ function MyLoginPage() {
     const login = useLogin();
     const notify = useNotify();
     const redirect = useRedirect();
-    // const navigate = useNavigate();
-    // const authProvider = useAuthProvider();
 
-    // function handleToggleMethod() {
-    //     // Check: ...if otherMethod updates when useMethod updates
-    //     setUseMethod(otherMethod);
-    // }
+    function handleToggleMethod() {
+        setUseMethod(otherMethod);
+    }
 
     useEffect(() => {
         // Delete mfa after 5 minutes (when it expires anyways)
@@ -130,9 +125,9 @@ function MyLoginPage() {
             <FormPageWrapper title="Enter OTP" width="340px">
                 <MethodInfo method={useMethod} />
                 {mfa.info.methodsCount > 1 && (
-                    <Box>
-                        <Button>Use {otherMethod} instead</Button>
-                    </Box>
+                    <Button onClick={handleToggleMethod}>
+                        Use {otherMethod} instead
+                    </Button>
                 )}
                 <form onSubmit={handleMfaSubmit}>
                     <OtpCodeField

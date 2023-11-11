@@ -396,6 +396,7 @@ export const authProvider = {
             if (data) {
                 // console.log('User data: ', data);
                 const { id, fullName, avatar, email, lastLogin, mfa } = data;
+                console.log('user mfa info: ', mfa);
                 return Promise.resolve({
                     id,
                     fullName,

@@ -16,6 +16,7 @@ import UserSettingsPageWrapper, {
 } from './UserSettingsUtilities';
 import UserForm from '../UserForm';
 
+// TODO: Fix security settings button min-width, etc (scaling down broken)
 // TODO (later): User info section into a List (mui)
 export default function AccountPage() {
     const { data } = useGetIdentity();

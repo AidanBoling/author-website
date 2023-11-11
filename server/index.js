@@ -504,6 +504,7 @@ app.post(
     BASE + 'admin/mod/register',
     adminUserFormsLimiter,
     checkSchema({
+        name: validationSchema.textShort,
         email: validationSchema.email,
         password: validationSchema.password,
         confirmPassword: validationSchema.confirmPassword,
@@ -668,7 +669,6 @@ app.get(BASE + 'admin/auth/user', async (req, res) => {
             throw new Error('Invalid.');
         }
         console.log('User found: ', user.email);
-
         const userInfo = {
             fullName: user.name,
             email: user.email,
@@ -680,6 +680,8 @@ app.get(BASE + 'admin/auth/user', async (req, res) => {
                 count: user.mfa.methodsVerified,
             },
         };
+        console.log('mfa info: ', userInfo.mfa);
+
         res.json(userInfo);
     } catch (error) {
         console.log(error);

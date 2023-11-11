@@ -141,6 +141,7 @@ function UserFormPasswordSection(props) {
                     variant="outlined"
                     id="currentPassword"
                     label="Current Password"
+                    type="password"
                     required
                     onChange={props.onChange}
                     helperText={props.errorMsg.currentPassword || false}
@@ -151,6 +152,7 @@ function UserFormPasswordSection(props) {
                 variant="outlined"
                 id="password"
                 label={props.passwordLabel || 'Password'}
+                type="password"
                 required
                 onChange={props.onChange}
                 helperText={
@@ -168,6 +170,7 @@ function UserFormPasswordSection(props) {
                 variant="outlined"
                 id="confirmPassword"
                 label="Confirm Password"
+                type="password"
                 required
                 onChange={props.onChange}
                 helperText={props.errorMsg.confirmPassword || false}

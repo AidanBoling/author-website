@@ -10,6 +10,7 @@ import {
     getMFALoginToken,
     FPT_COOKIE_OPTIONS,
 } from '../utils/authUtilities.js';
+import sendOTPCodeEmail from '../utils/sendOTPemail.js';
 // import cookieParser from 'cookie-parser';
 
 export const passportAuthenticate = {

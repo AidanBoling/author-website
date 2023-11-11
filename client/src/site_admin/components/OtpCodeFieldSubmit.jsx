@@ -4,9 +4,7 @@ import { Stack, TextField, Button, Typography } from '@mui/material';
 export default function OtpCodeField(props) {
     return (
         <>
-            <Stack
-                gap={4}
-                sx={{ margin: '2rem', mt: '1rem', maxWidth: '250px' }}>
+            <Stack gap={4} sx={{ mt: '1rem', maxWidth: '275px' }}>
                 <TextField
                     variant="outlined"
                     name="code"

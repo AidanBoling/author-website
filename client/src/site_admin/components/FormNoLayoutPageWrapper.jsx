@@ -29,7 +29,7 @@ export default function FormPageWrapper(props) {
                     width: props.width,
                     mt: '10vh',
                 }}>
-                <Stack gap={props.spacing || 3}>
+                <Stack gap={props.spacing || 3} m={'2rem'} mt={'1rem'}>
                     {props.title && (
                         <Box
                             sx={{
@@ -44,7 +44,7 @@ export default function FormPageWrapper(props) {
                                 mb={'1rem'}>
                                 {props.title}
                             </Typography>
-                            <Divider width={'80%'} />
+                            <Divider width={'90%'} />
                         </Box>
                     )}
                     {props.children}

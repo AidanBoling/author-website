@@ -120,8 +120,6 @@ export const validationSchema = {
 
     otpCode: {
         in: ['body'],
-        // exists: true,
-        // isEmpty: { negated: true },
         isLength: {
             options: { min: 6, max: 6 },
         },
@@ -132,12 +130,13 @@ export const validationSchema = {
     token: {
         in: ['body'],
         trim: true,
-        // exists: true,
-        // isEmpty: { negated: true },
-        isByteLength: {
-            options: { min: 50, max: 64 },
+        isLength: {
+            options: { min: 50, max: 150 },
         },
-        isAlphanumeric: { locale: 'en-US' },
+        isHexadecimal: true,
+        // isByteLength: {
+        //     options: { min: 50, max: 64 },
+        // },
     },
 
     purpose: {
