@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import mailchimp from '@mailchimp/mailchimp_marketing';
-import { checkSchema, query } from 'express-validator';
+import { checkSchema } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
 import { initializePassport } from './utils/passportHelper.js';
@@ -58,7 +58,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOrigin = process.env.CLIENT_URL;
 
-// Note: Depending on production domain setup, may need to change Cross-Origin-Resource-Policy to same-site
+app.set('trust proxy', 1);
+
 app.use(
     helmet({
         contentSecurityPolicy: {
@@ -109,11 +110,11 @@ app.use(
         resave: true,
         saveUninitialized: false,
         rolling: true,
+        proxy: !isDev,
         cookie: {
-            domain: isDev ? '.localhost' : null, //Remove in Production
+            // domain: isDev ? '.localhost' : null, //Remove in Production
             path: '/admin',
             httpOnly: true,
-            // secure: true,
             secure: !isDev,
             maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE),
             sameSite: 'Strict',
