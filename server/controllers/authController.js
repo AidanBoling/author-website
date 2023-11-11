@@ -1,5 +1,4 @@
 import { matchedData } from 'express-validator';
-// import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import User from '../model/User.js';
 import EmailOTP from '../model/EmailOTP.js';
@@ -176,18 +175,21 @@ export const authController = {
     emailOTP: async (req, res) => {
         console.log('Send email route triggered...');
 
-        // TODO (production prep):
+        // [-] TODO (production prep):
         const { email } = matchedData(req);
         if (!email) {
             throw new Error('Invalid email');
         }
 
-        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; //TESTING --> user.email
-
         try {
             const user = await User.findOne({ email: { $eq: email } });
             if (!user) throw new Error('User not found');
-            // TODO (production prep): emailRecipient -> user.email
+
+            const emailRecipient =
+                process.env.NODE_ENV === 'production'
+                    ? user.email
+                    : process.env.TEST_EMAIL_RECIPIENT;
+
             sendOTPCodeEmail(user._id, emailRecipient);
             res.json({ message: 'Success' });
         } catch (error) {

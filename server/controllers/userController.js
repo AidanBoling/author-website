@@ -1,21 +1,15 @@
-// import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import User from '../model/User.js';
 import Code from '../model/Code.js';
-// import Token from '../model/Token.js';
 import EmailOTP from '../model/EmailOTP.js';
 import sendAccountInfoEmail from '../utils/sendAccountInfoEmail.js';
-import {
-    generateEmailOtpCode,
-    generateTokenLink,
-} from '../utils/userUtilities.js';
+import { generateTokenLink } from '../utils/userUtilities.js';
 import sendOTPCodeEmail from '../utils/sendOTPemail.js';
 import { matchedData } from 'express-validator';
 
-// const sanitizeOptionsNoHTML = { allowedTags: [], allowedAttributes: {} };
+const isDev = process.env.NODE_ENV !== 'production';
 
-// TODO: (production prep) Update instances of email to input email, not TEST_EMAIL
 // TODO: Make sure initial access Code is deleted at an appropriate point
 // (when email sends successfully? Or when user completes update action?)
 // CONSIDER: Connect access code with the generated token somehow?
@@ -24,7 +18,9 @@ export const userController = {
     // Used to handle (admin-created) codes. Initiates registration and password reset process.
     // Preceded by checking code with custom middleware (verify.accessCode)
     accessRequest: async (req, res) => {
-        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
+        const emailRecipient = !isDev
+            ? req.user.email
+            : process.env.TEST_EMAIL_RECIPIENT;
 
         try {
             const link = await generateTokenLink(req.codePurpose, req.user._id);
@@ -36,7 +32,7 @@ export const userController = {
             ) {
                 sendAccountInfoEmail(
                     { link: link },
-                    emailRecipient, // for TESTING only. Change to --> req.user.email
+                    emailRecipient,
                     req.codePurpose,
                     'request'
                 );
@@ -63,7 +59,6 @@ export const userController = {
     // the user linked to the token matches the email submitted by the user.
     // TODO: Also delete admin-created token on success
     completeAccountSetup: async (req, res) => {
-        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         const { id, name, email, password } = req.data;
 
         try {
@@ -74,6 +69,10 @@ export const userController = {
 
             // Update user's information, only if user doesn't yet have password set
             if (!user.password) {
+                const emailRecipient = !isDev
+                    ? user.email
+                    : process.env.TEST_EMAIL_RECIPIENT;
+
                 user.name = name;
                 user.password = password;
                 user.markModified('password'); // this triggers it to be hashed on save()
@@ -83,7 +82,7 @@ export const userController = {
                     email: user.email,
                     message: 'Account registration completed',
                 });
-                // Note: on front end - have this page redirect them to login page.
+                // TODO (later): on front end - have this page redirect them to login page.
 
                 // Delete the temp access code
                 console.log('Deleting initial code...');
@@ -99,7 +98,7 @@ export const userController = {
                 // Send email notifying of account created
                 sendAccountInfoEmail(
                     { name: user.name },
-                    emailRecipient, // for TESTING only. TODO (production prep): Change to --> user.email
+                    emailRecipient,
                     'register',
                     'success'
                 );
@@ -129,16 +128,16 @@ export const userController = {
     },
 
     // Processes password reset submission
-    // TODO: preceded by validation and sanitization middleware (for email, and for password (min/max length, other security requirements, and that password entries match),
+    // [-]TODO: preceded by validation and sanitization middleware (for email, and for password (min/max length, other security requirements, and that password entries match),
     // Preceded by dedicated custom middleware to validate token (verify.userUpdateToken)
     // TODO: Also delete admin-created token on success
 
     passwordReset: async (req, res) => {
-        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         console.log(
             'Token verification passed, continuing password reset process...'
         );
-        let status;
+        // let status;
+
         try {
             // Additional auth check: check submitted userId matches
             // the email submitted. If match, returns user
@@ -150,13 +149,16 @@ export const userController = {
                 throw new Error('Invalid');
             }
 
-            // Update user's password
             if (user.password) {
+                const emailRecipient = !isDev
+                    ? user.email
+                    : process.env.TEST_EMAIL_RECIPIENT;
+
+                // Update user's password
                 user.password = req.data.password;
                 user.markModified('password');
                 await user.save();
 
-                // console.log(user); // --> check that password is hashed
                 res.json({
                     email: user.email,
                     message: 'Password reset successfully',
@@ -176,7 +178,7 @@ export const userController = {
                 // Send email notifying of password reset
                 sendAccountInfoEmail(
                     { name: user.name },
-                    emailRecipient, // for TESTING only. Change to --> user.email
+                    emailRecipient,
                     'passwordReset',
                     'success'
                 );
@@ -206,7 +208,6 @@ export const userController = {
 
     passwordChange: async (req, res) => {
         console.log('Starting password change request...');
-        const emailRecipient = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         const { currentPassword, password } = matchedData(req);
 
         try {
@@ -223,6 +224,10 @@ export const userController = {
                 throw new Error('Invalid');
             }
 
+            const emailRecipient = !isDev
+                ? user.email
+                : process.env.TEST_EMAIL_RECIPIENT;
+
             // Authenticated; Update user's password
             user.password = password;
             user.markModified('password');
@@ -238,7 +243,7 @@ export const userController = {
             // Send email notifying of password change
             sendAccountInfoEmail(
                 { name: user.name },
-                emailRecipient, // for TESTING only. Change to --> user.email
+                emailRecipient,
                 'passwordChange'
             );
         } catch (error) {
@@ -257,7 +262,6 @@ export const userController = {
     },
 
     setUpMfa: async (req, res) => {
-        const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
         const { method } = matchedData(req);
         console.log('Starting mfa setup route...');
 
@@ -302,6 +306,10 @@ export const userController = {
             }
             // For Email:
             else if (method === 'email') {
+                const emailRecipient = !isDev
+                    ? req.user.email
+                    : process.env.TEST_EMAIL_RECIPIENT;
+
                 // Enable method, if not yet enabled
                 if (!user.mfaMethods.email.enabled) {
                     user.mfaMethods.email = {
@@ -312,7 +320,7 @@ export const userController = {
                 }
 
                 // Generate and email otp code
-                sendOTPCodeEmail(user._id, email);
+                sendOTPCodeEmail(user._id, emailRecipient);
 
                 console.log('Success -- code sent');
 
@@ -328,10 +336,8 @@ export const userController = {
         }
     },
 
-    //TODO: Add validation for input
+    // [-] TODO: Add validation for input
     verifyMfaMethod: async (req, res) => {
-        const email = process.env.TEST_EMAIL_RECIPIENT; // FOR TESTING only
-
         console.log('Starting MFA method verification...');
         const { method, otpCode } = matchedData(req);
 
