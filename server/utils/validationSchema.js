@@ -177,8 +177,8 @@ export const validationSchema = {
         // isEmpty: { negated: true },
         isString: true,
         isLength: {
-            options: { min: 8, max: 64 },
-            errorMessage: 'Password must at least 8 characters',
+            options: { min: 12, max: 64 },
+            errorMessage: 'Password must at least 12 characters',
         },
     },
 
