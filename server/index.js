@@ -50,15 +50,15 @@ import parseQuery from './services/parseAdminQuery.js';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-if (isDev) {
-    dotenv.config();
-}
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOrigin = process.env.CLIENT_URL;
 
-app.set('trust proxy', 1);
+if (!isDev) {
+    app.set('trust proxy', 1);
+}
 
 app.use(
     helmet({

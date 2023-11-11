@@ -34,7 +34,7 @@ export const passportAuthenticate = {
                     });
 
                 // If user doesn't have mfa set up/enabled, complete login & return auth token
-                if (!user.mfaEnabled) {
+                if (!user.mfa.enabled) {
                     req.login(user, next); // Call passport login function (to set req.user and send to session)
                     User.saveLogin(user);
                 } else {
