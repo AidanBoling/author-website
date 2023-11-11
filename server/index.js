@@ -113,7 +113,7 @@ app.use(
         proxy: !isDev,
         cookie: {
             // domain: isDev ? '.localhost' : null, //Remove in Production
-            path: '/admin',
+            path: '/',
             httpOnly: true,
             secure: !isDev,
             maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE),
