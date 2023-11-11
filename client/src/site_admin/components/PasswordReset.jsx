@@ -8,8 +8,7 @@ import UserForm from './UserForm';
 
 export default function PasswordReset() {
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const searchParams = useSearchParams();
-    // const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const params = {
         token: searchParams.get('token'),
         id: searchParams.get('id'),
