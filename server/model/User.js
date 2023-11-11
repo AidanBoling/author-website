@@ -1,8 +1,5 @@
 import mongoose from 'mongoose';
 import argon2 from 'argon2';
-// import passport from 'passport';
-
-// import findOrCreate from 'mongoose-findorcreate';
 
 const { Schema, SchemaTypes, model } = mongoose;
 
@@ -21,8 +18,8 @@ const userSchema = new Schema(
             methodsVerified: { type: Number, default: 0 },
             defaultMethod: { type: String },
         },
-        mfaEnabled: { type: Boolean, default: false },
-        mfaDefaultMethod: { type: String },
+        // mfaEnabled: { type: Boolean, default: false },
+        // mfaDefaultMethod: { type: String },
         mfaAppSecret: String,
         mfaMethods: {
             authApp: {
@@ -34,10 +31,10 @@ const userSchema = new Schema(
                 verified: { type: Boolean, default: false },
             },
         },
-        permissionLevel: {
-            type: String,
-            default: 'user',
-        },
+        // permissionLevel: {
+        //     type: String,
+        //     default: 'user',
+        // },
         createdAt: {
             type: Date,
             default: () => Date.now(),
@@ -142,11 +139,3 @@ userSchema.static('saveLogin', user => {
 
 const User = model('User', userSchema);
 export default User;
-
-// userSchema.plugin(passportLocalMongoose, {usernameLowerCase: true});
-// userSchema.plugin(findOrCreate);
-
-// // var secret = process.env.USERDB_SECRET;
-// // userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
-
-// const User = model('User', userSchema);
