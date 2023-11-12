@@ -43,7 +43,7 @@ export async function getList(resource, params) {
     let query = '';
     if (params) {
         const queryString = new URLSearchParams(params).toString();
-        console.log(queryString);
+        // console.log(queryString);
         query = `?${queryString}`;
     }
 

@@ -1,8 +1,8 @@
 import ResourceGalleryCard from '../cards/ResourceGalleryCard';
-import { getListCache } from '@/main/api/getResourceItems';
+import { getList } from '@/main/api/getResourceItems';
 
 export default async function PostsCards(props) {
-    const posts = await getListCache('posts', props.listParams);
+    const posts = await getList('posts', props.listParams);
     // console.log('Posts found: ', posts);
 
     return posts.items.length > 0 ? (
