@@ -1,29 +1,48 @@
 import { Suspense } from 'react';
 import PageWrapper from '@/main/components/layout/PageWrapper';
+import PagePagination from '@/main/components/layout/PagePagination';
+import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
+import { getListPaginated } from '@/main/api/getResourceItems';
 import Articles from '@/main/components/mainPages/Articles';
-import { getList } from '@/main/api/getResourceItems';
 import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
 
-// async function GetArticles() {
-//
-//     return (
-//         <Suspense fallback={<ResourceCardSkeleton hasMedia />}>
-//             <Articles articles={articles} />
-//         </Suspense>
-//     );
-// }
+async function FetchArticlesList({ page, limit, params }) {
+    const queryResults = await getListPaginated(
+        'articles',
+        page,
+        limit,
+        params
+    );
+    const { items } = queryResults;
+    return <Articles articles={items} />;
+}
 
 export default async function Page({ searchParams }) {
-    // console.log(searchParams);
-    const queryResults = await getList('articles', searchParams);
+    const { page, limit, ...params } = searchParams;
+    const currentPage = (page && Number(page)) || 1;
+    const pageLimit = (limit && Number(limit)) || pageLimitOptions[0];
+
+    const queryResults = await getListPaginated(
+        'articles',
+        currentPage,
+        pageLimit,
+        params
+    );
     const { items, ...pageInfo } = queryResults;
-    console.log('Articles page results: ', pageInfo);
+    // console.log('Articles page results: ', pageInfo);
 
     return (
         <PageWrapper header="Articles" pagination={pageInfo}>
-            <Suspense fallback={<ResourceCardSkeleton hasMedia />}>
-                <Articles articles={items} />
+            <Suspense
+                key={currentPage + pageLimit + params}
+                fallback={<ResourceCardSkeleton hasMedia />}>
+                <FetchArticlesList
+                    page={currentPage}
+                    limit={pageLimit}
+                    params={params}
+                />
             </Suspense>
+            <PagePagination pagination={pageInfo} />
         </PageWrapper>
     );
 }

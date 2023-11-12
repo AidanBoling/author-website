@@ -680,7 +680,6 @@ app.get(BASE + 'admin/auth/user', async (req, res) => {
                 count: user.mfa.methodsVerified,
             },
         };
-        console.log('mfa info: ', userInfo.mfa);
 
         res.json(userInfo);
     } catch (error) {

@@ -22,7 +22,7 @@ function parseResponse(response) {
 
 function handleResponse({ status, body }, passValidationErrors = false) {
     console.log('Handling response...');
-    // console.log('Response content: ', body);
+    console.log('Response content: ', body);
 
     // If unauthorized or other error:
     // function handleStatusNotOk(res)
@@ -242,7 +242,7 @@ export const authProvider = {
 
             // console.log('Params: ', params);
 
-            // TODO: Add some sort of validation of id and token params here, so if
+            // TODO (maybe): Add some sort of validation of id and token params here, so if
             // not correct format, doesn't even go to api (may help with DDoS or something?? Check...)
 
             const request = setRequest('/mod/checkAuth', {
@@ -392,6 +392,8 @@ export const authProvider = {
             const data = await fetch(request)
                 .then(response => parseResponse(response))
                 .then(response => handleResponse(response));
+
+            console.log('Data request sent. ');
 
             if (data) {
                 // console.log('User data: ', data);

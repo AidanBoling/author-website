@@ -5,7 +5,7 @@ const BASE_URL = process.env.BASE_API_URL;
 
 // TEST, get lists with preload, and cache:
 export const preloadGetList = (resource, params) => {
-    void getListCache(resource, params);
+    void getList(resource, params);
 };
 
 export const getListCache = cache(async (resource, params) => {
@@ -21,9 +21,25 @@ export const getListCache = cache(async (resource, params) => {
     });
 });
 
+export async function getListPaginated(resource, page, limit, params) {
+    let query = '';
+    if (params) {
+        const queryString = new URLSearchParams(params).toString();
+        // console.log(queryString);
+        query = `?${queryString}`;
+    }
+
+    return await fetch(
+        `${BASE_URL}/${resource}?page=${page}&limit=${limit}&${query}`
+    ).then(response => {
+        return response.json();
+    });
+}
+
 // Regular way to get list, without preload and cache (delete if test works):
 
 export async function getList(resource, params) {
+    // options = { next: { revalidate: 300 } }
     let query = '';
     if (params) {
         const queryString = new URLSearchParams(params).toString();
