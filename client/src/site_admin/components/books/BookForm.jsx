@@ -2,7 +2,6 @@
 import {
     SimpleForm,
     TextInput,
-    // ImageInput,
     DateInput,
     SelectInput,
     ArrayInput,
@@ -10,9 +9,18 @@ import {
 } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';
+import CreateResourceTagsField from '../CreateResourceTagsField';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
-function BookForm() {
+function BookForm({ newRecord }) {
+    const tagsField = newRecord ? (
+        <CreateResourceTagsField resource="books" />
+    ) : (
+        <RecordTagsFieldLabel>
+            <TagsListEdit resource="books" />
+        </RecordTagsFieldLabel>
+    );
+
     return (
         <SimpleForm>
             <TextInput source="title" className="form" />
@@ -50,16 +58,13 @@ function BookForm() {
                 </Grid>
             </Grid>
 
-            {/* <ImageInput source="coverImageUrl" className="form" /> */}
             <ArrayInput source="purchaseInfo">
                 <SimpleFormIterator inline>
                     <TextInput source="location" helperText={false} />
                     <TextInput source="link" helperText={false} />
                 </SimpleFormIterator>
             </ArrayInput>
-            <RecordTagsFieldLabel>
-                <TagsListEdit resource="books" />
-            </RecordTagsFieldLabel>
+            {tagsField}
         </SimpleForm>
     );
 }

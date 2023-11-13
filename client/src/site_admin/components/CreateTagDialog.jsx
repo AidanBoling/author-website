@@ -46,17 +46,11 @@ export default function CreateTagDialog({
     newRecord,
 }) {
     const record = useRecordContext();
-    // [-] TODO: Check the useCreateSuggestionContext change below.
-    // Had to remove the conditional because it broke
-    // a react hook rule ("React Hook "useCreateSuggestionContext" is called conditionally. React Hooks must be called in the exact same order in every component render.")
-    // Not sure if this will break the ui.
+    // Note: The conditional below breaks a react hook rule ("React Hook "useCreateSuggestionContext" is called conditionally. React Hooks must be called in the exact same order in every component render.")
+    // However can't get it to work any other way (unless I duplicate this and adjust for New records only)
 
-    // const { filter, onCancel, onCreate } = newRecord
-    //     ? useCreateSuggestionContext()
-    //     : {};
-    let createSuggestionContext = useCreateSuggestionContext();
     const { filter, onCancel, onCreate } = newRecord
-        ? createSuggestionContext
+        ? useCreateSuggestionContext()
         : {};
 
     const [newTagName, setNewTagName] = useState((newRecord && filter) || '');
@@ -69,7 +63,7 @@ export default function CreateTagDialog({
 
     function handleCloseDialog() {
         if (newRecord) {
-            onCancel;
+            onCancel();
         } else {
             setOpen(false);
         }

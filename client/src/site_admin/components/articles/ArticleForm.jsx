@@ -8,8 +8,17 @@ import {
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid } from '@mui/material';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
+import CreateResourceTagsField from '../CreateResourceTagsField';
 
-function ArticleForm() {
+function ArticleForm({ newRecord }) {
+    const tagsField = newRecord ? (
+        <CreateResourceTagsField resource="articles" />
+    ) : (
+        <RecordTagsFieldLabel>
+            <TagsListEdit resource="articles" />
+        </RecordTagsFieldLabel>
+    );
+
     return (
         <TabbedForm>
             <TabbedForm.Tab label="Main">
@@ -19,16 +28,23 @@ function ArticleForm() {
                     className="form"
                     label="Link to Article"
                 />
-                <TextInput
-                    source="image.url"
-                    className="form"
-                    label="Image URL"
-                />
-                <TextInput
-                    source="image.altText"
-                    className="form"
-                    label="Image Description (accessibility)"
-                />
+                <Grid container spacing={2} className="form">
+                    <Grid item xs={12} sm={6}>
+                        <TextInput
+                            source="image.url"
+                            label="Cover Image URL"
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextInput
+                            source="image.altText"
+                            label="Image Description (accessibility)"
+                            fullWidth
+                        />
+                    </Grid>
+                </Grid>
+
                 <TextInput
                     source="descriptionShort"
                     multiline
@@ -59,9 +75,7 @@ function ArticleForm() {
                         <TextInput source="publisher.website" fullWidth />
                     </Grid>
                 </Grid>
-                <RecordTagsFieldLabel>
-                    <TagsListEdit resource="articles" />
-                </RecordTagsFieldLabel>
+                {tagsField}
             </TabbedForm.Tab>
             <TabbedForm.Tab label="Content">
                 <RichTextInput

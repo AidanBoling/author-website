@@ -25,11 +25,11 @@ export default async function Page({ searchParams }) {
         pageLimit,
         params
     );
-    const { items, ...pageInfo } = queryResults;
+    // const { items, ...pageInfo } = queryResults;
     // console.log('Posts page results: ', pageInfo);
 
     return (
-        <PageWrapper header="Posts" pagination={pageInfo}>
+        <PageWrapper header="Posts">
             <Suspense
                 key={currentPage + pageLimit + params}
                 fallback={<ResourceCardSkeleton hasMedia />}>
@@ -39,7 +39,7 @@ export default async function Page({ searchParams }) {
                     params={params}
                 />
             </Suspense>
-            <PagePagination pagination={pageInfo} />
+            <PagePagination pagination={queryResults} />
         </PageWrapper>
     );
 }

@@ -4,7 +4,7 @@ import ArticleForm from './ArticleForm';
 function ArticleCreate() {
     return (
         <Create redirect="show">
-            <ArticleForm />
+            <ArticleForm newRecord />
         </Create>
     );
 }

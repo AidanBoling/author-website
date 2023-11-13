@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getList, getListPaginated } from '@/main/api/getResourceItems';
+import { getListPaginated } from '@/main/api/getResourceItems';
 import PageWrapper from '@/main/components/layout/PageWrapper';
 import PagePagination from '@/main/components/layout/PagePagination';
 import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
@@ -32,7 +32,7 @@ export default async function Page({ searchParams }) {
         pageLimit,
         params
     );
-    const { items, ...pageInfo } = queryResults;
+    // const { items, ...pageInfo } = queryResults;
     // console.log('Articles page results: ', pageInfo);
 
     return (
@@ -46,7 +46,7 @@ export default async function Page({ searchParams }) {
                     params={params}
                 />
             </Suspense>
-            <PagePagination pagination={pageInfo} />
+            <PagePagination pagination={queryResults} />
         </PageWrapper>
     );
 }

@@ -4,12 +4,12 @@ import BookForm from './BookForm';
 function BookCreate() {
     return (
         <Create redirect="show">
-            <BookForm />
+            <BookForm newRecord />
         </Create>
     );
 }
 
 export default BookCreate;
 
-// TODO
+// [-] TODO
 // Make sure if published=true, also sends the current date as publishDate...
