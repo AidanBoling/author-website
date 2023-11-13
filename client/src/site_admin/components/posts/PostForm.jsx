@@ -1,6 +1,6 @@
 import { SimpleForm, TextInput, BooleanInput } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import CreateResourceTagsField from '../CreateResourceTagsField';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
@@ -40,7 +40,9 @@ function PostForm({ newRecord }) {
                 </Grid>
             </Grid>
             {tagsField}
-            <BooleanInput source="published" label="Publish" />
+            <Box sx={{ mt: '2rem' }}>
+                <BooleanInput source="published" label="Publish" />
+            </Box>
         </SimpleForm>
     );
 }
