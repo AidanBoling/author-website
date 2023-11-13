@@ -33,11 +33,29 @@ function ArticleList() {
                     linkType="show"
                 />
             ) : (
-                <Datagrid rowClick="show">
+                <Datagrid
+                    rowClick="show"
+                    sx={{
+                        '& .column-title': {
+                            maxWidth: '350px',
+                            minWidth: '200px',
+                        },
+                        '& .column-datePublished': { maxWidth: '100px' },
+                        '& .column-tags': { minWidth: '175px' },
+                        '& .column-publisher.name': { minWidth: '200px' },
+                    }}>
                     <TextField source="title" />
-                    <UrlField source="url" />
-                    <TextField source="publisher.name" />
                     <DateField source="datePublished" />
+                    <UrlField
+                        source="url"
+                        style={{
+                            display: 'inline-block',
+                            maxWidth: '130px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}
+                    />
+                    <TextField source="publisher.name" />
                     {/* <TextField source="descriptionShort" /> */}
                     <ReferenceArrayField
                         label="Tags"

@@ -11,7 +11,7 @@ import {
 } from 'react-admin';
 import TagField from '../TagField';
 
-//TODO: troubleshoot how to get search filter field to show search button...
+// TODO: troubleshoot how to get search filter field to show search button...
 
 function PostList() {
     const postFilters = [
@@ -24,9 +24,17 @@ function PostList() {
             filters={postFilters}
             filterDefaultValues={{ published: true }}
             sort={{ field: 'datePublished', order: 'DESC' }}>
-            <Datagrid rowClick="show">
-                <DateField source="createdAt" />
+            <Datagrid
+                rowClick="show"
+                sx={{
+                    '& .column-tags': { minWidth: '175px' },
+                    '& .column-createdAt': { maxWidth: '150px' },
+                    '& .column-datePublished': { maxWidth: '150px' },
+                }}>
                 <TextField source="title" />
+                <DateField source="datePublished" />
+
+                <DateField source="createdAt" />
                 <ReferenceArrayField
                     label="Tags"
                     reference="tags"

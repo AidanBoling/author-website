@@ -31,7 +31,12 @@ function BookList() {
                     linkType="show"
                 />
             ) : (
-                <Datagrid rowClick="show">
+                <Datagrid
+                    rowClick="show"
+                    sx={{
+                        '& .column-tags': { minWidth: '175px' },
+                        '& .column-title': { minWidth: '225px' },
+                    }}>
                     <TextField source="title" />
                     <DateField source="datePublished" />
                     <TextField source="description.short" />
