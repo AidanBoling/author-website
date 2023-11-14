@@ -88,9 +88,8 @@ export function NavButton({ page }) {
             disableRipple
             component={Link}
             href={page.link}
-            zIndex={1}
+            // zIndex={1}
             underline="none"
-            ulWidth={`${ulWidth}ch`}
             onMouseDown={handleClick}
             onTouchStart={handleClick}
             className={(active && 'isActive') + ' ' + (clicked && 'isClicked')}>

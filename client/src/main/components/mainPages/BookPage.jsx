@@ -1,41 +1,31 @@
 'use client';
-// import { useState, useEffect } from 'react';
-// import { useParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
-// import { getById } from '@/main/api/getResourceItems';
 // import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
 function BookPage({ book }) {
-    // if (!book) {
-    //     notFound();
-    // }
-
-    // const params = useParams();
-    // console.log(bookId);
-    // const [book, setBook] = useState('');
-
     const breakpoint = 'md';
     const coverWidth = { xs: '75vw', sm: 400, [breakpoint]: 300 };
     const baselineGap = '2.5rem';
 
     const Header = () => (
-        <div className="book-header fullpage">
-            <Typography variant="h3" component="h2" mb={baselineGap}>
+        <>
+            <Typography variant="h3" component="h2">
                 {book.title}
             </Typography>
-        </div>
+            <Typography
+                variant="h6"
+                componenent="p"
+                color="grey.main"
+                mb={baselineGap}>
+                {`${new Date(book.datePublished).toLocaleDateString('en-us', {
+                    month: 'long',
+                    year: 'numeric',
+                })}`}
+            </Typography>
+        </>
     );
-
-    // useEffect(() => {
-    //     async function fetchItem() {
-    //         const foundItem = await getById(params.id, 'books');
-    //         // console.log(foundItem);
-    //         setBook(foundItem);
-    //     }
-    //     fetchItem();
-    // }, []);
 
     return (
         <>
@@ -68,7 +58,7 @@ function BookPage({ book }) {
                             />
                         </Box>
                         <Header />
-                        <Box className="book-content">
+                        <Box>
                             {book.description.long ? (
                                 <div
                                     dangerouslySetInnerHTML={{
@@ -98,17 +88,6 @@ function BookPage({ book }) {
                                 ))}
                             </Box>
                         )}
-                    </Box>
-                    <Box className="book-details" sx={{ width: '100%' }}>
-                        <Typography paragraph>
-                            {`Published: ${new Date(
-                                book.datePublished
-                            ).toLocaleDateString('en-us', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric',
-                            })}`}
-                        </Typography>
                     </Box>
                 </Box>
             )}

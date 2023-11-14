@@ -5,7 +5,7 @@ import pageContent from '../../content/eventsContent.json';
 function Events({ children }) {
     return (
         <>
-            <Box sx={{ my: '2rem' }}>
+            <Box sx={{ mt: '2rem', mb: '3rem' }}>
                 {pageContent.headerText.map((paragraph, i) => (
                     <Typography key={i} mb={'2rem'}>
                         {paragraph}

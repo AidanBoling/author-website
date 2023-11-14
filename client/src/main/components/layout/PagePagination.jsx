@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Button, Menu, MenuItem, Tooltip } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from '@mui/material/Pagination';
@@ -34,6 +34,18 @@ export default function PagePagination(props) {
         },
         [searchParams]
     );
+
+    useEffect(() => {
+        const totalPages = props.pagination
+            ? Number(props.pagination.totalPages)
+            : '';
+        // Auto-correct page number if a new page limit reduces total pages below current page number
+        if (page > totalPages) {
+            const url = pathname + '?' + createQueryString('page', totalPages);
+            setPage(totalPages);
+            router.replace(url);
+        }
+    }, [searchParams]);
 
     function handlePageChange(event, value) {
         // console.log('Page: ' + value);

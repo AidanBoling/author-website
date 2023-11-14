@@ -39,13 +39,6 @@ function ResourceCard(props) {
               day: 'numeric',
           };
     const datePublished = props.published ? props.published : props.created;
-    // let linkAriaLabel;
-
-    // const linkAriaLabel =
-    //     props.mainLinkTo &&
-    //     (props.mainLinkLabel
-    //         ? props.mainLinkLabel
-    //         : `Link to full ${props.resource} page which opens in a new tab`);
 
     const expandButton = (
         <ExpandMore
@@ -58,71 +51,9 @@ function ResourceCard(props) {
         </ExpandMore>
     );
 
-    // if (props.mediaSXOverride) {
-    //     mediaSX = props.mediaSXOverride;
-    // }
-    // if (props.dateFormatOverride) {
-    //     dateFormat = props.dateFormatOverride;
-    // }
-
     function handleExpandClick() {
         setExpanded(!isExpanded);
     }
-
-    // function linkWrapper(content) {
-    //     if (props.mainLinkTo) {
-    //         if (props.mainLinkIsLocal) {
-    //             return (
-    //                 <Link
-    //                     component={RouterLink}
-    //                     to={props.mainLinkTo}
-    //                     underline="none"
-    //                     sx={{ ':hover': { color: 'primary.dark' } }}>
-    //                     {content}
-    //                 </Link>
-    //             );
-    //         } else {
-    //             return (
-    //                 <Link
-    //                     href={props.mainLinkTo}
-    //                     target="_blank"
-    //                     aria-label={linkAriaLabel}
-    //                     underline="none"
-    //                     sx={{ ':hover': { color: 'primary.dark' } }}>
-    //                     {content}
-    //                 </Link>
-    //             );
-    //         }
-    //     } else {
-    //         return content;
-    //     }
-    // }
-
-    // function mediaWithLink() {
-    //     if (props.mainLinkIsLocal) {
-    //         return (
-    //             <CardMedia
-    //                 component={RouterLink}
-    //                 to={props.mainLinkTo}
-    //                 sx={mediaSX}
-    //                 image={props.image}
-    //                 title={props.imageAlt}
-    //             />
-    //         );
-    //     } else {
-    //         return (
-    //             <CardMedia
-    //                 component="a"
-    //                 href={props.mainLinkTo}
-    //                 target="_blank"
-    //                 aria-label={linkAriaLabel}
-    //                 sx={mediaSX}
-    //                 image={props.image}
-    //                 title={props.imageAlt}
-    //             />
-    //         );
-    //     }
-    // }
 
     return (
         <Card
@@ -197,3 +128,78 @@ function ResourceCard(props) {
 }
 
 export default ResourceCard;
+
+//
+//
+// TEMP Archive ----------------------
+//
+
+// let linkAriaLabel;
+
+// const linkAriaLabel =
+//     props.mainLinkTo &&
+//     (props.mainLinkLabel
+//         ? props.mainLinkLabel
+//         : `Link to full ${props.resource} page which opens in a new tab`);
+
+// if (props.mediaSXOverride) {
+//     mediaSX = props.mediaSXOverride;
+// }
+// if (props.dateFormatOverride) {
+//     dateFormat = props.dateFormatOverride;
+// }
+
+// function linkWrapper(content) {
+//     if (props.mainLinkTo) {
+//         if (props.mainLinkIsLocal) {
+//             return (
+//                 <Link
+//                     component={RouterLink}
+//                     to={props.mainLinkTo}
+//                     underline="none"
+//                     sx={{ ':hover': { color: 'primary.dark' } }}>
+//                     {content}
+//                 </Link>
+//             );
+//         } else {
+//             return (
+//                 <Link
+//                     href={props.mainLinkTo}
+//                     target="_blank"
+//                     aria-label={linkAriaLabel}
+//                     underline="none"
+//                     sx={{ ':hover': { color: 'primary.dark' } }}>
+//                     {content}
+//                 </Link>
+//             );
+//         }
+//     } else {
+//         return content;
+//     }
+// }
+
+// function mediaWithLink() {
+//     if (props.mainLinkIsLocal) {
+//         return (
+//             <CardMedia
+//                 component={RouterLink}
+//                 to={props.mainLinkTo}
+//                 sx={mediaSX}
+//                 image={props.image}
+//                 title={props.imageAlt}
+//             />
+//         );
+//     } else {
+//         return (
+//             <CardMedia
+//                 component="a"
+//                 href={props.mainLinkTo}
+//                 target="_blank"
+//                 aria-label={linkAriaLabel}
+//                 sx={mediaSX}
+//                 image={props.image}
+//                 title={props.imageAlt}
+//             />
+//         );
+//     }
+// }
