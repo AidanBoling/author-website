@@ -20,6 +20,8 @@ import { NavbarModeButton, MenuModeToggle } from '../ColorModeToggles';
 import BgPatternBox from '../style/BgPatternBox';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import pageContent from '@/main/content/authorDetails.json';
+import { NavButton } from '@/main/components/NavButton';
 
 const pages = [
     { name: 'HOME', link: '/' },
@@ -30,7 +32,6 @@ const pages = [
     { name: 'ABOUT', link: '/about' },
     { name: 'CONTACT', link: '/contact' },
 ];
-const title = 'Jane Austen';
 
 function Navbar() {
     const [drawerState, setDrawerState] = useState(false);
@@ -91,7 +92,7 @@ function Navbar() {
                             href={'/'}
                             underline="none"
                             color="inherit">
-                            {title}
+                            {pageContent.author.name}
                         </MuiLink>
                     </Typography>
                     <Box
@@ -110,24 +111,7 @@ function Navbar() {
                                 mx: 'auto',
                             }}>
                             {pages.map(page => (
-                                <Typography
-                                    key={page.name}
-                                    component="span"
-                                    zIndex={1}
-                                    sx={{ ...navTextStyles }}>
-                                    <MuiLink
-                                        component={Link}
-                                        href={page.link}
-                                        underline="none"
-                                        color="inherit"
-                                        sx={{
-                                            ':hover': {
-                                                color: 'lightgold.light',
-                                            },
-                                        }}>
-                                        {page.name}
-                                    </MuiLink>
-                                </Typography>
+                                <NavButton key={page.name} page={page} />
                             ))}
                         </Box>
                         <Box
@@ -206,3 +190,29 @@ function Navbar() {
 }
 
 export default Navbar;
+
+//
+//
+// TEMP Archive -------------------
+//
+
+//{/* {pages.map(page => (
+//<Typography
+// key={page.name}
+// component="span"
+// zIndex={1}
+// sx={{ ...navTextStyles }}>
+// <MuiLink
+//     component={Link}
+//     href={page.link}
+//     underline="none"
+//     color="inherit"
+//     sx={{
+//         ':hover': {
+//             color: 'lightgold.light',
+//         },
+//     }}>
+//     {page.name}
+// </MuiLink>
+// </Typography>
+// ))}
