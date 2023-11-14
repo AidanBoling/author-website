@@ -62,7 +62,7 @@ const themeBase = {
         h4: { fontSize: '2.2rem', fontWeight: '300' },
         h5: { fontSize: '1.75rem' },
         h6: { fontSize: '1.4rem' },
-        // body1: { marginBottom: '1rem' },
+        body1: { marginBottom: '1rem' },
     },
     components: {
         MuiAppBar: {
@@ -90,6 +90,7 @@ const themeBase = {
                     ...(ownerState.variant === 'subheading1' && {
                         color: theme.palette.text.secondary,
                     }),
+
                     ...(ownerState.component === 'p' && {
                         marginBottom: '1rem',
                     }),

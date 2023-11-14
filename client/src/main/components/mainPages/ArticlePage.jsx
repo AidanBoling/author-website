@@ -3,69 +3,67 @@ import PeriodicalsHeading from '@/main/components/layout/PeriodicalsHeading';
 import PeriodicalsBody from '../layout/PeriodicalsBody';
 import { Box, Typography, Link } from '@mui/material';
 import NorthEastSharpIcon from '@mui/icons-material/NorthEastSharp';
+import PeriodicalsFooter from '../layout/PeriodicalsFooter';
 
 function ArticlePage({ article }) {
     return (
-        <>
-            {article && (
-                <>
-                    {/* {console.log(article)} */}
-                    <PeriodicalsHeading
-                        title={article.title}
-                        published={article.datePublished}
-                    />
-                    <PeriodicalsBody
-                        periodical={article}
-                        content={article.content}
-                        contentFallback={article.descriptionShort}>
-                        {article.publisher.name && (
-                            <Box
-                                className="article details"
-                                sx={{ mt: '4rem' }}>
-                                {/* TODO: - Make sure links open in new tab */}
-                                <Typography>
-                                    Publisher:{' '}
-                                    <Link
-                                        href={article.publisher.website}
-                                        target="_blank"
-                                        aria-label={`Link to publisher's website, which opens in a new tab`}
-                                        underline="none"
+        article && (
+            <>
+                {/* {console.log(article)} */}
+                <PeriodicalsHeading
+                    title={article.title}
+                    published={article.datePublished}
+                />
+                <PeriodicalsBody
+                    periodical={article}
+                    content={article.content}
+                    contentFallback={article.descriptionShort}>
+                    {article.publisher.name && (
+                        <Box className="article details" sx={{ mt: '4rem' }}>
+                            {/* TODO: - Make sure links open in new tab */}
+                            <Typography>
+                                Publisher:{' '}
+                                <Link
+                                    href={article.publisher.website}
+                                    target="_blank"
+                                    aria-label={`Link to publisher's website, which opens in a new tab`}
+                                    underline="none"
+                                    sx={{
+                                        ':hover': { color: 'primary.dark' },
+                                    }}>
+                                    {article.publisher.name}{' '}
+                                    <NorthEastSharpIcon
+                                        fontSize="xsmall"
                                         sx={{
-                                            ':hover': { color: 'primary.dark' },
-                                        }}>
-                                        {article.publisher.name}{' '}
-                                        <NorthEastSharpIcon
-                                            fontSize="xsmall"
-                                            sx={{
-                                                color: 'primary.dark',
-                                            }}
-                                        />
-                                    </Link>
-                                </Typography>
-                                <Typography>
-                                    <Link
-                                        href={article.url}
-                                        target="_blank"
-                                        aria-label={`Link to article on publisher's website, which opens in a new tab`}
+                                            color: 'primary.dark',
+                                        }}
+                                    />
+                                </Link>
+                            </Typography>
+                            <Typography>
+                                <Link
+                                    href={article.url}
+                                    target="_blank"
+                                    aria-label={`Link to article on publisher's website, which opens in a new tab`}
+                                    sx={{
+                                        ':hover': { color: 'primary.dark' },
+                                    }}>
+                                    See article in external site
+                                    <NorthEastSharpIcon
+                                        fontSize="xsmall"
                                         sx={{
-                                            ':hover': { color: 'primary.dark' },
-                                        }}>
-                                        See article in external site
-                                        <NorthEastSharpIcon
-                                            fontSize="xsmall"
-                                            sx={{
-                                                ml: '.3rem',
-                                                color: 'primary.dark',
-                                            }}
-                                        />
-                                    </Link>
-                                </Typography>
-                            </Box>
-                        )}
-                    </PeriodicalsBody>
-                </>
-            )}
-        </>
+                                            ml: '.3rem',
+                                            color: 'primary.dark',
+                                        }}
+                                    />
+                                </Link>
+                            </Typography>
+                        </Box>
+                    )}
+                </PeriodicalsBody>
+                <PeriodicalsFooter />
+            </>
+        )
     );
 }
 

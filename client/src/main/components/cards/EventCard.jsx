@@ -14,6 +14,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    Divider,
 } from '@mui/material';
 // import { styled } from '@mui/material/styles';
 // import { palette } from '@mui/system';
@@ -57,8 +58,9 @@ function EventCard(props) {
             </Box>
             <Box className="resource-card content" sx={{ width: '100%' }}>
                 <CardHeader title={props.event.title} />
+                <Divider sx={{ marginLeft: '1rem', width: '80%' }} />
                 <CardContent>
-                    <List>
+                    <List sx={{ paddingY: 0 }}>
                         <ListItem disablePadding>
                             <ListItemText
                                 primary={new Date(
@@ -84,9 +86,11 @@ function EventCard(props) {
                                 })}`}
                             />
                         </ListItem>
-                        <ListItem disablePadding>
-                            <ListItemText primary={props.event.location} />
-                        </ListItem>
+                        {props.event.location && (
+                            <ListItem disablePadding>
+                                <ListItemText primary={props.event.location} />
+                            </ListItem>
+                        )}
                     </List>
                 </CardContent>
 
@@ -113,18 +117,28 @@ function EventCard(props) {
                             )
                         )}
                     {props.event.details && (
-                        <ExpandMore
-                            expand={isExpanded}
-                            onClick={handleExpandClick}
-                            aria-expanded={isExpanded}
-                            aria-label="show more event details">
-                            <ExpandMoreIcon />
-                        </ExpandMore>
+                        <Box sx={{ display: 'flex' }}>
+                            <ExpandMore
+                                expand={isExpanded}
+                                onClick={handleExpandClick}
+                                aria-expanded={isExpanded}
+                                aria-label="show more event details">
+                                <ExpandMoreIcon />
+                            </ExpandMore>
+                            <Typography
+                                sx={{
+                                    ml: '.2rem',
+                                    alignSelf: 'center',
+                                    color: 'grey.main',
+                                }}>
+                                <i>More Details</i>
+                            </Typography>
+                        </Box>
                     )}
                 </CardActions>
                 {props.event.details && (
                     <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                        <CardContent>
+                        <CardContent sx={{ paddingY: '0 !important' }}>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(

@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
-import { Box, Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import ResponsiveImageContainer from '@/main/components/ResponsiveImageContainer';
 
 export default function PeriodicalsBody(props) {
@@ -37,14 +37,6 @@ export default function PeriodicalsBody(props) {
                 )}
             </Box>
             {props.children}
-            <Divider
-                sx={{
-                    width: '95%',
-                    maxWidth: '800px',
-                    pt: '5rem',
-                    mx: 'auto',
-                }}
-            />
         </Box>
     );
 }

@@ -2,6 +2,7 @@
 import { Box, Container, Typography } from '@mui/material';
 // import InnerPageContainer from './InnerPageContainer';
 import BgPatternBox from '../style/BgPatternBox';
+import pageContent from '@/main/content/authorDetails.json';
 
 function Footer(props) {
     return (
@@ -25,11 +26,11 @@ function Footer(props) {
                         py: '2rem',
                     }}>
                     <Typography sx={{ fontSize: '14px' }}>
-                        © {new Date().getFullYear()} Lauren Hall
+                        © {new Date().getFullYear()} {pageContent.author.name}
                     </Typography>
-                    <Typography sx={{ fontSize: '14px' }}>
+                    {/* <Typography sx={{ fontSize: '14px' }}>
                         Created by Aidan Boling
-                    </Typography>
+                    </Typography> */}
                 </Box>
             </Container>
         </Box>

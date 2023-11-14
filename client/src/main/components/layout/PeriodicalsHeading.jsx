@@ -1,5 +1,6 @@
 'use client';
 import { Box, Typography, Divider } from '@mui/material';
+import DividerStyled from '../DividerStyled';
 
 export default function PeriodicalsHeading(props) {
     return (
@@ -10,7 +11,7 @@ export default function PeriodicalsHeading(props) {
                 alignItems: 'baseline',
                 flexDirection: 'column',
             }}>
-            <Divider sx={{ mx: 'auto', my: '.5rem', width: '85%' }} />
+            <DividerStyled sx={{ my: '.5rem', width: '85%' }} />
             <Typography
                 variant="h3"
                 component="h2"

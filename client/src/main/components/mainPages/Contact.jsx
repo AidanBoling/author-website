@@ -7,7 +7,7 @@ import pageContent from '../../content/contactContent.json';
 function Contact() {
     return (
         <Box>
-            <Box mx={'2rem'} px={'2rem'}>
+            <Box mb={'3rem'}>
                 {pageContent.headerText.map((paragraph, i) => (
                     <Typography key={i} mb={'2rem'}>
                         {paragraph}

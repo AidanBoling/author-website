@@ -1,5 +1,6 @@
 'use client';
 import { Box, Typography, Divider } from '@mui/material';
+import DividerStyled from '../DividerStyled';
 
 function PageTitle(props) {
     return (
@@ -14,7 +15,7 @@ function PageTitle(props) {
             <Typography variant="h2" component="h2" textAlign={'center'}>
                 {props.title}
             </Typography>
-            <Divider sx={{ width: '80vw', maxWidth: '700px' }} />
+            <DividerStyled sx={{ width: '80vw', maxWidth: '700px' }} />
         </Box>
     );
 }

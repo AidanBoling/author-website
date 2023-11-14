@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import pageContent from '@/main/content/authorDetails.json';
 
 export default function AboutAuthorMini() {
     const theme = useTheme();
@@ -20,15 +21,13 @@ export default function AboutAuthorMini() {
                 display: 'flex',
                 alignItems: 'center',
             }}>
-            <i>Jane Austen</i>
+            <i>{pageContent.author.name}</i>
         </Typography>
     );
 
     const authorDescription = (
         <Typography sx={{ mt: '1rem' }}>
-            A description about the author, interdum et malesuada fames ac ante
-            ipsum primis in faucibus. Nulla tempor lectus sed nunc laoreet
-            euismod. Pellentesque viverra ligula ac neque congue tristique.
+            {pageContent.author.summary}
         </Typography>
     );
 
@@ -51,7 +50,7 @@ export default function AboutAuthorMini() {
                     },
                 }}>
                 <Image
-                    src="https://picsum.photos/200/200?random=1"
+                    src={pageContent.author.avatarURL}
                     alt="image of the author"
                     height={120}
                     width={120}

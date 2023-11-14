@@ -1,6 +1,7 @@
 'use client';
 import { Paper, Stack, Typography } from '@mui/material';
 import SubscribeForm from './SubscribeForm';
+import pageContent from '@/main/content/formsContent.json';
 
 export default function NewsletterForm() {
     const breakpoint = 'md';
@@ -22,10 +23,7 @@ export default function NewsletterForm() {
                     Subscribe to my monthly newsletter!
                 </Typography>
                 <Typography sx={{ mb: '2rem' }}>
-                    A newsletter where vestibulum a mi sit amet sem mollis
-                    euismod eget quis mi. Sed quis fermentum tortor. Nullam
-                    aliquet viverra lorem. Sed eu vehicula purus, vel rutrum
-                    nunc.
+                    {pageContent.subscribe.description}
                 </Typography>
             </Stack>
             <SubscribeForm buttonSize={'medium'} />

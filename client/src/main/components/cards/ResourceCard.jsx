@@ -10,6 +10,7 @@ import {
     Collapse,
     Typography,
     useMediaQuery,
+    Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandMore from '../ExpandToggle';
@@ -141,21 +142,22 @@ function ResourceCard(props) {
                         title={props.imageAlt}
                     />
                 ))}
-            <Box className="resource-card content">
+            <Box className="resource-card content" width={'100%'}>
                 <CardHeader
                     title={textLinkWrapper(props, props.title)}
                     subheader={
-                        <div>
-                            <Typography variant="h6" component="p">
+                        <>
+                            <Typography variant="h6" component="p" mb={0}>
                                 {new Date(datePublished).toLocaleDateString(
                                     'en-us',
                                     dateFormat
                                 )}
                             </Typography>
                             {props.publisher && <div>{props.publisher}</div>}
-                        </div>
+                        </>
                     }
                 />
+                <Divider sx={{ marginLeft: '1rem', width: '80%' }} />
                 {isSmall && props.content.length > 150 ? (
                     <>
                         <CardContent>
@@ -164,17 +166,29 @@ function ResourceCard(props) {
                                 : props.content}
                             <Collapse in={isExpanded} timeout="auto"></Collapse>
                         </CardContent>
-                        <CardActions>
-                            {!isExpanded
-                                ? props.actionsAlwaysShow
-                                : props.actions}
-                            {expandButton}
-                        </CardActions>
+                        {props.actionsAlwaysShow ||
+                            (props.actions && (
+                                <CardActions>
+                                    {!isExpanded
+                                        ? props.actionsAlwaysShow
+                                        : props.actions}
+                                    {expandButton}
+                                </CardActions>
+                            ))}
                     </>
                 ) : (
                     <>
                         <CardContent>{props.content}</CardContent>
-                        <CardActions>{props.actions}</CardActions>
+                        {props.actions && (
+                            <CardActions
+                                sx={{
+                                    paddingTop: '1rem',
+                                    paddingLeft: '1rem',
+                                    paddingRight: '1rem',
+                                }}>
+                                {props.actions}
+                            </CardActions>
+                        )}
                     </>
                 )}
             </Box>

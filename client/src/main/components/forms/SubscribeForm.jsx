@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { sendFormData } from '../../api/sendFormData';
 // import greenCheckmark from '../../assets/check_mark_green.png';
 import FormSubmitSuccessScreen from '@/main/components/forms/FormSubmitSuccessScreen';
+import pageContent from '@/main/content/formsContent.json';
 
 export default function SubscribeForm(props) {
     const [subscribeSuccessful, setSubscribeSuccessful] = useState(false);
@@ -50,20 +51,20 @@ export default function SubscribeForm(props) {
                     <Grid className="contactform" container spacing={1}>
                         <Grid xs={12}>
                             <TextFieldElement
-                                name="fName"
-                                label="First Name"
+                                name="name"
+                                label="Name"
                                 variant="outlined"
                                 size="small"
                             />
                         </Grid>
-                        <Grid xs={12}>
+                        {/* <Grid xs={12}>
                             <TextFieldElement
                                 name="lName"
                                 label="Last Name"
                                 variant="outlined"
                                 size="small"
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid xs={12}>
                             <TextFieldElement
                                 name="email"
@@ -99,10 +100,7 @@ export default function SubscribeForm(props) {
                         {subscribeError && (
                             <Grid xs={12}>
                                 <Typography color="error">
-                                    Sorry, there was an error subscribing to the
-                                    newsletter. Try again in a moment, or email
-                                    me at email@email.com and I&apos;ll add you
-                                    the old fashioned way.
+                                    {pageContent.subscribe.error}
                                 </Typography>
                             </Grid>
                         )}

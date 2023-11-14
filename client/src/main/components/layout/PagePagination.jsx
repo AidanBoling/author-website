@@ -5,6 +5,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from '@mui/material/Pagination';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
+import DividerStyled from '../DividerStyled';
 
 export default function PagePagination(props) {
     const initialPageLimitOption = props.pagination
@@ -69,78 +70,83 @@ export default function PagePagination(props) {
     }
     if (!props.pagination) return null;
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 11fr',
-                gridTemplateRows: '1fr',
-                mt: '4rem',
-            }}>
-            <Tooltip title="Items per page">
-                <Button
-                    id="page-limit-button"
-                    aria-controls={open ? 'page-limit-menu' : undefined}
-                    aria-haspopup="listbox"
-                    aria-expanded={open ? 'true' : undefined}
-                    aria-label="Set number of items per page"
-                    onClick={handleLimitButtonClick}
-                    variant="outlined"
-                    color="grey"
-                    sx={{
-                        backgroundColor: 'forestgreenAlpha10.main',
-                        gridArea: '1 / 1 / 1 / 1',
-                        justifySelf: 'flex-start',
-                        alignSelf: 'flex-start',
-                    }}>
-                    {pageLimitOptions[selectedIndex]}
-                    <ArrowDropDownIcon
-                        fontSize="medium"
-                        sx={{ ml: '.3rem', mr: '-.5rem' }}
-                    />
-                </Button>
-            </Tooltip>
-            <Menu
-                id="page-limit-menu"
-                // aria-labelledby="page-limit-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleLimitMenuClose}
-                MenuListProps={{
-                    'aria-labelledby': 'page-limit-button',
-                    role: 'listbox',
-                    dense: true,
-                    sx: {
-                        '&& .Mui-selected': {
-                            backgroundColor: 'greyAlpha50.main',
-                        },
-                    },
-                }}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    horizontal: 'left',
-                }}>
-                {pageLimitOptions.map((option, index) => (
-                    <MenuItem
-                        key={option}
-                        selected={index === selectedIndex}
-                        onClick={event => handlePageLimitSelect(event, index)}>
-                        {option}
-                    </MenuItem>
-                ))}
-            </Menu>
-            <Pagination
-                count={props.pagination.totalPages}
-                page={page}
-                onChange={handlePageChange}
-                size="medium"
+        <Box mt={'4rem'}>
+            <DividerStyled sx={{ width: '100%', marginBottom: '1.5rem' }} />
+            <Box
                 sx={{
-                    gridArea: '1 / 1 / -1 / -1',
-                    justifySelf: 'center',
-                }}
-            />
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 11fr',
+                    gridTemplateRows: '1fr',
+                    mt: '.5rem',
+                }}>
+                <Tooltip title="Items per page">
+                    <Button
+                        id="page-limit-button"
+                        aria-controls={open ? 'page-limit-menu' : undefined}
+                        aria-haspopup="listbox"
+                        aria-expanded={open ? 'true' : undefined}
+                        aria-label="Set number of items per page"
+                        onClick={handleLimitButtonClick}
+                        variant="outlined"
+                        color="grey"
+                        sx={{
+                            backgroundColor: 'forestgreenAlpha10.main',
+                            gridArea: '1 / 1 / 1 / 1',
+                            justifySelf: 'flex-start',
+                            alignSelf: 'flex-start',
+                        }}>
+                        {pageLimitOptions[selectedIndex]}
+                        <ArrowDropDownIcon
+                            fontSize="medium"
+                            sx={{ ml: '.3rem', mr: '-.5rem' }}
+                        />
+                    </Button>
+                </Tooltip>
+                <Menu
+                    id="page-limit-menu"
+                    // aria-labelledby="page-limit-button"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleLimitMenuClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'page-limit-button',
+                        role: 'listbox',
+                        dense: true,
+                        sx: {
+                            '&& .Mui-selected': {
+                                backgroundColor: 'greyAlpha50.main',
+                            },
+                        },
+                    }}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        horizontal: 'left',
+                    }}>
+                    {pageLimitOptions.map((option, index) => (
+                        <MenuItem
+                            key={option}
+                            selected={index === selectedIndex}
+                            onClick={event =>
+                                handlePageLimitSelect(event, index)
+                            }>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Menu>
+                <Pagination
+                    count={props.pagination.totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    size="medium"
+                    sx={{
+                        gridArea: '1 / 1 / -1 / -1',
+                        justifySelf: 'center',
+                    }}
+                />
+            </Box>
         </Box>
     );
 }

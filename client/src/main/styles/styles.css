@@ -394,9 +394,17 @@ aspect-ratio: 1.6;
     margin: 1rem;
 }
 
-.card .MuiCardContent-root {
-    padding-top: .5rem;
+.card .MuiCardHeader-root {
     padding-bottom: .5rem;
+}
+
+.card .MuiCardContent-root {
+    padding-top: 1rem;
+    padding-bottom: .5rem;
+}
+
+.card .MuiTypography-root:last-child {
+    margin-bottom: 0;
 }
 
 .MuiCard-root.resource-card.skeleton .content {
