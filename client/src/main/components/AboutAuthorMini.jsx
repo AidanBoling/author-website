@@ -10,7 +10,6 @@ export default function AboutAuthorMini() {
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const spacing = '2rem';
     const breakpoint = 'sm';
-    // const authorAvatar = <Image />;
 
     const authorName = (
         <Typography

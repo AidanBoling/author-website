@@ -13,14 +13,6 @@ async function FetchBooksList({ page, limit, params }) {
     return <Books books={items} />;
 }
 
-// async function FetchBooksListPages({page, params, children}) {
-//     const queryResults = await getListPaginated('books', page, params);
-//     const { items } = queryResults;
-//     return (
-//         <Books books={items} />
-//     );
-// }
-
 export default async function Page({ searchParams }) {
     const { page, limit, ...params } = searchParams;
     const currentPage = (page && Number(page)) || 1;

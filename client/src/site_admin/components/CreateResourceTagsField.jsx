@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ReferenceArrayInput, AutocompleteArrayInput } from 'react-admin';
 import { TagChip } from './TagField';
 import CreateTagDialog from './CreateTagDialog';

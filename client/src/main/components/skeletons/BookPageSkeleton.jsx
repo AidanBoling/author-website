@@ -1,7 +1,6 @@
 'use client';
 import { Box, Skeleton } from '@mui/material';
 import PageWrapper from '@/main/components/layout/PageWrapper';
-import DividerStyled from '../DividerStyled';
 
 function SkeletonTextStandard() {
     return <Skeleton variant="text" sx={{ fontSize: '1.25rem' }} />;

@@ -6,8 +6,6 @@ import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
 import Posts from '@/main/components/mainPages/Posts';
 import { ResourcesListSkeleton } from '@/main/components/skeletons/LoadingResourcesListPage';
 
-// import PostsList from '@/main/components/PostsList';
-
 async function FetchPostsList({ page, limit, params }) {
     const queryResults = await getListPaginated('posts', page, limit, params);
     const { items } = queryResults;

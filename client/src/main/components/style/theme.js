@@ -244,6 +244,16 @@ function buildTheme(themeOptions) {
     return theme;
 }
 
+const lightTheme = buildTheme(lightThemeOptions);
+const darkTheme = buildTheme(darkThemeOptions);
+
+export { lightTheme, darkTheme, lightThemeOptions, darkThemeOptions };
+
+//
+//
+// TEMP Archive -----------------------
+//
+
 // function getDesignTokens(mode) {
 //     return {
 //         palette: {
@@ -468,8 +478,3 @@ function buildTheme(themeOptions) {
 //     },
 //   },
 // };
-
-const lightTheme = buildTheme(lightThemeOptions);
-const darkTheme = buildTheme(darkThemeOptions);
-
-export { lightTheme, darkTheme, lightThemeOptions, darkThemeOptions };

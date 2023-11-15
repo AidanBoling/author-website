@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Typography, Link as MuiLink, ButtonBase } from '@mui/material';
+import { Typography, ButtonBase } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { usePathname } from 'next/navigation';
 // import { useTheme } from '@mui/material/styles';

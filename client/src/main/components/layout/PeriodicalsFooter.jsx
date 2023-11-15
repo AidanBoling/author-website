@@ -4,7 +4,7 @@ import NewsletterForm from '@/main/components/forms/NewsletterForm';
 import AboutAuthorMini from '@/main/components/AboutAuthorMini';
 import DividerStyled from '@/main/components/DividerStyled';
 
-export default function PeriodicalsFooter(props) {
+export default function PeriodicalsFooter() {
     return (
         <Box width={'100%'} sx={{ display: 'inline-block' }}>
             <DividerStyled
