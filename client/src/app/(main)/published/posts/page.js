@@ -4,7 +4,7 @@ import PageWrapper from '@/main/components/layout/PageWrapper';
 import PagePagination from '@/main/components/layout/PagePagination';
 import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
 import Posts from '@/main/components/mainPages/Posts';
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
+import { ResourcesListSkeleton } from '@/main/components/skeletons/LoadingResourcesListPage';
 
 // import PostsList from '@/main/components/PostsList';
 
@@ -32,7 +32,7 @@ export default async function Page({ searchParams }) {
         <PageWrapper header="Posts">
             <Suspense
                 key={currentPage + pageLimit + params}
-                fallback={<ResourceCardSkeleton hasMedia />}>
+                fallback={<ResourcesListSkeleton />}>
                 <FetchPostsList
                     page={currentPage}
                     limit={pageLimit}

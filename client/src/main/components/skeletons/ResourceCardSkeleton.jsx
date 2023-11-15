@@ -1,6 +1,6 @@
 'use client';
 // import { useState } from 'react';
-import { Card, Skeleton } from '@mui/material';
+import { Box, Card, Skeleton } from '@mui/material';
 
 function ResourceCardSkeleton(props) {
     // const [cardClassAdditions, setCardClass] = useState('');
@@ -29,7 +29,7 @@ function ResourceCardSkeleton(props) {
                 />
             )}
 
-            <div className="resource-card content">
+            <Box className="resource-card content" width={'100%'}>
                 <Skeleton
                     variant="text"
                     sx={{
@@ -46,7 +46,7 @@ function ResourceCardSkeleton(props) {
                     width={100}
                     sx={{ fontSize: '1.75rem', marginTop: '1rem' }}
                 />
-            </div>
+            </Box>
         </Card>
     );
 }

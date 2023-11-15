@@ -1,10 +1,10 @@
 'use client';
 // import { useState } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
-import ContactForm from '../forms/ContactForm';
+// import ContactForm from '../forms/ContactForm';
 import pageContent from '../../content/contactContent.json';
 
-function Contact() {
+function Contact({ children }) {
     return (
         <Box>
             <Box mb={'3rem'}>
@@ -15,9 +15,7 @@ function Contact() {
                 ))}
             </Box>
 
-            <Paper sx={{ p: '2rem' }}>
-                <ContactForm />
-            </Paper>
+            <Paper sx={{ p: '2rem' }}>{children}</Paper>
         </Box>
     );
 }

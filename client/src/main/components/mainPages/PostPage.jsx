@@ -1,7 +1,7 @@
 'use client';
 // import { useParams } from 'next/navigation';
 // import { getById } from '@/main/api/getResourceItems';
-// import ResourcePageSkeleton from '@/main/components/skeletons/ResourceFullPageSkeleton.jsx';
+// import PeriodicalsPageSkeleton from '@/main/components/skeletons/PeriodicalsPageSkeleton.jsx';
 import PeriodicalsHeading from '@/main/components/layout/PeriodicalsHeading';
 import PeriodicalsBody from '@/main/components/layout/PeriodicalsBody';
 import PeriodicalsFooter from '@/main/components/layout/PeriodicalsFooter';

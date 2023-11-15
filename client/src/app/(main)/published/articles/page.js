@@ -4,7 +4,7 @@ import PagePagination from '@/main/components/layout/PagePagination';
 import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
 import { getListPaginated } from '@/main/api/getResourceItems';
 import Articles from '@/main/components/mainPages/Articles';
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
+import ResourcesListSkeleton from '@/main/components/skeletons/LoadingResourcesListPage';
 
 async function FetchArticlesList({ page, limit, params }) {
     const queryResults = await getListPaginated(
@@ -35,7 +35,7 @@ export default async function Page({ searchParams }) {
         <PageWrapper header="Articles">
             <Suspense
                 key={currentPage + pageLimit + params}
-                fallback={<ResourceCardSkeleton hasMedia />}>
+                fallback={<ResourcesListSkeleton />}>
                 <FetchArticlesList
                     page={currentPage}
                     limit={pageLimit}

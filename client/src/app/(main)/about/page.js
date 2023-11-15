@@ -3,7 +3,7 @@ import About from '@/main/components/mainPages/About';
 
 export default function Page() {
     return (
-        <PageWrapper header="About" usePaper>
+        <PageWrapper header="About">
             <About />
         </PageWrapper>
     );

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { getList } from '@/main/api/getResourceItems';
 import PostCard from '../cards/PostCard';
 import NoItemsMessage from '../NoItemsMessage';
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
+import ResourceCardSkeleton from '@/main/components/skeletons/ResourceCardSkeleton';
 
 export default async function PostsList() {
     const posts = await getList('posts');

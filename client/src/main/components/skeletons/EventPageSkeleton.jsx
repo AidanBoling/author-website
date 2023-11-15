@@ -1,10 +1,7 @@
 'use client';
-// import { useState } from 'react';
-
 import { Box, Stack, Skeleton } from '@mui/material';
 import PageWrapper from '@/main/components/layout/PageWrapper';
-
-import ResourceCardSkeleton from '@/main/components/cards/ResourceCardSkeleton';
+import EventCardSkeleton from '@/main/components/skeletons/EventCardSkeleton';
 
 export default function EventPageHeaderSkeleton() {
     return (
@@ -23,20 +20,16 @@ export default function EventPageHeaderSkeleton() {
                     marginBottom: '1.5rem',
                 }}
             />
-            <Stack spacing={3}>
-                <ResourceCardSkeleton hasMedia />
-            </Stack>
+            <EventListSkeleton />
         </PageWrapper>
     );
 }
 
-// export function EventListSkeleton() {
-//     return (
-//         <Stack spacing={3}>
-//             <ResourceCardSkeleton hasMedia />
-//             <ResourceCardSkeleton hasMedia />
-//         </Stack>
-//     );
-// }
-
-// export default EventPageSkeleton;
+export function EventListSkeleton() {
+    return (
+        <Stack spacing={3}>
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+        </Stack>
+    );
+}
