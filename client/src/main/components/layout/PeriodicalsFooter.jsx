@@ -1,6 +1,6 @@
 'use client';
 import { Box } from '@mui/material';
-import NewsletterForm from '@/main/components/forms/NewsletterForm';
+import NewsletterFormPageComponent from '@/main/components/forms/NewsletterFormComponent';
 import AboutAuthorMini from '@/main/components/AboutAuthorMini';
 import DividerStyled from '@/main/components/DividerStyled';
 
@@ -17,7 +17,7 @@ export default function PeriodicalsFooter() {
             />
             <Box>
                 <AboutAuthorMini />
-                <NewsletterForm />
+                <NewsletterFormPageComponent />
             </Box>
         </Box>
     );

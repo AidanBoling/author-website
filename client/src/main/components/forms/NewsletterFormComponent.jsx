@@ -3,9 +3,9 @@ import { Paper, Stack, Typography } from '@mui/material';
 import SubscribeForm from './SubscribeForm';
 import pageContent from '@/main/content/formsContent.json';
 
-export default function NewsletterForm() {
-    const breakpoint = 'md';
+const breakpoint = 'md';
 
+export default function NewsletterFormPageComponent() {
     return (
         <Paper
             sx={{
@@ -13,6 +13,14 @@ export default function NewsletterForm() {
                 display: 'flex',
                 flexDirection: { xs: 'column', [breakpoint]: 'row' },
             }}>
+            <NewletterFormComponentContent />
+        </Paper>
+    );
+}
+
+export function NewletterFormComponentContent() {
+    return (
+        <>
             <Stack
                 gap={2}
                 sx={{
@@ -27,6 +35,6 @@ export default function NewsletterForm() {
                 </Typography>
             </Stack>
             <SubscribeForm buttonSize={'medium'} />
-        </Paper>
+        </>
     );
 }

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 // import { css } from '@emotion/react';
 
 export default function Background(props) {
-    const footerHeight = '200px';
+    const footerHeight = '140px';
 
     return (
         <>
