@@ -73,6 +73,25 @@ function Navbar() {
                         width: '100%',
                         mx: '1.75rem',
                     }}>
+                    <Box
+                        sx={{
+                            flexGrow: 0,
+                            position: 'absolute',
+                            height: '100%',
+                            left: '1.75rem',
+                            top: 0,
+                            display: { xs: 'none', md: 'flex' },
+                            zIndex: '2',
+                        }}>
+                        <Typography
+                            variant="h3"
+                            sx={{
+                                my: '.5rem',
+                                alignSelf: { xs: 'flex-start', lg: 'center' },
+                            }}>
+                            Logo
+                        </Typography>
+                    </Box>
                     <Typography
                         variant="h1"
                         component="h1"
@@ -95,6 +114,7 @@ function Navbar() {
                             {pageContent.author.name}
                         </MuiLink>
                     </Typography>
+
                     <Box
                         sx={{
                             flexGrow: 1,
