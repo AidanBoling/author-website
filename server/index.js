@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import mailchimp from '@mailchimp/mailchimp_marketing';
+import multer from 'multer';
+// import { S3Client } from '@aws-sdk/client-s3';
 import { checkSchema } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
@@ -22,6 +24,7 @@ import postController from './controllers/postController.js';
 import bookController from './controllers/bookController.js';
 import articleController from './controllers/articleController.js';
 import eventController from './controllers/eventController.js';
+import imageController from './controllers/imageController.js';
 import tagController from './controllers/tagController.js';
 import contactFormController from './controllers/contactFormController.js';
 import subscribeMailingListController from './controllers/subscribeController.js';
@@ -56,6 +59,11 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOrigin = process.env.CLIENT_URL;
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+upload.single('file'); // check this
+
 if (!isDev) {
     app.set('trust proxy', 1);
 }
@@ -89,7 +97,11 @@ mongoose.connect(
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json({ limit: 50000 })); // limit request size to 50kB
+app.use(
+    express.json({
+        // limit: 50000
+    })
+); // limit request size to 50kB TODO
 app.use(cookieParser());
 app.use(
     cors({
@@ -424,6 +436,47 @@ app.delete(
     BASE + 'admin/events/:id',
     checkSchema({ id: validationSchema.id }),
     eventController.delete
+);
+
+// --IMAGES routes
+
+app.use('/admin/images', passport.session(), checkAuth);
+
+app.post(
+    '/admin/images',
+    checkSchema({
+        title: validationSchema.textShort,
+        altText: validationSchema.textMedium,
+        caption: validationSchema.textMedium,
+    }),
+    upload.single('file'), // check this
+    imageController.create
+);
+app.get(
+    '/admin/images',
+    parseQuery,
+    checkSchema(validationSchema.adminQuery),
+    imageController.fetch
+);
+app.get(
+    '/admin/images/:id',
+    checkSchema({ id: validationSchema.id }),
+    imageController.get
+);
+app.put(
+    '/admin/images/:id',
+    checkSchema({
+        id: validationSchema.id,
+        title: validationSchema.textShort,
+        altText: validationSchema.textMedium,
+        caption: validationSchema.textMedium,
+    }),
+    imageController.update
+);
+app.delete(
+    '/admin/images/:id',
+    checkSchema({ id: validationSchema.id }),
+    imageController.delete
 );
 
 // -- TAGS routes

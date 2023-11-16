@@ -7,7 +7,18 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
+                hostname: 'd2w3fdea7tfrpv.cloudfront.net',
+                port: '',
+            },
+
+            {
+                protocol: 'https',
                 hostname: 'picsum.photos',
+                port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
                 port: '',
             },
         ],

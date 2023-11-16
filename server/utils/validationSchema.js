@@ -198,9 +198,20 @@ export const validationSchema = {
         isString: true,
         isLength: {
             options: { max: 64 },
-            errorMessage: 'Name is too long',
+            errorMessage: 'Field is too long',
         },
-        // remove/replace: ^±!@£$%^&*_+§€#¢§¶•ªº«\\/<>?:;|=.,
+        // remove/replace: ^±!@£$%&*_+§€#¢§¶•ªº«\\/<>?:;|=.,
+    },
+
+    textMedium: {
+        in: ['body'],
+        trim: true,
+        isString: true,
+        isLength: {
+            options: { max: 100 },
+            errorMessage: 'Field is too long',
+        },
+        // remove/replace??: ^$*_§€#§¶\\/<>:;|=.,
     },
 
     // textLong: {
