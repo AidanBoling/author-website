@@ -48,6 +48,5 @@ body {
 .form,
 .tiptap {
     width: 80vw;
-    max-width: 800px;
-
+    max-width: 800px
 }

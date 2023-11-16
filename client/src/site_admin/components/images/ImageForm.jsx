@@ -1,6 +1,11 @@
 'use client';
-import { SimpleForm, TextInput } from 'react-admin';
-import { ImageInput, ImageField } from 'react-admin';
+import {
+    SimpleForm,
+    TextInput,
+    ImageInput,
+    ImageField,
+    required,
+} from 'react-admin';
 
 function ImageForm({ edit }) {
     return (
@@ -11,14 +16,16 @@ function ImageForm({ edit }) {
                     label="Image File"
                     accept="image/*"
                     placeholder={<p>Drop your file here</p>}
+                    validate={required()}
                     className="form">
                     <ImageField source="src" title="title" />
                 </ImageInput>
             )}
-            <TextInput source="title" className="form" />
+            <TextInput source="title" className="form" validate={required()} />
             <TextInput
                 source="altText"
                 label="Image description (accessibility)"
+                validate={required()}
                 className="form"
             />
             <TextInput

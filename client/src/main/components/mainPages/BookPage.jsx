@@ -47,7 +47,7 @@ function BookPage({ book }) {
                         }}>
                         <Image
                             className="book-cover"
-                            src={book.coverImage}
+                            src={book.coverImage || book.coverImagePlaceholder}
                             alt="book cover"
                             fill
                             style={{

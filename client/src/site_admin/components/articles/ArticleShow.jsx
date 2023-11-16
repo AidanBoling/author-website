@@ -4,15 +4,23 @@ import {
     TextField,
     RichTextField,
     DateField,
-    ImageField,
     UrlField,
     WithRecord,
 } from 'react-admin';
 import { Typography } from '@mui/material';
 import ArticleTitle from './ArticlePageTitle';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
+import CustomShowImageField from '../ImageShowField';
 
 function ArticleShow() {
+    const imageSx = {
+        '& img': {
+            minHeight: '200px',
+            minWidth: '250px',
+            objectFit: 'contain',
+        },
+    };
+
     return (
         <Show title={<ArticleTitle />}>
             <WithRecord
@@ -25,17 +33,7 @@ function ArticleShow() {
             />
             <TabbedShowLayout spacing={2}>
                 <TabbedShowLayout.Tab label="summary">
-                    <ImageField
-                        source="image.url"
-                        label={false}
-                        sx={{
-                            '& img': {
-                                minHeight: '200px',
-                                minWidth: '250px',
-                                objectFit: 'contain',
-                            },
-                        }}
-                    />
+                    <CustomShowImageField sx={imageSx} />
                     <DateField source="datePublished" />
                     <TextField source="publisher.name" />
                     <UrlField source="publisher.website" />
@@ -49,7 +47,7 @@ function ArticleShow() {
                     </RecordTagsFieldLabel>
                 </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab label="content">
-                    <ImageField source="image.url" label={false} />
+                    <CustomShowImageField sx={imageSx} />
                     <RichTextField source="content" label={false} />
                 </TabbedShowLayout.Tab>
             </TabbedShowLayout>

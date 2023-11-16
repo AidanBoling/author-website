@@ -6,28 +6,30 @@ import {
     DateField,
     ImageField,
     WithRecord,
+    ReferenceField,
+    useRecordContext,
 } from 'react-admin';
 import { Grid, Typography, Divider } from '@mui/material';
 
 import PageTitle from '../PageTitle';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
-function BookShow() {
+export default function BookShow() {
+    const record = useRecordContext();
+    const imageSx = {
+        mt: '.75rem',
+        '& img': {
+            minHeight: '325px',
+            minWidth: '250px',
+            objectFit: 'contain',
+        },
+    };
+
     return (
         <Show title={<PageTitle resourceName="Book" />}>
             <Grid container spacing={2}>
                 <Grid item>
-                    <ImageField
-                        source="coverImage"
-                        sx={{
-                            mt: '.75rem',
-                            '& img': {
-                                minHeight: '325px',
-                                minWidth: '250px',
-                                objectFit: 'contain',
-                            },
-                        }}
-                    />
+                    <BookCoverImageShow sx={imageSx} />
                 </Grid>
                 <Grid item xs={12} sm={9}>
                     <SimpleShowLayout spacing={2}>
@@ -68,4 +70,20 @@ function BookShow() {
     );
 }
 
-export default BookShow;
+function BookCoverImageShow({ sx }) {
+    const record = useRecordContext();
+
+    if (!record) return null;
+
+    return record.coverImage ? (
+        <ReferenceField source="coverImage" reference="images">
+            <ImageField source="url" sx={sx} />
+        </ReferenceField>
+    ) : (
+        <ImageField
+            source="coverImagePlaceholder"
+            sx={sx}
+            label="Image Placeholder"
+        />
+    );
+}

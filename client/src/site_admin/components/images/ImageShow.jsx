@@ -1,15 +1,14 @@
 import {
     Show,
     SimpleShowLayout,
-    RichTextField,
     TextField,
     DateField,
     ImageField,
-    WithRecord,
     useRecordContext,
+    WrapperField,
 } from 'react-admin';
 import { useMediaQuery } from '@mui/material';
-import { Container, Box, Typography, Divider } from '@mui/material';
+import { Container, Box, Divider } from '@mui/material';
 import PageTitle from '../PageTitle';
 
 function ImageShow() {
@@ -74,6 +73,11 @@ function ImageShow() {
                     <TextField source="caption" label="Caption" />
                 )}
                 <DateField source="createdAt" showTime />
+                <WrapperField label="Dimensions">
+                    <TextField source="dimensions.width" label="width" />
+                    <TextField height="dimensions.height" label="height" />
+                </WrapperField>
+                <TextField source="orientation" />
             </SimpleShowLayout>
         </Show>
     );

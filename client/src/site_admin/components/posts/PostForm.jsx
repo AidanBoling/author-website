@@ -3,6 +3,7 @@ import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
 import { Grid, Box } from '@mui/material';
 import CreateResourceTagsField from '../CreateResourceTagsField';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
+import FormImageField from '../ImageFieldArticlePostForm';
 
 function PostForm({ newRecord }) {
     const tagsField = newRecord ? (
@@ -14,34 +15,20 @@ function PostForm({ newRecord }) {
     );
 
     return (
-        <SimpleForm>
-            <TextInput source="title" className="form" />
-            <RichTextInput
-                source="content.richText"
-                editorOptions={DefaultEditorOptions}
-                className="form"
-                label="Content"
-            />
-
-            <Grid container spacing={2} className="form">
-                <Grid item xs={12} sm={6}>
-                    <TextInput
-                        source="image.url"
-                        label="Cover Image URL"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextInput
-                        source="image.altText"
-                        label="Image Description (accessibility)"
-                        fullWidth
-                    />
-                </Grid>
-            </Grid>
-            {tagsField}
-            <Box sx={{ mt: '2rem' }}>
-                <BooleanInput source="published" label="Publish" />
+        <SimpleForm className="form">
+            <Box className="form">
+                <TextInput source="title" className="form" />
+                <RichTextInput
+                    source="content.richText"
+                    editorOptions={DefaultEditorOptions}
+                    className="form"
+                    label="Content"
+                />
+                <FormImageField newRecord={newRecord} />
+                <Box sx={{ width: '50%' }}>{tagsField}</Box>
+                <Box sx={{ mt: '2rem' }}>
+                    <BooleanInput source="published" label="Publish" />
+                </Box>
             </Box>
         </SimpleForm>
     );

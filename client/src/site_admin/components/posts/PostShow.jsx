@@ -1,7 +1,6 @@
 import {
     Show,
     SimpleShowLayout,
-    ImageField,
     DateField,
     WithRecord,
     useRecordContext,
@@ -10,6 +9,7 @@ import { Grid, Typography, Divider } from '@mui/material';
 import PostTitle from './PostPageTitle';
 import PostContentField from './postContentField';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
+import CustomShowImageField from '../ImageShowField';
 
 const PostShow = () => (
     <Show title={<PostTitle />}>
@@ -19,6 +19,13 @@ const PostShow = () => (
 
 function PostShowLayout() {
     const record = useRecordContext();
+    const imageSx = {
+        ml: '.5rem',
+        '& img': {
+            minHeight: '275px',
+            objectFit: 'contain',
+        },
+    };
 
     if (!record) return null;
     return (
@@ -38,19 +45,11 @@ function PostShowLayout() {
                         )}
                     />
                 </Grid>
+
                 <Grid item>
-                    <ImageField
-                        source="image.url"
-                        label={false}
-                        sx={{
-                            ml: '.5rem',
-                            '& img': {
-                                minHeight: '275px',
-                                objectFit: 'contain',
-                            },
-                        }}
-                    />
+                    <CustomShowImageField sx={imageSx} />
                 </Grid>
+
                 <Grid item xs={12} md={6}>
                     <SimpleShowLayout
                         sx={{ '& .RaSimpleShowLayout-stack': { gap: 2 } }}>

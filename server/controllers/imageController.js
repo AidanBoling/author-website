@@ -25,12 +25,17 @@ const imageController = {
         const cdnBaseUrl = process.env.CDN_BASE_URL;
         console.log('CDN Base url: ', cdnBaseUrl);
 
+        // TODO: get image dimensions from image-size,
+        // TODO: calculate orientation based on image dims
+
         const dbImageData = {
             title: title,
             altText: altText,
             caption: caption,
             url: `${cdnBaseUrl}/${imageFileName}`,
             fileName: imageFileName,
+            // dimensions: dimensions,
+            // orientation: orientation
         };
 
         const bucketParams = {
@@ -42,12 +47,10 @@ const imageController = {
 
         try {
             // Send to S3 bucket
-
             const command = new PutObjectCommand(bucketParams);
             await s3.send(command);
 
-            // TODO: send to db
-
+            // Send to db
             const newImage = await Image.create(dbImageData);
             sendResponse(Image, 'images', newImage, res, 201);
         } catch (error) {

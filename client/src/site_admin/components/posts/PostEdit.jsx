@@ -4,7 +4,7 @@ import PostForm from './PostForm';
 
 function PostEdit() {
     return (
-        <Edit title={<PostTitle />}>
+        <Edit title={<PostTitle />} redirect="show">
             <PostForm />
         </Edit>
     );

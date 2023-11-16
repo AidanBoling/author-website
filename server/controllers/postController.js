@@ -9,20 +9,22 @@ const postController = {
     // Create a post
     create: async (req, res) => {
         const post = req.body;
-        // let contentPlain = post.content.plain;
+        // let teaser = post.content.teaser;
         console.log('New post content: ', post.content);
 
         // if (contentPlain) {
-        //     contentPlain = post.content.plain.split('\n\n');
+        //     contentPlain = post.content.teaser.split('\n\n');
         // }
 
         let newPostData = {
             title: post.title,
+            image: post.image,
             content: {
                 richText: post.content.richText,
-                teaser: post.content.teaser,
+                // teaser: post.content.teaser,
                 // plain: contentPlain,
             },
+            tags: post.tags,
             published: post.published,
         };
 
@@ -71,9 +73,8 @@ const postController = {
     // Update a post
     update: async (req, res) => {
         const { id } = matchedData(req);
-
-        // const postId = req.params.id;
         let updates = { ...req.body, updatedAt: new Date() };
+
         if (updates.published && !updates.datePublished) {
             updates = { ...updates, datePublished: new Date() };
         }

@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+
 const { Schema, SchemaTypes, model } = mongoose;
 
 const postSchema = new Schema({
     title: { type: String, required: [true, 'Post title is missing'] },
-    image: { url: String, fileName: String, altText: String },
-    content: { richText: String, plain: [String] },
+    image: { fromDB: Schema.Types.ObjectId, url: String, altText: String },
+    content: { richText: String },
     tags: [String],
     createdAt: {
         type: Date,
@@ -24,12 +25,14 @@ postSchema.pre('save', function (next) {
     next();
 });
 
-// postSchema.post('save', function (next) {
+// postSchema.pre('save', function (next) {
 //     if (published === true) {
 //         this.publishDate = Date.now();
 //     }
-//     next();
+//     return next();
 // });
+
+// postSchema.plugin(require('mongoose-autopopulate'));
 
 const Post = model('Post', postSchema);
 export default Post;

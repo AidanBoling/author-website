@@ -34,7 +34,7 @@ function BookCard(props) {
         <ResourceCard
             title={props.book.title}
             hasMedia
-            image={props.book.coverImage}
+            image={props.book.coverImage || props.book.coverImagePlaceholder}
             imageAlt="book cover"
             mediaSXOverride={mediaSXOverride}
             published={props.book.datePublished}

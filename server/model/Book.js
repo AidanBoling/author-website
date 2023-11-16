@@ -3,7 +3,8 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const bookSchema = new Schema({
     title: { type: String, required: [true, 'Book title is missing'] },
-    coverImage: String,
+    coverImage: Schema.Types.ObjectId,
+    coverImagePlaceholder: String,
     description: { short: String, long: String },
     tags: [String],
     datePublished: Date,

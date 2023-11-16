@@ -26,7 +26,7 @@ import PostForm from './PostForm';
 
 function PostCreate() {
     return (
-        <Create>
+        <Create redirect="show">
             <PostForm newRecord />
         </Create>
     );
