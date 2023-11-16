@@ -3,6 +3,7 @@
 main_archived
 purgatory_ignore
 api/config.js
+s3config.js
 
 .env
 next-env.d.ts

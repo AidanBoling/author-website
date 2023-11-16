@@ -31,6 +31,7 @@ export default function CustomMenu() {
             <Menu.ResourceItem name="books" />
             <Menu.ResourceItem name="articles" />
             <Menu.ResourceItem name="events" />
+            <Menu.ResourceItem name="images" />
             <Menu.ResourceItem name="tags" />
         </Menu>
     );

@@ -3,6 +3,8 @@ import {
     PutObjectCommand,
     DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
+import { s3config } from '../s3config.js';
+import { matchedData } from 'express-validator';
 import { randomBytes } from 'node:crypto';
 import Image from '../model/Image.js';
 import {
@@ -10,22 +12,18 @@ import {
     formatAdminGetListQuery,
 } from '../utils/sharedControllerFunctions.js';
 
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_KEY,
-    },
-    region: process.env.S3_BUCKET_REGION,
-});
-
-const cdnBaseUrl = process.env.CDN_BASE_URL;
+const s3 = new S3Client(s3config);
 
 const imageController = {
     create: async (req, res) => {
         const { title, altText, caption } = matchedData(req);
+        // const { title, altText, caption } = req.body;
 
         // generate random file name
         const imageFileName = randomBytes(16).toString('hex');
+
+        const cdnBaseUrl = process.env.CDN_BASE_URL;
+        console.log('CDN Base url: ', cdnBaseUrl);
 
         const dbImageData = {
             title: title,
@@ -79,7 +77,7 @@ const imageController = {
             const image = await Image.findById(id);
             sendResponse(Image, 'images', image, res, 200);
         } catch (error) {
-            console.log('Error getting post: ', error);
+            console.log('Error getting image: ', error);
             res.status(500).send(error);
         }
     },
@@ -92,7 +90,6 @@ const imageController = {
 
         try {
             const imageToUpdate = await Image.findByIdAndUpdate(id, updates);
-            // const postToUpdate = await Post.findById(postId);
             sendResponse(Image, 'images', { data: imageToUpdate }, res, 200);
         } catch (e) {
             res.status(500).send(e);

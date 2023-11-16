@@ -449,7 +449,7 @@ app.post(
         altText: validationSchema.textMedium,
         caption: validationSchema.textMedium,
     }),
-    upload.single('file'), // check this
+    upload.single('image'),
     imageController.create
 );
 app.get(

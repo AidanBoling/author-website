@@ -3,7 +3,7 @@ import {
     Resource,
     Layout,
     CustomRoutes,
-    // ListGuesser,
+    ListGuesser,
     // EditGuesser,
     // ShowGuesser,
     // defaultTheme,
@@ -19,6 +19,7 @@ import FeedIcon from '@mui/icons-material/Feed';
 import LabelIcon from '@mui/icons-material/Label';
 
 import myDataProvider from '../dataProvider';
+import { dataProvider } from '../dataProviderImgExt';
 import { authProvider } from '../authProvider';
 
 import CustomMenu from './CustomMenu';
@@ -44,6 +45,10 @@ import EventList from './events/EventList';
 import EventShow from './events/EventShow';
 import EventCreate from './events/EventCreate';
 import EventEdit from './events/EventEdit';
+import ImageList from './images/ImageList';
+import ImageShow from './images/ImageShow';
+import ImageCreate from './images/ImageCreate';
+import ImageEdit from './images/ImageEdit';
 import TagList from './tags/TagList';
 import TagShow from './tags/TagShow';
 
@@ -77,7 +82,7 @@ function AdminApp() {
         <Admin
             basename="/admin"
             layout={CustomLayout}
-            dataProvider={myDataProvider}
+            dataProvider={dataProvider}
             authProvider={authProvider}
             theme={customLightTheme}
             darkTheme={customDarkTheme}
@@ -117,6 +122,14 @@ function AdminApp() {
                 create={EventCreate}
                 edit={EventEdit}
                 icon={CalendarMonthIcon}
+            />
+            <Resource
+                name="images"
+                list={ImageList}
+                show={ImageShow}
+                create={ImageCreate}
+                edit={ImageEdit}
+                // icon={ImageIcon}
             />
             <Resource
                 name="tags"
