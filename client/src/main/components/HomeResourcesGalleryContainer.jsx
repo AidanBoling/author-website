@@ -1,5 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import ItemsListError from '@/main/components/errors/ItemsListError';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useTheme as useMuiTheme } from '@mui/material/styles';
@@ -174,54 +176,56 @@ export default function ResourcesGalleryContainer(props) {
                     ml: { xs: '-4%', sm: 'inherit' },
                     position: 'relative',
                 }}>
-                <Box
-                    ref={ref}
-                    onScroll={() => checkButtonsOnScroll(ref.current)}
-                    sx={{
-                        // display: 'flex',
-                        // height: '100%',
-                        width: '100%',
-                        py: '2rem',
-                        overflowX: 'scroll',
-                        WebkitOverflowScrolling: 'touch',
-                        '&::-webkit-scrollbar': {
-                            display: 'none',
-                        },
-                    }}>
+                <ErrorBoundary fallback={<ItemsListError />}>
                     <Box
+                        ref={ref}
+                        onScroll={() => checkButtonsOnScroll(ref.current)}
                         sx={{
-                            display: 'flex',
-                            flexWrap: 'nowrap',
-                            gap: '1.5rem',
+                            // display: 'flex',
+                            // height: '100%',
                             width: '100%',
-                            height: '100%',
-                            px: '.5rem',
-                            // mx: { xs: '13%', sm: 'calc(45px + 3vw)' },
+                            py: '2rem',
+                            overflowX: 'scroll',
+                            WebkitOverflowScrolling: 'touch',
+                            '&::-webkit-scrollbar': {
+                                display: 'none',
+                            },
                         }}>
-                        <ScrollSpacer />
-                        {props.children}
-                        <Button
-                            component={Link}
-                            href={props.mainPage}
-                            size={'large'}
+                        <Box
                             sx={{
-                                flexShrink: 0,
-                                transitionDuration: '50ms',
-                                pl: '1.5rem',
-                                backgroundColor: 'transparent',
-                                '&:hover': {
-                                    color: 'primary.light',
-                                    backgroundColor: 'greyAlpha10.main',
-                                },
+                                display: 'flex',
+                                flexWrap: 'nowrap',
+                                gap: '1.5rem',
+                                width: '100%',
+                                height: '100%',
+                                px: '.5rem',
+                                // mx: { xs: '13%', sm: 'calc(45px + 3vw)' },
                             }}>
-                            More
-                            <ArrowRightAltIcon
-                                sx={{ pl: '.25rem', fontSize: '2rem' }}
-                            />
-                        </Button>
-                        <ScrollSpacer />
+                            <ScrollSpacer />
+                            {props.children}
+                            <Button
+                                component={Link}
+                                href={props.mainPage}
+                                size={'large'}
+                                sx={{
+                                    flexShrink: 0,
+                                    transitionDuration: '50ms',
+                                    pl: '1.5rem',
+                                    backgroundColor: 'transparent',
+                                    '&:hover': {
+                                        color: 'primary.light',
+                                        backgroundColor: 'greyAlpha10.main',
+                                    },
+                                }}>
+                                More
+                                <ArrowRightAltIcon
+                                    sx={{ pl: '.25rem', fontSize: '2rem' }}
+                                />
+                            </Button>
+                            <ScrollSpacer />
+                        </Box>
                     </Box>
-                </Box>
+                </ErrorBoundary>
                 <ScrollButton
                     direction={'left'}
                     justify={'flex-end'}

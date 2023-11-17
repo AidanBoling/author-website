@@ -1,21 +1,26 @@
 'use client';
 import { Stack } from '@mui/material';
-// import { Suspense } from 'react';
-// import { getList } from '@/main/api/getResourceItems';
+import { ErrorBoundary } from 'react-error-boundary';
+import ResourceCardError from '../errors/ResourceCardError';
 import ArticleCard from '@/main/components/cards/ArticleCard';
 import NoItemsMessage from '@/main/components/NoItemsMessage';
-// import ResourceCardSkeleton from '@/main/components/skeletons/ResourceCardSkeleton';
 
 function Articles(props) {
-    // const { items, ...pageData } = props.pageData;
-    // console.log(pageData);
     return (
         <Stack spacing={3}>
             {/* {console.log('Articles: ', props.articles)} */}
-
             {props.articles.length > 0 ? (
                 props.articles.map(article => (
-                    <ArticleCard key={article._id} article={article} hasMedia />
+                    <>
+                        <ErrorBoundary
+                            fallback={<ResourceCardError item={article} />}>
+                            <ArticleCard
+                                key={article._id}
+                                article={article}
+                                hasMedia
+                            />
+                        </ErrorBoundary>
+                    </>
                 ))
             ) : (
                 <NoItemsMessage message={'No articles found'} />

@@ -1,4 +1,6 @@
 'use client';
+import { ErrorBoundary } from 'react-error-boundary';
+import ResourceCardError from '../errors/ResourceCardError';
 import { Stack } from '@mui/material';
 import PostCard from '@/main/components/cards/PostCard';
 import NoItemsMessage from '@/main/components/NoItemsMessage';
@@ -7,7 +9,11 @@ function Posts(props) {
     return (
         <Stack spacing={3}>
             {props.posts.length > 0 ? (
-                props.posts.map(post => <PostCard key={post._id} post={post} />)
+                props.posts.map(post => (
+                    <ErrorBoundary fallback={<ResourceCardError item={post} />}>
+                        <PostCard key={post._id} post={post} />
+                    </ErrorBoundary>
+                ))
             ) : (
                 <NoItemsMessage message={'No posts found.'} />
             )}

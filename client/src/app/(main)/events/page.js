@@ -5,7 +5,7 @@ import { preloadGetList } from '@/main/api/getResourceItems';
 import Events from '@/main/components/mainPages/Events';
 import EventsList from '@/main/components/lists/EventsList';
 
-export const revalidate = 10800; // 3 hrs
+export const revalidate = 300; // 10800; // 3 hrs
 
 export default function Page() {
     preloadGetList('events');

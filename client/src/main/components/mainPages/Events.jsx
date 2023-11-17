@@ -1,4 +1,5 @@
 'use client';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Box, Stack, Typography } from '@mui/material';
 import pageContent from '../../content/eventsContent.json';
 
@@ -16,7 +17,11 @@ function Events({ children }) {
             <Typography variant="h3" component="h3" mb="1.5rem" color="primary">
                 Upcoming Events
             </Typography>
-            <Stack spacing={3}>{children}</Stack>
+            <Stack spacing={3}>
+                <ErrorBoundary fallback={<ItemsListError />}>
+                    {children}
+                </ErrorBoundary>
+            </Stack>
         </>
     );
 }
