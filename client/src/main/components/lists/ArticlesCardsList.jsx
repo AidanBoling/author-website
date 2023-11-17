@@ -11,8 +11,16 @@ export default async function ArticlesCards(props) {
                 key={article._id}
                 resource="article"
                 title={article.title}
-                image={article.image.url}
-                imageAlt={article.image.altText}
+                image={
+                    article.image.fromDB
+                        ? article.image.fromDB.url
+                        : article.image.url
+                }
+                imageAlt={
+                    article.image.fromDB
+                        ? article.image.fromDB.altText
+                        : article.image.altText
+                }
                 published={article.datePublished}
                 publisher={article.publisher.name}
                 // created={props.article.createdAt}

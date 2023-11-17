@@ -11,9 +11,15 @@ export default async function PostsCards(props) {
                 key={post._id}
                 resource="post"
                 title={post.title}
-                image={post.image && post.image.url ? post.image.url : null}
+                image={
+                    post.image &&
+                    (post.image.fromDB ? post.image.fromDB.url : post.image.url)
+                }
                 imageAlt={
-                    post.image && post.image.altText ? post.image.altText : null
+                    post.image &&
+                    (post.image.fromDB
+                        ? post.image.fromDB.altText
+                        : post.image.altText)
                 }
                 published={post.datePublished}
                 created={post.createdAt}
