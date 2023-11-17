@@ -1,10 +1,5 @@
-import {
-    TextInput,
-    ReferenceInput,
-    SelectInput,
-    useRecordContext,
-} from 'react-admin';
-import { Grid, Box } from '@mui/material';
+import { ReferenceInput, SelectInput, useRecordContext } from 'react-admin';
+import { Box } from '@mui/material';
 
 export default function FormImageField({ newRecord }) {
     const record = useRecordContext();

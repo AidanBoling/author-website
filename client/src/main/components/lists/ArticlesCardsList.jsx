@@ -5,24 +5,28 @@ export default async function ArticlesCards(props) {
     const articles = await getList('articles', props.listParams);
     // console.log('Articles found: ', articles);
 
-    return articles.items.length > 0 ? (
+    return articles && articles.items.length > 0 ? (
         articles.items.map(article => (
             <ResourceGalleryCard
                 key={article._id}
                 resource="article"
                 title={article.title}
                 image={
-                    article.image.fromDB
-                        ? article.image.fromDB.url
-                        : article.image.url
+                    article.image
+                        ? article.image.fromDB
+                            ? article.image.fromDB.url
+                            : article.image.url
+                        : null
                 }
                 imageAlt={
-                    article.image.fromDB
-                        ? article.image.fromDB.altText
-                        : article.image.altText
+                    article.image
+                        ? article.image.fromDB
+                            ? article.image.fromDB.altText
+                            : article.image.altText
+                        : null
                 }
                 published={article.datePublished}
-                publisher={article.publisher.name}
+                publisher={article.publisher && article.publisher.name}
                 // created={props.article.createdAt}
                 mainLinkTo={
                     article.url
@@ -32,7 +36,9 @@ export default async function ArticlesCards(props) {
                 mainLinkIsLocal={article.url ? false : true}
                 mainLinkLabel={
                     article.url &&
-                    `Read this article on the ${article.publisher.name} website, which opens in a new tab.`
+                    `Read this article on the ${
+                        article.publisher && article.publisher.name
+                    } website, which opens in a new tab.`
                 }
                 // actions={''}
             />

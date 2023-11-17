@@ -15,7 +15,7 @@ import PageTitle from '../PageTitle';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 
 export default function BookShow() {
-    const record = useRecordContext();
+    // const record = useRecordContext();
     const imageSx = {
         mt: '.75rem',
         '& img': {

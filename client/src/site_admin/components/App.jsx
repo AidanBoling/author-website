@@ -3,7 +3,7 @@ import {
     Resource,
     Layout,
     CustomRoutes,
-    ListGuesser,
+    // ListGuesser,
     // EditGuesser,
     // ShowGuesser,
     // defaultTheme,
@@ -18,7 +18,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
 import LabelIcon from '@mui/icons-material/Label';
 
-import myDataProvider from '../dataProvider';
+// import myDataProvider from '../dataProvider';
 import { dataProvider } from '../dataProviderImgExt';
 import { authProvider } from '../authProvider';
 

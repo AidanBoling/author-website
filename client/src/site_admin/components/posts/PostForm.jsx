@@ -1,6 +1,6 @@
 import { SimpleForm, TextInput, BooleanInput } from 'react-admin';
 import { RichTextInput, DefaultEditorOptions } from 'ra-input-rich-text';
-import { Grid, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import CreateResourceTagsField from '../CreateResourceTagsField';
 import TagsListEdit, { RecordTagsFieldLabel } from '../TagsListEdit';
 import FormImageField from '../ImageFieldArticlePostForm';

@@ -18,7 +18,7 @@ function ArticlePage({ article }) {
                     periodical={article}
                     content={article.content}
                     contentFallback={article.descriptionShort}>
-                    {article.publisher.name && (
+                    {article.publisher && article.publisher.name && (
                         <Box className="article details" sx={{ mt: '4rem' }}>
                             {/* TODO: - Make sure links open in new tab */}
                             <Typography>

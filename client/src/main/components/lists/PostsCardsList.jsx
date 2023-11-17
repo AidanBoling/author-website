@@ -5,7 +5,7 @@ export default async function PostsCards(props) {
     const posts = await getList('posts', props.listParams);
     // console.log('Posts found: ', posts);
 
-    return posts.items.length > 0 ? (
+    return posts && posts.items.length > 0 ? (
         posts.items.map(post => (
             <ResourceGalleryCard
                 key={post._id}

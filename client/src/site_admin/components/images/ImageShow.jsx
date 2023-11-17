@@ -15,7 +15,7 @@ import PageTitle from '../PageTitle';
 function ImageShow() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
 
-    const record = useRecordContext();
+    // const record = useRecordContext();
     return (
         <Show title={<PageTitle resourceName="Image" />}>
             <Box
