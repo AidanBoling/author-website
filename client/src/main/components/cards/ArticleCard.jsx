@@ -7,6 +7,9 @@ import ResourceCard from './ResourceCard';
 function ArticleCard(props) {
     // console.log('Received article: ', props.article);
     // console.log(props.post._id);
+    const image = props.article.image?.fromDB
+        ? props.article.image.fromDB
+        : props.article.image;
 
     const summaryContent = props.article.content ? (
         <>
@@ -30,8 +33,8 @@ function ArticleCard(props) {
         <ResourceCard
             resource="article"
             title={props.article.title}
-            image={props.article.image.url}
-            imageAlt={props.article.image.altText}
+            image={image.url}
+            imageAlt={image.altText}
             published={props.article.datePublished}
             publisher={props.article.publisher.name}
             created={props.article.createdAt}

@@ -163,9 +163,17 @@ const listPageValidation = {
 app.get(BASE + 'posts', checkSchema({ ...listPageValidation }), (req, res) => {
     const overrides = { filter: { published: true } };
     const defaultSort = { datePublished: -1 };
+    const imagePopPath = 'image.fromDB';
 
     try {
-        getFilteredResourceList(Post, req, res, defaultSort, overrides);
+        getFilteredResourceList(
+            Post,
+            imagePopPath,
+            req,
+            res,
+            defaultSort,
+            overrides
+        );
     } catch (error) {
         handleGetItemsError(error, res);
     }
@@ -193,9 +201,10 @@ app.get(
     }),
     async (req, res) => {
         const defaultSort = { datePublished: -1 };
+        const imagePopPath = 'coverImage';
 
         try {
-            getFilteredResourceList(Book, req, res, defaultSort);
+            getFilteredResourceList(Book, 'coverImage', req, res, defaultSort);
         } catch (error) {
             handleGetItemsError(error, res);
         }
@@ -207,7 +216,7 @@ app.get(
     checkSchema({ id: validationSchema.id }),
     async (req, res) => {
         try {
-            await getItemByValidatedId(Book, req, res);
+            await getItemByValidatedId(Book, req, res, 'coverImage');
         } catch (error) {
             handleGetItemsError(error, res);
         }
@@ -221,9 +230,16 @@ app.get(
     checkSchema({ ...listPageValidation }),
     (req, res) => {
         const defaultSort = { datePublished: -1 };
+        const imagePopPath = 'image.fromDB';
 
         try {
-            getFilteredResourceList(Article, req, res, defaultSort);
+            getFilteredResourceList(
+                Article,
+                imagePopPath,
+                req,
+                res,
+                defaultSort
+            );
         } catch (error) {
             handleGetItemsError(error, res);
         }

@@ -18,20 +18,24 @@ function PostCard(props) {
         summary = props.post.content.plain[0].substring(0, 300) + '...';
     }
 
+    const image = props.post.image.fromDB
+        ? props.post.image.fromDB
+        : props.post.image;
+
     return (
         <ResourceCard
             resource="post"
             title={props.post.title}
-            image={
-                props.post.image && props.post.image.url
-                    ? props.post.image.url
-                    : null
-            }
-            imageAlt={
-                props.post.image && props.post.image.altText
-                    ? props.post.image.altText
-                    : null
-            }
+            image={image.url ? image.url : null}
+            //     props.post.image && props.post.image.url
+            //         ? props.post.image.url
+            //         : null
+            // }
+            imageAlt={image.altText ? image.altText : null}
+            //     props.post.image && props.post.image.altText
+            //         ? props.post.image.altText
+            //         : null
+            // }
             published={props.post.datePublished}
             created={props.post.createdAt}
             content={summary}

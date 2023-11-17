@@ -2,6 +2,7 @@ import { matchedData } from 'express-validator';
 
 async function getFilteredResourceList(
     model,
+    imagePopPath,
     req,
     res,
     defaultSort,
@@ -26,6 +27,7 @@ async function getFilteredResourceList(
         .sort(sort)
         .skip(skip)
         .limit(limit)
+        .populate(imagePopPath, 'url altText')
         .exec();
 
     if (items) {

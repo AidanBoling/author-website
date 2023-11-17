@@ -34,13 +34,13 @@ function PostPage({ post }) {
                     periodical={post}
                     imageFloat="left"
                     content={post.content.richText}
-                    contentFallback={
-                        post.content.plain &&
-                        post.content.plain.length > 0 &&
-                        post.content.plain.map((paragraph, index) => (
-                            <p key={index + 1}>{paragraph}</p>
-                        ))
-                    }
+                    // contentFallback={
+                    //     post.content.plain &&
+                    //     post.content.plain.length > 0 &&
+                    //     post.content.plain.map((paragraph, index) => (
+                    //         <p key={index + 1}>{paragraph}</p>
+                    //     ))
+                    // }
                 />
                 <PeriodicalsFooter />
             </>

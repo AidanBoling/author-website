@@ -24,6 +24,15 @@ function PostForm({ newRecord }) {
                     className="form"
                     label="Content"
                 />
+                <TextInput
+                    source="content.teaser"
+                    multiline
+                    rows={4}
+                    className="form"
+                    label="Teaser"
+                    helperText="A paragraph which will show up on the post card view (in lists). Can simply copy the first paragraph of post."
+                    fullWidth
+                />
                 <FormImageField newRecord={newRecord} />
                 <Box sx={{ width: '50%' }}>{tagsField}</Box>
                 <Box sx={{ mt: '2rem' }}>

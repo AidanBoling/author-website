@@ -21,7 +21,7 @@ const postController = {
             image: post.image,
             content: {
                 richText: post.content.richText,
-                // teaser: post.content.teaser,
+                teaser: post.content.teaser,
                 // plain: contentPlain,
             },
             tags: post.tags,

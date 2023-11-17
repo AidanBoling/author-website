@@ -3,10 +3,10 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const bookSchema = new Schema({
     title: { type: String, required: [true, 'Book title is missing'] },
-    coverImage: Schema.Types.ObjectId,
+    coverImage: { type: Schema.Types.ObjectId, ref: 'Image' },
     coverImagePlaceholder: String,
     description: { short: String, long: String },
-    tags: [String],
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     datePublished: Date,
     purchaseInfo: [{ location: String, link: String }],
     category: { type: String, enum: ['fiction', 'non-fiction'] },

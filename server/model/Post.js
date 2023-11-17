@@ -4,9 +4,13 @@ const { Schema, SchemaTypes, model } = mongoose;
 
 const postSchema = new Schema({
     title: { type: String, required: [true, 'Post title is missing'] },
-    image: { fromDB: Schema.Types.ObjectId, url: String, altText: String },
-    content: { richText: String },
-    tags: [String],
+    image: {
+        fromDB: { type: Schema.Types.ObjectId, ref: 'Image' },
+        url: String,
+        altText: String,
+    },
+    content: { richText: String, teaser: String },
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     createdAt: {
         type: Date,
         default: () => Date.now(),
