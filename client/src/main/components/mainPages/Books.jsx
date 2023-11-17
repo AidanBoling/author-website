@@ -10,8 +10,10 @@ function Books(props) {
         <Stack spacing={3}>
             {props.books.length > 0 ? (
                 props.books.map(book => (
-                    <ErrorBoundary fallback={<ResourceCardError item={book} />}>
-                        <BookCard key={book._id} book={book} />
+                    <ErrorBoundary
+                        key={book._id}
+                        fallback={<ResourceCardError item={book} />}>
+                        <BookCard book={book} />
                     </ErrorBoundary>
                 ))
             ) : (

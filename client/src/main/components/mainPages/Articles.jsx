@@ -11,16 +11,11 @@ function Articles(props) {
             {/* {console.log('Articles: ', props.articles)} */}
             {props.articles.length > 0 ? (
                 props.articles.map(article => (
-                    <>
-                        <ErrorBoundary
-                            fallback={<ResourceCardError item={article} />}>
-                            <ArticleCard
-                                key={article._id}
-                                article={article}
-                                hasMedia
-                            />
-                        </ErrorBoundary>
-                    </>
+                    <ErrorBoundary
+                        key={article._id}
+                        fallback={<ResourceCardError item={article} />}>
+                        <ArticleCard article={article} hasMedia />
+                    </ErrorBoundary>
                 ))
             ) : (
                 <NoItemsMessage message={'No articles found'} />

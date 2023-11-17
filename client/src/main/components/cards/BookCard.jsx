@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { Box, Button } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
-function BookCard(props) {
+function BookCard({ book }) {
     const purchaseButtons =
-        props.book.purchaseInfo.length > 0 &&
-        props.book.purchaseInfo.map(store => (
+        book.purchaseInfo &&
+        book.purchaseInfo.length > 0 &&
+        book.purchaseInfo.map(store => (
             <Button
                 key={store._id}
                 variant="contained"
@@ -28,19 +29,19 @@ function BookCard(props) {
 
     return (
         <ResourceCard
-            title={props.book.title}
+            title={book.title}
             hasMedia
             image={
-                props.book.coverImage
-                    ? props.book.coverImage.url
-                    : props.book.coverImagePlaceholder
+                book.coverImage
+                    ? book.coverImage.url
+                    : book.coverImagePlaceholder
             }
             imageAlt="book cover"
             mediaSXOverride={mediaSXOverride}
-            published={props.book.datePublished}
-            created={props.book.createdAt}
+            published={book.datePublished}
+            created={book.createdAt}
             dateFormatOverride={{ year: 'numeric' }}
-            content={props.book.description.short}
+            content={book.description.short}
             actions={
                 <Box
                     sx={{
@@ -53,7 +54,7 @@ function BookCard(props) {
                     }}>
                     <Button
                         component={Link}
-                        href={`/published/books/id/${props.book._id}`}
+                        href={`/published/books/id/${book._id}`}
                         className="link"
                         variant="outlined">
                         ➣ Read more

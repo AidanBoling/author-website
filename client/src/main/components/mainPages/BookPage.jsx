@@ -47,7 +47,7 @@ function BookPage({ book }) {
                         <Image
                             className="book-cover"
                             src={
-                                book.coverImage.url ||
+                                (book.coverImage && book.coverImage.url) ||
                                 book.coverImagePlaceholder
                             }
                             alt="book cover"
@@ -59,19 +59,20 @@ function BookPage({ book }) {
                     </Box>
                     <Header />
                     <Box>
-                        {book.description.long ? (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                        book.description.long
-                                    ),
-                                }}
-                            />
-                        ) : (
-                            book.description.short
-                        )}
+                        {book.description &&
+                            (book.description.long ? (
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: DOMPurify.sanitize(
+                                            book.description.long
+                                        ),
+                                    }}
+                                />
+                            ) : (
+                                book.description.short
+                            ))}
                     </Box>
-                    {book.purchaseInfo.length > 0 && (
+                    {book.purchaseInfo && book.purchaseInfo.length > 0 && (
                         <Box className="book-purchase" my={baselineGap} flex>
                             {book.purchaseInfo.map(store => (
                                 <Button

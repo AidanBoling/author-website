@@ -10,8 +10,10 @@ function Posts(props) {
         <Stack spacing={3}>
             {props.posts.length > 0 ? (
                 props.posts.map(post => (
-                    <ErrorBoundary fallback={<ResourceCardError item={post} />}>
-                        <PostCard key={post._id} post={post} />
+                    <ErrorBoundary
+                        key={post._id}
+                        fallback={<ResourceCardError item={post} />}>
+                        <PostCard post={post} />
                     </ErrorBoundary>
                 ))
             ) : (

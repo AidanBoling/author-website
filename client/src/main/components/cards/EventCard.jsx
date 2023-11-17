@@ -21,7 +21,7 @@ import ResourceCardError from '../errors/ResourceCardError';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandMore from '../ExpandToggle';
 
-function EventCard(props) {
+function EventCard({ event }) {
     const [isExpanded, setExpanded] = useState(false);
 
     function handleExpandClick() {
@@ -29,7 +29,7 @@ function EventCard(props) {
     }
 
     return (
-        <ErrorBoundary fallback={<ResourceCardError item={props.event} />}>
+        <ErrorBoundary fallback={<ResourceCardError item={event} />}>
             <Card className="card resource-card media" sx={{ display: 'flex' }}>
                 <Box sx={{ p: '1.75rem' }}>
                     <Box
@@ -43,62 +43,77 @@ function EventCard(props) {
                             py: '.5rem',
                             textAlign: 'center',
                         }}>
-                        <Typography variant="h6" component="p" m={0}>
-                            {new Date(props.event.date.start)
-                                .toLocaleDateString('en-us', { month: 'short' })
-                                .toUpperCase()}
-                        </Typography>
-                        <Typography variant="h6" component="p" mt={'-.2rem'}>
-                            {new Date(
-                                props.event.date.start
-                            ).toLocaleDateString('en-us', { day: 'numeric' })}
-                        </Typography>
+                        {event.date && (
+                            <>
+                                <Typography variant="h6" component="p" m={0}>
+                                    {new Date(event.date.start)
+                                        .toLocaleDateString('en-us', {
+                                            month: 'short',
+                                        })
+                                        .toUpperCase()}
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    component="p"
+                                    mt={'-.2rem'}>
+                                    {new Date(
+                                        event.date.start
+                                    ).toLocaleDateString('en-us', {
+                                        day: 'numeric',
+                                    })}
+                                </Typography>
+                            </>
+                        )}
                     </Box>
                 </Box>
                 <Box className="resource-card content" sx={{ width: '100%' }}>
-                    <CardHeader title={props.event.title} />
+                    <CardHeader title={event.title} />
                     <Divider sx={{ marginLeft: '1rem', width: '80%' }} />
                     <CardContent>
                         <List sx={{ paddingY: 0 }}>
                             <ListItem disablePadding>
                                 <ListItemText
-                                    primary={new Date(
-                                        props.event.date.start
-                                    ).toLocaleDateString('en-us', {
-                                        weekday: 'long',
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                    })}
+                                    primary={
+                                        event.date &&
+                                        new Date(
+                                            event.date.start
+                                        ).toLocaleDateString('en-us', {
+                                            weekday: 'long',
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        })
+                                    }
                                 />
                             </ListItem>
                             <ListItem disablePadding>
                                 <ListItemText
-                                    primary={`${new Date(
-                                        props.event.date.start
-                                    ).toLocaleTimeString('en-US', {
-                                        timeStyle: 'short',
-                                    })} — ${new Date(
-                                        props.event.date.end
-                                    ).toLocaleTimeString('en-US', {
-                                        timeStyle: 'short',
-                                    })}`}
+                                    primary={
+                                        event.date &&
+                                        `${new Date(
+                                            event.date.start
+                                        ).toLocaleTimeString('en-US', {
+                                            timeStyle: 'short',
+                                        })} — ${new Date(
+                                            event.date.end
+                                        ).toLocaleTimeString('en-US', {
+                                            timeStyle: 'short',
+                                        })}`
+                                    }
                                 />
                             </ListItem>
-                            {props.event.location && (
+                            {event.location && (
                                 <ListItem disablePadding>
-                                    <ListItemText
-                                        primary={props.event.location}
-                                    />
+                                    <ListItemText primary={event.location} />
                                 </ListItem>
                             )}
                         </List>
                     </CardContent>
 
                     <CardActions sx={{ display: 'flex' }}>
-                        {props.event.actions > 0 &&
-                            props.event.actions.map((action, index) =>
-                                props.event.action.external ? (
+                        {event.actions > 0 &&
+                            event.actions.map((action, index) =>
+                                action.external ? (
                                     <Button
                                         key={index}
                                         href={action.link}
@@ -111,13 +126,13 @@ function EventCard(props) {
                                     <Button
                                         key={index}
                                         component={Link}
-                                        href={props.event.action.link}
+                                        href={action.link}
                                         className="link">
                                         {action.label}
                                     </Button>
                                 )
                             )}
-                        {props.event.details && (
+                        {event.details && (
                             <Box sx={{ display: 'flex' }}>
                                 <ExpandMore
                                     expand={isExpanded}
@@ -137,13 +152,13 @@ function EventCard(props) {
                             </Box>
                         )}
                     </CardActions>
-                    {props.event.details && (
+                    {event.details && (
                         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                             <CardContent sx={{ paddingY: '0 !important' }}>
                                 <div
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(
-                                            props.event.details
+                                            event.details
                                         ),
                                     }}
                                 />

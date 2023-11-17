@@ -1,25 +1,24 @@
 'use client';
-// import React from 'react';
 import Link from 'next/link';
 import { Link as MuiLink, Typography } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
-function ArticleCard(props) {
-    // console.log('Received article: ', props.article);
-    // console.log(props.post._id);
-    const image =
-        props.article.image && props.article.image.fromDB
-            ? props.article.image.fromDB
-            : props.article.image;
+function ArticleCard({ article }) {
+    // console.log('Received article: ', article);
 
-    const summaryContent = props.article.content ? (
+    const image =
+        article.image && article.image.fromDB
+            ? article.image.fromDB
+            : article.image;
+
+    const summaryContent = article.content ? (
         <>
-            <Typography>{props.article.descriptionShort}</Typography>
+            <Typography>{article.descriptionShort}</Typography>
             <Typography mt={'1rem'}>
                 This article also available to{' '}
                 <MuiLink
                     component={Link}
-                    href={`/published/articles/id/${props.article._id}`}
+                    href={`/published/articles/id/${article._id}`}
                     className="link">
                     read through this site
                 </MuiLink>
@@ -27,28 +26,28 @@ function ArticleCard(props) {
             </Typography>
         </>
     ) : (
-        <Typography>{props.article.descriptionShort}</Typography>
+        <Typography>{article.descriptionShort}</Typography>
     );
 
     return (
         <ResourceCard
             resource="article"
-            title={props.article.title}
+            title={article.title}
             image={image && image.url}
             imageAlt={image && image.altText}
-            published={props.article.datePublished}
-            publisher={props.article.publisher && props.article.publisher.name}
-            created={props.article.createdAt}
+            published={article.datePublished}
+            publisher={article.publisher && article.publisher.name}
+            created={article.createdAt}
             content={summaryContent}
             mainLinkTo={
-                (props.article.url && props.article.url) ||
-                `/published/articles/id/${props.article._id}`
+                (article.url && article.url) ||
+                `/published/articles/id/${article._id}`
             }
-            mainLinkIsLocal={props.article.url ? false : true}
+            mainLinkIsLocal={article.url ? false : true}
             mainLinkLabel={
-                props.article.url &&
+                article.url &&
                 `Read this article on the ${
-                    props.article.publisher && props.article.publisher.name
+                    article.publisher && article.publisher.name
                 } website, which opens in a new tab.`
             }
             actions={''}

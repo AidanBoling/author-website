@@ -18,7 +18,7 @@ function PostPage({ post }) {
                 <PeriodicalsBody
                     periodical={post}
                     // imageFloat="left"
-                    content={post.content.richText}
+                    content={post.content && post.content.richText}
                     // contentFallback={
                     //     post.content.plain &&
                     //     post.content.plain.length > 0 &&

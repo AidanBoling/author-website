@@ -18,26 +18,15 @@ function Home(props) {
         md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
     };
 
-    //TODO: fetch hero book via id (?)
-    //[x] TODO: fetch articles and filter for only most recent
-    //[x] TODO: fetch posts and filter for only most recent
-
     return (
-        <Container
-            // className="main"
-            sx={{ mb: '1rem', mt: '0' }}
-            maxWidth={'xl'}
-            disableGutters>
+        <Container sx={{ mb: '1rem', mt: '0' }} maxWidth={'xl'} disableGutters>
             <Container
-                // className="headline"
                 sx={{
                     display: 'grid',
                     gridTemplateRows: 'minmax(500px, 70vh)',
                     gridTemplateColumns: '1fr',
-                    // justifyContent: 'center',
                     alignItems: 'start',
                     mt: '0',
-                    // p: '1rem',
                 }}
                 maxWidth={'xl'}
                 disableGutters>
@@ -82,7 +71,6 @@ function Home(props) {
                         maskRepeat: 'no-repeat',
                     }}>
                     <Image
-                        // className="home-header-image"
                         src={pageContent.titleImage.url}
                         alt={pageContent.titleImage.altText}
                         fill
@@ -120,7 +108,6 @@ function Home(props) {
                                     borderRadius: '.4rem',
                                     width: '325px',
                                     aspectRatio: '0.67',
-                                    // height: '400',
                                     objectFit: 'fill',
                                     mx: { xs: 'auto' },
                                 }}
