@@ -1,4 +1,4 @@
-import { ExpressValidator } from 'express-validator';
+// import { ExpressValidator } from 'express-validator';
 
 // const parseJSON = value => JSON.parse(value);
 

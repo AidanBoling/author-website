@@ -88,6 +88,8 @@ export default function TagsListEdit(props) {
         sort: { field: 'name', order: 'ASC' },
     });
 
+    if (isLoadingAllTags) return null;
+
     const recordTagIdsSource = record.tags;
     const tags =
         allTags && allTags.filter(tag => recordTagIdsSource.includes(tag.id));
@@ -119,7 +121,6 @@ export default function TagsListEdit(props) {
         setAnchorEl(null);
     }
 
-    if (isLoadingAllTags) return null;
     // if (isLoadingRecordTags || !data || isLoadingAllTags) return null;
     // console.log(tags);
     // console.log('Record tags (via filtered AllTags): ', tags);

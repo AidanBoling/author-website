@@ -4,7 +4,7 @@ import {
     TextInput,
     ImageInput,
     ImageField,
-    required,
+    // required,
 } from 'react-admin';
 
 function ImageForm({ edit }) {
@@ -16,16 +16,14 @@ function ImageForm({ edit }) {
                     label="Image File"
                     accept="image/*"
                     placeholder={<p>Drop your file here</p>}
-                    validate={required()}
                     className="form">
                     <ImageField source="src" title="title" />
                 </ImageInput>
             )}
-            <TextInput source="title" className="form" validate={required()} />
+            <TextInput source="title" className="form" />
             <TextInput
                 source="altText"
                 label="Image description (accessibility)"
-                validate={required()}
                 className="form"
             />
             <TextInput

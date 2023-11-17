@@ -5,10 +5,11 @@ import {
     DateField,
     ImageField,
     useRecordContext,
-    WrapperField,
+    // WithRecord,
+    FunctionField,
 } from 'react-admin';
 import { useMediaQuery } from '@mui/material';
-import { Container, Box, Divider } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import PageTitle from '../PageTitle';
 
 function ImageShow() {
@@ -69,14 +70,22 @@ function ImageShow() {
                 )}
                 <TextField source="url" label="URL" />
                 <TextField source="altText" label="Description" />
-                {record && record.caption && (
-                    <TextField source="caption" label="Caption" />
-                )}
+                <TextField source="caption" label="Caption" />
                 <DateField source="createdAt" showTime />
-                <WrapperField label="Dimensions">
-                    <TextField source="dimensions.width" label="width" />
-                    <TextField height="dimensions.height" label="height" />
-                </WrapperField>
+
+                {/* <WithRecord
+                    label="Dimensions"
+                    render={record =>
+                        `${record.dimensions.width} x ${record.dimensions.height}`
+                    }
+                /> */}
+                <FunctionField
+                    label="Dimensions"
+                    render={record =>
+                        `${record.dimensions.width} x ${record.dimensions.height}`
+                    }
+                />
+
                 <TextField source="orientation" />
             </SimpleShowLayout>
         </Show>

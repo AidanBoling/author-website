@@ -4,7 +4,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import multer from 'multer';
-// import { S3Client } from '@aws-sdk/client-s3';
 import { checkSchema } from 'express-validator';
 import session from 'express-session';
 import passport from 'passport';
@@ -458,16 +457,7 @@ app.delete(
 
 app.use('/admin/images', passport.session(), checkAuth);
 
-app.post(
-    '/admin/images',
-    checkSchema({
-        title: validationSchema.textShort,
-        altText: validationSchema.textMedium,
-        caption: validationSchema.textMedium,
-    }),
-    upload.single('image'),
-    imageController.create
-);
+app.post('/admin/images', upload.single('image'), imageController.create);
 app.get(
     '/admin/images',
     parseQuery,
@@ -483,9 +473,6 @@ app.put(
     '/admin/images/:id',
     checkSchema({
         id: validationSchema.id,
-        title: validationSchema.textShort,
-        altText: validationSchema.textMedium,
-        caption: validationSchema.textMedium,
     }),
     imageController.update
 );

@@ -6,6 +6,7 @@ import {
 import { s3config } from '../s3config.js';
 import { matchedData } from 'express-validator';
 import { randomBytes } from 'node:crypto';
+import sizeOf from 'image-size';
 import Image from '../model/Image.js';
 import {
     sendResponse,
@@ -16,8 +17,8 @@ const s3 = new S3Client(s3config);
 
 const imageController = {
     create: async (req, res) => {
-        const { title, altText, caption } = matchedData(req);
-        // const { title, altText, caption } = req.body;
+        // const { title, altText, caption } = matchedData(req);
+        const { title, altText, caption } = req.body;
 
         // generate random file name
         const imageFileName = randomBytes(16).toString('hex');
@@ -25,8 +26,12 @@ const imageController = {
         const cdnBaseUrl = process.env.CDN_BASE_URL;
         console.log('CDN Base url: ', cdnBaseUrl);
 
-        // TODO: get image dimensions from image-size,
+        let buffer = req.file.buffer;
+        const dimensions = sizeOf(buffer);
+        console.log('Dimensions: ', dimensions);
+
         // TODO: calculate orientation based on image dims
+        const orientation = getImageOrientation(dimensions);
 
         const dbImageData = {
             title: title,
@@ -34,14 +39,14 @@ const imageController = {
             caption: caption,
             url: `${cdnBaseUrl}/${imageFileName}`,
             fileName: imageFileName,
-            // dimensions: dimensions,
-            // orientation: orientation
+            dimensions: { width: dimensions.width, height: dimensions.height },
+            orientation: orientation,
         };
 
         const bucketParams = {
             Bucket: process.env.S3_BUCKET_NAME,
             Key: imageFileName,
-            Body: req.file.buffer, //multer
+            Body: buffer,
             ContentType: req.file.mimetype, //multer
         };
 
@@ -86,7 +91,8 @@ const imageController = {
     },
 
     update: async (req, res) => {
-        let { id, ...updates } = matchedData(req);
+        let { id } = matchedData(req);
+        let updates = req.body;
 
         updates = { ...updates, updatedAt: new Date() };
         console.log('Image updates: ', updates);
@@ -123,5 +129,18 @@ const imageController = {
         }
     },
 };
+
+function getImageOrientation(dim) {
+    let orientation = 'square';
+    if (dim.width > dim.height && dim.width > 1.1 * dim.height) {
+        console.log('Image orientation: landscape');
+        orientation = 'landscape';
+    } else if (dim.width < dim.height && 1.1 * dim.width < dim.height) {
+        console.log('Image orientation: portrait');
+        orientation = 'portrait';
+    }
+
+    return orientation;
+}
 
 export default imageController;

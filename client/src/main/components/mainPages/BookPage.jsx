@@ -1,13 +1,13 @@
 'use client';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
-// import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
 function BookPage({ book }) {
     const breakpoint = 'md';
     const coverWidth = { xs: '75vw', sm: 400, [breakpoint]: 300 };
     const baselineGap = '2.5rem';
+    // const dims = book.coverImage && book.coverImage.dimensions;
 
     const Header = () => (
         <>
@@ -41,17 +41,18 @@ function BookPage({ book }) {
                             mb: baselineGap,
                             flexShrink: 0,
                             float: { xs: 'unset', [breakpoint]: 'left' },
-
                             contain: 'content',
                             shapeOutside: 'margin-box',
                         }}>
                         <Image
                             className="book-cover"
-                            src={book.coverImage || book.coverImagePlaceholder}
+                            src={
+                                book.coverImage.url ||
+                                book.coverImagePlaceholder
+                            }
                             alt="book cover"
                             fill
                             style={{
-                                width: '100%',
                                 objectFit: 'cover',
                             }}
                         />
@@ -91,3 +92,42 @@ function BookPage({ book }) {
 }
 
 export default BookPage;
+
+//
+//
+// TEMP Archive -------------------------
+//
+
+// const breakpoint = 'md';
+//     const coverWidth = { xs: '75vw', sm: 400, [breakpoint]: 300 };
+//     const baselineGap = '2.5rem';
+//     const dims = book.coverImage && book.coverImage.dimensions;
+//     const containerSx = !book.coverImage
+//         ? { width: coverWidth, aspectRatio: 0.67 }
+//         : {};
+
+//     const CoverImage = () =>
+//         book.coverImage ? (
+//             <Image
+//                 className="book-cover"
+//                 src={book.coverImage.url}
+//                 alt="book cover"
+//                 width={400}
+//                 height={300 / 0.67}
+//                 style={{
+//                     height: 'auto',
+//                     objectFit: 'contain',
+//                 }}
+//             />
+//         ) : (
+//             <Image
+//                 className="book-cover"
+//                 src={book.coverImagePlaceholder}
+//                 alt="book cover"
+//                 fill
+//                 style={{
+//                     width: '100%',
+//                     objectFit: 'cover',
+//                 }}
+//             />
+//         );

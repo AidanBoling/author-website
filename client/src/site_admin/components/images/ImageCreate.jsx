@@ -3,9 +3,7 @@ import ImageForm from './ImageForm';
 
 function ImageCreate() {
     return (
-        <Create
-        // redirect="show"
-        >
+        <Create redirect="list">
             <ImageForm />
         </Create>
     );

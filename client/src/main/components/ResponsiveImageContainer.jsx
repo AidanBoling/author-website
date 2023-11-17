@@ -28,6 +28,7 @@ export default function ResponsiveImageContainer(props) {
                 justifyContent: 'center',
                 float: floatSX,
                 shapeOutside: 'margin-box',
+                ...props.max,
             }}>
             {props.children}
         </Box>

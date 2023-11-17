@@ -1,13 +1,9 @@
 'use client';
-// import React, { useState } from 'react';
 import Link from 'next/link';
 import { Box, Button } from '@mui/material';
 import ResourceCard from './ResourceCard';
 
 function BookCard(props) {
-    // console.log('Received book: ', props.book);
-    // console.log(props.post._id);
-
     const purchaseButtons =
         props.book.purchaseInfo.length > 0 &&
         props.book.purchaseInfo.map(store => (
@@ -34,7 +30,11 @@ function BookCard(props) {
         <ResourceCard
             title={props.book.title}
             hasMedia
-            image={props.book.coverImage || props.book.coverImagePlaceholder}
+            image={
+                props.book.coverImage
+                    ? props.book.coverImage.url
+                    : props.book.coverImagePlaceholder
+            }
             imageAlt="book cover"
             mediaSXOverride={mediaSXOverride}
             published={props.book.datePublished}

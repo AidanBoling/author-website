@@ -14,7 +14,7 @@ export default async function getItemByValidatedId(
     console.log('Validated id: ', id);
     const item = await model
         .findById(`${id}`)
-        .populate(path, 'url altText caption')
+        .populate(path, 'url altText caption dimensions orientation')
         .populate('tags', 'name')
         .exec();
 
