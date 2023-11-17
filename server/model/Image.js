@@ -18,7 +18,7 @@ const imageSchema = new Schema({
     updatedAt: Date,
 });
 
-postSchema.pre('save', function (next) {
+imageSchema.pre('save', function (next) {
     this.updatedAt = Date.now(); // update the date every time image is saved
     next();
 });
