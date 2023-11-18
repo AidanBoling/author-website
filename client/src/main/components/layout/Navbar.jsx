@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
     AppBar,
     Box,
@@ -22,6 +23,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import pageContent from '@/main/content/authorDetails.json';
 import { NavButton } from '@/main/components/NavButton';
+import logo from '@/assets/logo-art.png';
 
 const pages = [
     { name: 'HOME', link: '/' },
@@ -77,20 +79,28 @@ function Navbar() {
                         sx={{
                             flexGrow: 0,
                             position: 'absolute',
-                            height: '100%',
                             left: '1.75rem',
                             top: 0,
-                            display: { xs: 'none', md: 'flex' },
+                            height: { lg: '100%' },
+                            marginTop: { xs: '.75rem', md: '1.2rem', lg: 0 },
+                            display: 'flex',
+                            alignItems: { xs: 'start', lg: 'center' },
                             zIndex: '2',
                         }}>
-                        <Typography
-                            variant="h3"
+                        <Box
                             sx={{
-                                my: '.5rem',
-                                alignSelf: { xs: 'flex-start', lg: 'center' },
+                                width: { xs: '60px', md: '90px', lg: '120px' },
+                                height: { xs: '60px', md: '90px', lg: '120px' },
                             }}>
-                            Logo
-                        </Typography>
+                            <Image
+                                src={logo}
+                                alt={pageContent.logo.altText}
+                                fill
+                                style={{
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </Box>
                     </Box>
                     <Typography
                         variant="h1"
@@ -127,7 +137,7 @@ function Navbar() {
                                 justifyContent: 'space-evenly',
                                 alignItems: 'center',
                                 width: '85%',
-                                maxWidth: '775px',
+                                maxWidth: '725px',
                                 mx: 'auto',
                             }}>
                             {pages.map(page => (

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
     Box,
     Container,
@@ -15,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import BgPatternBox from '../style/BgPatternBox';
 import NewsletterFormComponentContent from '../forms/NewsletterFormComponent';
 import pageContent from '@/main/content/authorDetails.json';
+import logo from '@/assets/logo-art.png';
 
 function Footer(props) {
     const [open, setOpen] = useState(false);
@@ -35,7 +37,6 @@ function Footer(props) {
                     height: props.height,
                     mt: 'auto',
                     backgroundColor: 'forestgreen.light',
-                    // zIndex: 1,
                     overflowY: 'hidden',
                 }}>
                 <BgPatternBox height={props.height} />
@@ -52,8 +53,11 @@ function Footer(props) {
                         <Box
                             zIndex={1}
                             sx={{
-                                display: 'inline-flex',
-                                m: '.75rem',
+                                mb: '.65rem',
+                                width: '250px',
+                                paddingLeft: '20px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
                                 fontSize: '1.1rem',
                                 fontWeight: 'lighter',
                                 alignItems: 'center',
@@ -64,22 +68,51 @@ function Footer(props) {
                                 aria-label={`Contact ${pageContent.author.name}`}
                                 underline="none"
                                 align={'center'}
-                                mx={'.75rem'}>
+                                pr={'.20rem'}>
                                 Contact
                             </MuiLink>
-                            <Box color={'lightgold.main'} fontSize={'.75rem'}>
-                                •
+                            <Box
+                                sx={{
+                                    flexGrow: 0,
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    zIndex: '2',
+                                }}>
+                                <Box
+                                    sx={{
+                                        width: '50px',
+                                        height: '50px',
+                                    }}>
+                                    <Image
+                                        src={logo}
+                                        alt={pageContent.logo.altText}
+                                        width={'50px'}
+                                        height={'50px'}
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            objectFit: 'contain',
+                                        }}
+                                    />
+                                </Box>
                             </Box>
+                            {/* <Box color={'lightgold.main'} fontSize={'.75rem'}>
+                                •
+                            </Box> */}
                             <MuiLink
                                 component="button"
                                 onClick={handleClickOpen}
                                 aria-label={`Subscribe to ${pageContent.author.name}'s newsletter mailing list`}
                                 underline="none"
-                                sx={{ marginX: '.75rem' }}>
+                                // sx={{ marginX: '.75rem' }}
+                            >
                                 Subscribe
                             </MuiLink>
                         </Box>
-                        <Typography sx={{ fontSize: '14px' }}>
+                        <Typography
+                            color={'grey.medLight'}
+                            sx={{ fontSize: '14px', mb: 'auto', mt: '.65rem' }}>
                             © {new Date().getFullYear()}{' '}
                             {pageContent.author.name}
                         </Typography>

@@ -17,6 +17,9 @@ vite.svg
 .next
 client/build
 client/src/main/content
+favicon.ico
+logo-art.png
+client/src/assets/*
 
 
 # Logs

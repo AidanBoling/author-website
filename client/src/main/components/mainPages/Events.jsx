@@ -1,5 +1,6 @@
 'use client';
 import { ErrorBoundary } from 'react-error-boundary';
+import ItemsListError from '@/main/components/errors/ItemsListError';
 import { Box, Stack, Typography } from '@mui/material';
 import pageContent from '../../content/eventsContent.json';
 

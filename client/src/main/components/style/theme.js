@@ -64,6 +64,17 @@ const themeBase = {
         h6: { fontSize: '1.4rem' },
         body1: { marginBottom: '1rem' },
     },
+
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 950,
+            lg: 1200,
+            xl: 1536,
+        },
+    },
+
     components: {
         MuiAppBar: {
             styleOverrides: {
@@ -201,6 +212,7 @@ const darkThemeOptions = {
             main: grey[500],
             light: grey[300],
             dark: grey[700],
+            medLight: grey[400],
         },
         background: {
             default: '#00100b',

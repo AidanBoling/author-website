@@ -4,7 +4,8 @@
         "paths": {
             "@/styles/*": ["styles/*"],
             "@/main/*": ["main/*"],
-            "@/admin/*": ["site_admin/*"]
+            "@/admin/*": ["site_admin/*"],
+            "@/assets/*": ["assets/*"]
         }
     }
     // "exclude": ["node_modules"]
