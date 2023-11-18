@@ -6,12 +6,13 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+// import Brightness3Icon from '@mui/icons-material/Brightness3';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
+import LightModeIcon from '@mui/icons-material/LightMode';
 // import { ColorModeContext } from './style/ThemeWrapper';
 import { useTheme } from 'next-themes';
 
-const colorModeIcon = { light: <Brightness7Icon />, dark: <Brightness4Icon /> };
+const colorModeIcon = { light: <LightModeIcon />, dark: <NightsStayIcon /> };
 const toggleText = { light: 'Toggle light mode', dark: 'Toggle dark mode' };
 
 function NavbarModeButton() {
@@ -46,7 +47,7 @@ function MenuModeToggle(props) {
             onClick={() =>
                 setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
             }>
-            <ListItemIcon>{modeIcon}</ListItemIcon>
+            <ListItemIcon sx={{ minWidth: '40px' }}>{modeIcon}</ListItemIcon>
             <ListItemText
                 primary={labelText}
                 primaryTypographyProps={props.textStyles}

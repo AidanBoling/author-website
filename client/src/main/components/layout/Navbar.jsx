@@ -51,8 +51,11 @@ function Navbar() {
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
-    const titleFontSize = isXS && { fontSize: '3rem' };
+    const titleFontSize = isXS
+        ? { fontSize: '2.6rem !important' }
+        : isSm && { fontSize: '2.8rem !important' };
     const navTextStyles = {
         fontWeight: '300',
         fontSize: '1.1rem',
@@ -61,8 +64,10 @@ function Navbar() {
     const menuTextStyles = {
         ...navTextStyles,
         fontSize: '1.3rem',
-        color: 'primary.dark',
+        color: 'primary.main',
+        marginBottom: 0,
     };
+    const navbarMarginX = { xs: '1.25rem', lg: '1.75rem' };
 
     return (
         <AppBar position="static">
@@ -73,30 +78,47 @@ function Navbar() {
                         display: 'flex',
                         flexDirection: { xs: 'row', md: 'column' },
                         width: '100%',
-                        mx: '1.75rem',
+                        mx: navbarMarginX,
+                        position: 'relative',
                     }}>
                     <Box
                         sx={{
                             flexGrow: 0,
                             position: 'absolute',
-                            left: '1.75rem',
-                            top: 0,
-                            height: { lg: '100%' },
-                            marginTop: { xs: '.75rem', md: '1.2rem', lg: 0 },
+                            left: 0,
+                            height: '100%',
                             display: 'flex',
-                            alignItems: { xs: 'start', lg: 'center' },
+                            alignItems: 'center',
                             zIndex: '2',
                         }}>
                         <Box
                             sx={{
-                                width: { xs: '60px', md: '90px', lg: '120px' },
-                                height: { xs: '60px', md: '90px', lg: '120px' },
+                                width: {
+                                    xs: '64px',
+                                    md: '96px',
+                                    lg: '120px',
+                                },
+                                height: {
+                                    xs: '64px',
+                                    md: '96px',
+                                    lg: '120px',
+                                },
+                                padding: '2px',
+                                borderRadius: '50%',
+                                borderWidth: {
+                                    xs: '1.25px',
+                                    md: '2px',
+                                    lg: '2.5px',
+                                },
+                                borderColor: 'lightgold.main',
+                                borderStyle: 'solid',
                             }}>
                             <Image
                                 src={logo}
                                 alt={pageContent.logo.altText}
                                 fill
                                 style={{
+                                    zIndex: '1',
                                     objectFit: 'contain',
                                 }}
                             />
@@ -107,12 +129,14 @@ function Navbar() {
                         component="h1"
                         color="lightgold.light"
                         sx={{
+                            maxWidth: { xs: '80%', sm: '100%' },
                             flexGrow: '1',
                             fontFamily: 'cursive',
                             textAlign: 'center',
-                            my: { xs: '.5rem' },
-                            pb: { xs: '.75rem', md: '1rem' },
+                            my: { xs: '.25rem', sm: '.75rem' },
                             mx: 'auto',
+                            py: { xs: 0, sm: '.5rem' },
+                            pb: { xs: 0, md: '.5rem' },
                             zIndex: '1',
                             ...titleFontSize,
                         }}>
@@ -121,7 +145,15 @@ function Navbar() {
                             href={'/'}
                             underline="none"
                             color="inherit">
-                            {pageContent.author.name}
+                            {pageContent.author.fName}
+                            <Box
+                                component="span"
+                                sx={{
+                                    display: { xs: 'block', sm: 'inline' },
+                                    mt: '.5rem',
+                                }}>
+                                {pageContent.author.lName}
+                            </Box>
                         </MuiLink>
                     </Typography>
 
@@ -130,6 +162,7 @@ function Navbar() {
                             flexGrow: 1,
                             display: { xs: 'none', md: 'flex' },
                             mb: '.5rem',
+                            // position: 'relative'
                         }}>
                         <Box
                             sx={{
@@ -146,7 +179,12 @@ function Navbar() {
                         </Box>
                         <Box
                             className="nav-settings"
-                            sx={{ display: { xs: 'none', md: 'block' } }}>
+                            sx={{
+                                display: { xs: 'none', md: 'block' },
+                                position: 'absolute',
+                                right: 0,
+                                marginTop: '5px',
+                            }}>
                             <NavbarModeButton />
                         </Box>
                     </Box>
@@ -156,7 +194,7 @@ function Navbar() {
                             flexGrow: 0,
                             position: 'absolute',
                             height: '100%',
-                            right: '1.75rem',
+                            right: 0,
                             display: { xs: 'flex', md: 'none' },
                             zIndex: '2',
                         }}>
@@ -192,7 +230,8 @@ function Navbar() {
                                         <ListItemButton
                                             component={Link}
                                             href={page.link}
-                                            color="inherit">
+                                            color="inherit"
+                                            sx={{ paddingX: '1.5rem' }}>
                                             <ListItemText
                                                 primary={page.name}
                                                 primaryTypographyProps={
@@ -205,7 +244,9 @@ function Navbar() {
                             </List>
                             <Divider />
                             <List>
-                                <ListItem disablePadding>
+                                <ListItem
+                                    disablePadding
+                                    sx={{ paddingX: '.5rem' }}>
                                     <MenuModeToggle
                                         textStyles={menuTextStyles}
                                     />
