@@ -5,7 +5,8 @@ import PagePagination from '@/main/components/layout/PagePagination';
 import { pageLimitOptions } from '@/main/utils/pageLimitOptions';
 import Books from '@/main/components/mainPages/Books';
 import { ResourcesListSkeleton } from '@/main/components/skeletons/LoadingResourcesListPage';
-// export const revalidate = 300;
+
+export const revalidate = 300;
 
 async function FetchBooksList({ page, limit, params }) {
     const queryResults = await getListPaginated('books', page, limit, params);

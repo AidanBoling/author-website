@@ -3,6 +3,8 @@ import { getById } from '@/main/api/getResourceItems';
 import PageWrapper from '@/main/components/layout/PageWrapper';
 import BookPage from '@/main/components/mainPages/BookPage';
 
+export const revalidate = 300;
+
 export default async function Page({ params }) {
     const book = await getById(params.id, 'books');
     if (!book) {

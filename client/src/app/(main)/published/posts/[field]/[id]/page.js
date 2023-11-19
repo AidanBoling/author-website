@@ -3,6 +3,8 @@ import { getById } from '@/main/api/getResourceItems';
 import PageWrapper from '@/main/components/layout/PageWrapper';
 import PostPage from '@/main/components/mainPages/PostPage';
 
+export const revalidate = 300;
+
 export default async function Page({ params }) {
     const post = await getById(params.id, 'posts');
     if (!post) {

@@ -6,6 +6,8 @@ import { getListPaginated } from '@/main/api/getResourceItems';
 import Articles from '@/main/components/mainPages/Articles';
 import ResourcesListSkeleton from '@/main/components/skeletons/LoadingResourcesListPage';
 
+export const revalidate = 300;
+
 async function FetchArticlesList({ page, limit, params }) {
     const queryResults = await getListPaginated(
         'articles',
