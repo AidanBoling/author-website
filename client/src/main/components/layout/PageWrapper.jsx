@@ -10,9 +10,7 @@ function PageWrapper(props) {
             className="main"
             sx={{ my: '1.5rem', pb: { md: '3rem' }, flexGrow: 0 }}>
             {props.header && <PageTitle title={props.header} />}
-            <InnerPageContainer className="content">
-                {props.children}
-            </InnerPageContainer>
+            <InnerPageContainer>{props.children}</InnerPageContainer>
         </Container>
     );
 }

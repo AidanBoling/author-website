@@ -68,7 +68,8 @@ function Footer(props) {
                                 aria-label={`Contact ${pageContent.author.name}`}
                                 underline="none"
                                 align={'center'}
-                                pr={'.20rem'}>
+                                pr={'.20rem'}
+                                sx={{ fontWeight: '300' }}>
                                 Contact
                             </MuiLink>
                             <Box
@@ -105,8 +106,7 @@ function Footer(props) {
                                 onClick={handleClickOpen}
                                 aria-label={`Subscribe to ${pageContent.author.name}'s newsletter mailing list`}
                                 underline="none"
-                                // sx={{ marginX: '.75rem' }}
-                            >
+                                sx={{ fontWeight: '300' }}>
                                 Subscribe
                             </MuiLink>
                         </Box>

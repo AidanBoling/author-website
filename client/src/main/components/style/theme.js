@@ -3,6 +3,54 @@
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 // import CssBaseline from '@mui/material/CssBaseline';
+import {
+    Inter,
+    // Red_Hat_Text,
+    // Mulish,
+    // Gothic_A1,
+} from 'next/font/google';
+
+// const font_name = Mulish({
+//     subsets: ['latin'],
+//     display: 'swap',
+//     style: ['normal', 'italic'],
+// });
+
+const font_name = Inter({
+    subsets: ['latin'],
+    display: 'swap',
+    style: ['normal'],
+});
+
+// const font_name = Red_Hat_Text({
+//     subsets: ['latin'],
+//     display: 'swap',
+//     style: ['normal', 'italic'],
+// });
+// // With settings:
+//         // h5: { fontSize: '1.75rem', fontWeight: '600', letterSpacing: '.04rem' },
+//        // h6: { fontSize: '1.2rem', fontWeight: '500' },
+//        // body1: {
+//        //     marginBottom: '1rem',
+//        //     fontWeight: '400',
+// //           // letterSpacing: '.03rem',
+// //       },
+
+// const font_name = Gothic_A1({
+//     subsets: ['latin'],
+//     display: 'swap',
+//     style: ['normal'],
+//     weight: ['200', '300', '400', '500'],
+// });
+// // // A little tall...? But maybe acceptable
+// // With settings:
+// //          h5: { fontSize: '1.75rem', fontWeight: '500' },
+// //         h6: { fontSize: '1.3rem', fontWeight: '400' },
+// //         body1: {
+// //             marginBottom: '1rem',
+// //             fontWeight: '400',
+// //             letterSpacing: '.03rem',
+// //         },
 
 const forestgreenBase = {
     main: '#002217',
@@ -57,12 +105,46 @@ const themeBase = {
         h1: {
             fontSize: '4rem',
         },
-        h2: { fontSize: '3rem' },
+
+        //Inter
+        h2: { fontSize: '3rem', fontWeight: '200' },
         h3: { fontSize: '2.6rem', fontWeight: '300' },
         h4: { fontSize: '2.2rem', fontWeight: '300' },
-        h5: { fontSize: '1.75rem' },
-        h6: { fontSize: '1.4rem' },
-        body1: { marginBottom: '1rem' },
+        h5: { fontSize: '1.75rem', fontWeight: '430', letterSpacing: '.01rem' },
+        h6: { fontSize: '1.3rem', fontWeight: '375' },
+        body1: {
+            marginBottom: '1rem',
+            fontWeight: '350',
+        },
+
+        // // Red Hat
+        // h2: { fontSize: '3rem', fontWeight: '200' },
+        // h3: { fontSize: '2.6rem', fontWeight: '400' },
+        // h4: { fontSize: '2.2rem', fontWeight: '300' },
+        // h5: {
+        //     fontSize: '1.75rem',
+        //     fontWeight: '450',
+        //     letterSpacing: '.02rem',
+        // },
+        // h6: { fontSize: '1.2rem', fontWeight: '400' },
+        // body1: {
+        //     marginBottom: '1rem',
+        //     fontWeight: '390',
+        //     letterSpacing: '.03rem',
+        // },
+
+        //Mulish
+        // h2: { fontSize: '3rem', fontWeight: '200' },
+        // h3: { fontSize: '2.6rem', fontWeight: '300' },
+        // h4: { fontSize: '2.2rem', fontWeight: '300' },
+        // h5: { fontSize: '1.7rem', fontWeight: '500' },
+        // h6: { fontSize: '1.3rem', fontWeight: '375' },
+        // body1: {
+        //     marginBottom: '1.2rem',
+        //     fontWeight: '375',
+        //     lineHeight: '150%',
+        // },
+        fontFamily: font_name.style.fontFamily,
     },
 
     breakpoints: {
@@ -137,6 +219,7 @@ const themeBase = {
         },
 
         // MuiCssBaseline: {
+
         //     styleOverrides: {
         //         '*': {
         //             '&::-webkit-scrollbar': {

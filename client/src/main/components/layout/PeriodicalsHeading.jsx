@@ -11,11 +11,20 @@ export default function PeriodicalsHeading(props) {
                 alignItems: 'baseline',
                 flexDirection: 'column',
             }}>
-            <DividerStyled sx={{ my: '.5rem', width: '85%' }} />
+            <DividerStyled
+                sx={{
+                    mt: '.75rem',
+                    // my: '.5rem',
+                    width: '100%',
+                }}
+            />
             <Typography
                 variant="h3"
                 component="h2"
-                sx={{ mb: '.5rem', mt: '1rem' }}>
+                sx={{
+                    mb: '.5rem',
+                    mt: '1rem',
+                }}>
                 {props.title}
             </Typography>
             <Typography

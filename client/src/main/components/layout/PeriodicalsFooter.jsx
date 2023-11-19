@@ -9,8 +9,7 @@ export default function PeriodicalsFooter() {
         <Box width={'100%'} sx={{ display: 'inline-block' }}>
             <DividerStyled
                 sx={{
-                    width: '85%',
-                    maxWidth: '800px',
+                    width: '100%',
                     mt: '3rem',
                     mb: '5rem',
                 }}

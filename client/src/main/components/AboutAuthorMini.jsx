@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import pageContent from '@/main/content/authorDetails.json';
@@ -19,8 +19,9 @@ export default function AboutAuthorMini() {
                 ml: { xs: spacing, [breakpoint]: 0 },
                 display: 'flex',
                 alignItems: 'center',
+                mb: { [breakpoint]: '.5rem' },
             }}>
-            <i>{pageContent.author.name}</i>
+            <i>About the Author</i>
         </Typography>
     );
 
@@ -66,6 +67,7 @@ export default function AboutAuthorMini() {
                     mt: { xs: '1rem', [breakpoint]: 0 },
                 }}>
                 {!isXS && authorName}
+                <Divider width={'70%'} />
                 {authorDescription}
             </Box>
         </Box>

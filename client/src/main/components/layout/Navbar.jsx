@@ -55,7 +55,9 @@ function Navbar() {
 
     const titleFontSize = isXS
         ? { fontSize: '2.6rem !important' }
-        : isSm && { fontSize: '2.8rem !important' };
+        : isSm
+        ? { fontSize: '3rem !important' }
+        : { fontSize: '3.7rem !important' };
     const navTextStyles = {
         fontWeight: '300',
         fontSize: '1.1rem',
@@ -94,19 +96,22 @@ function Navbar() {
                         <Box
                             sx={{
                                 width: {
-                                    xs: '64px',
+                                    xs: '76px',
+                                    sm: '64px',
                                     md: '96px',
                                     lg: '120px',
                                 },
                                 height: {
-                                    xs: '64px',
+                                    xs: '76px',
+                                    sm: '64px',
                                     md: '96px',
                                     lg: '120px',
                                 },
                                 padding: '2px',
                                 borderRadius: '50%',
                                 borderWidth: {
-                                    xs: '1.25px',
+                                    xs: '1.5px',
+                                    sm: '1.25px',
                                     md: '2px',
                                     lg: '2.5px',
                                 },
@@ -129,31 +134,24 @@ function Navbar() {
                         component="h1"
                         color="lightgold.light"
                         sx={{
-                            maxWidth: { xs: '80%', sm: '100%' },
+                            maxWidth: { xs: '55%', sm: '100%' },
                             flexGrow: '1',
-                            fontFamily: 'cursive',
+                            fontFamily: 'var(--font-alex-brush), cursive',
+                            // fontFamily: "'Great Vibes', cursive",
                             textAlign: 'center',
-                            my: { xs: '.25rem', sm: '.75rem' },
+                            mb: { xs: '.25rem', sm: '.6rem', md: '.6rem' },
+                            mt: { xs: '.6rem', sm: '1rem', md: '.8rem' },
                             mx: 'auto',
-                            py: { xs: 0, sm: '.5rem' },
-                            pb: { xs: 0, md: '.5rem' },
                             zIndex: '1',
                             ...titleFontSize,
+                            letterSpacing: '.01rem',
                         }}>
                         <MuiLink
                             component={Link}
                             href={'/'}
                             underline="none"
                             color="inherit">
-                            {pageContent.author.fName}
-                            <Box
-                                component="span"
-                                sx={{
-                                    display: { xs: 'block', sm: 'inline' },
-                                    mt: '.5rem',
-                                }}>
-                                {pageContent.author.lName}
-                            </Box>
+                            {pageContent.author.name}
                         </MuiLink>
                     </Typography>
 
@@ -162,7 +160,6 @@ function Navbar() {
                             flexGrow: 1,
                             display: { xs: 'none', md: 'flex' },
                             mb: '.5rem',
-                            // position: 'relative'
                         }}>
                         <Box
                             sx={{
@@ -287,3 +284,21 @@ export default Navbar;
 // </MuiLink>
 // </Typography>
 // ))}
+
+//
+//
+// <Box
+//     component="span"
+//     sx={{
+//         mb: 0,
+//     }}>
+//     {pageContent.author.fName}
+// </Box>
+// <Box
+//     component="span"
+//     sx={{
+//         display: { xs: 'block', sm: 'inline' },
+//         // mt: '.5rem',
+//     }}>
+//     {pageContent.author.lName}
+// </Box>

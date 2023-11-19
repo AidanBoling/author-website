@@ -1,16 +1,22 @@
 import RootStyleRegistry from './RootStyleRegistry.js';
+import pageContent from '@/main/content/siteContent.json';
+import { Alex_Brush } from 'next/font/google';
 
 export const metadata = {
-    title: 'Author Website',
-    description: '',
+    title: pageContent.metadata.title,
+    description: pageContent.metadata.description,
 };
+
+const alex_brush = Alex_Brush({
+    weight: '400',
+    subsets: ['latin'],
+    display: 'swap',
+    variable: '--font-alex-brush',
+});
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
-            <head>
-                <link rel="icon" href="/favicon.ico" sizes="any" />
-            </head>
+        <html lang="en" className={`${alex_brush.variable}`}>
             <body>
                 <div id="root">
                     <RootStyleRegistry>{children}</RootStyleRegistry>

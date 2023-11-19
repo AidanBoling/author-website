@@ -5,14 +5,13 @@ import { Menu } from 'react-admin';
 // import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from '@mui/icons-material/Feed';
 import ImageIcon from '@mui/icons-material/Image';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
-    Box,
     Typography,
     Divider,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
+    // Accordion,
+    // AccordionSummary,
+    // AccordionDetails,
 } from '@mui/material';
 
 export default function CustomMenu() {
