@@ -2,6 +2,8 @@ import {
     Datagrid,
     List,
     ReferenceArrayField,
+    ReferenceArrayInput,
+    SelectArrayInput,
     SingleFieldList,
     TextField,
     TextInput,
@@ -15,8 +17,11 @@ import TagField from '../TagField';
 
 function PostList() {
     const postFilters = [
-        <TextInput label="Search" source="q" alwaysOn />,
-        <BooleanInput label="Published" source="published" alwaysOn />,
+        <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+        // <BooleanInput label="Published" source="published" alwaysOn />,
+        <ReferenceArrayInput reference="tags" source="tags">
+            <SelectArrayInput optionText="name" variant="outlined" />
+        </ReferenceArrayInput>,
     ];
 
     return (

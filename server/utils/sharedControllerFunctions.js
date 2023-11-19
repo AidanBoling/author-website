@@ -1,4 +1,5 @@
 import { matchedData } from 'express-validator';
+import mongoose from 'mongoose';
 
 export async function sendResponse(
     model,
@@ -25,7 +26,8 @@ export function formatAdminGetListQuery(request) {
     // const data = matchedData(request);
     // console.log('Validated data: ', data);
 
-    let { range, sort, id, q, name, ...queryFilter } = matchedData(request);
+    let { range, sort, id, q, name, group, tags, ...queryFilter } =
+        matchedData(request);
 
     let options = {};
     // let options = { sanitizeFilter: true };
@@ -43,11 +45,23 @@ export function formatAdminGetListQuery(request) {
     }
 
     if (q) {
-        queryFilter = { ...queryFilter, $text: { $search: q } };
+        queryFilter = {
+            ...mongoose.sanitizeFilter({ ...queryFilter }),
+            $text: { $search: q },
+        };
     }
 
+    // Note: probably don't need this "name" if statement (can be caught by "...queryFilter")
     if (name) {
         queryFilter = { ...queryFilter, name: name };
+    }
+
+    if (group) {
+        queryFilter = { ...queryFilter, group: { $in: group } };
+    }
+
+    if (tags) {
+        queryFilter = { ...queryFilter, tags: { $in: tags } };
     }
 
     return { queryFilter, options };

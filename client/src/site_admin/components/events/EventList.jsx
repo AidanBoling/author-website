@@ -10,7 +10,9 @@ import {
 } from 'react-admin';
 import { Typography } from '@mui/material';
 
-const eventFilters = [<TextInput label="Search" source="q" alwaysOn />];
+const eventFilters = [
+    <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+];
 
 function EventList() {
     return (

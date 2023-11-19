@@ -6,13 +6,24 @@ import {
     UrlField,
     WrapperField,
     TextInput,
+    SelectArrayInput,
     EditButton,
     DateField,
     ShowButton,
 } from 'react-admin';
 import { useMediaQuery } from '@mui/material';
+import filterVars from '@/admin/data/listFilterVars.json';
 
-const imageFilters = [<TextInput label="Search" source="q" alwaysOn />];
+const imageFilters = [
+    <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+    <SelectArrayInput
+        source="group"
+        choices={filterVars.imagesGroups}
+        optionText="label"
+        optionValue="id"
+        variant="outlined"
+    />,
+];
 
 function ImageList() {
     const isTablet = useMediaQuery(theme => theme.breakpoints.down('lg'));

@@ -3,6 +3,8 @@ import {
     Datagrid,
     SimpleList,
     ReferenceArrayField,
+    ReferenceArrayInput,
+    SelectArrayInput,
     SingleFieldList,
     TextField,
     TextInput,
@@ -12,7 +14,12 @@ import {
 import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
-const bookFilters = [<TextInput label="Search" source="q" alwaysOn />];
+const bookFilters = [
+    <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+    <ReferenceArrayInput reference="tags" source="tags">
+        <SelectArrayInput optionText="name" variant="outlined" />
+    </ReferenceArrayInput>,
+];
 
 function BookList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));

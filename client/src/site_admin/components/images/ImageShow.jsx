@@ -4,13 +4,17 @@ import {
     TextField,
     DateField,
     ImageField,
-    useRecordContext,
+    // useRecordContext,
     // WithRecord,
+    ArrayField,
+    SingleFieldList,
+    ChipField,
     FunctionField,
 } from 'react-admin';
 import { useMediaQuery } from '@mui/material';
 import { Box, Divider } from '@mui/material';
 import PageTitle from '../PageTitle';
+import filterVars from '@/admin/data/listFilterVars.json';
 
 function ImageShow() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));
@@ -71,6 +75,7 @@ function ImageShow() {
                 <TextField source="url" label="URL" />
                 <TextField source="altText" label="Description" />
                 <TextField source="caption" label="Caption" />
+                <TextField source="group" />
                 <DateField source="createdAt" showTime />
 
                 {/* <WithRecord

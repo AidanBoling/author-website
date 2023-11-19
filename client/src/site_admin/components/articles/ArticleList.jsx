@@ -4,6 +4,8 @@ import {
     List,
     TextField,
     TextInput,
+    ReferenceArrayInput,
+    SelectArrayInput,
     EditButton,
     DateField,
     UrlField,
@@ -14,7 +16,12 @@ import {
 import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
-const articleFilters = [<TextInput label="Search" source="q" alwaysOn />];
+const articleFilters = [
+    <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+    <ReferenceArrayInput reference="tags" source="tags">
+        <SelectArrayInput optionText="name" variant="outlined" />
+    </ReferenceArrayInput>,
+];
 
 function ArticleList() {
     const isMobile = useMediaQuery(theme => theme.breakpoints.down('md'));

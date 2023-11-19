@@ -1,9 +1,8 @@
-.DS_store
-
 main_archived
 purgatory_ignore
 api/config.js
 s3config.js
+data
 
 .env
 next-env.d.ts
@@ -19,7 +18,10 @@ client/build
 client/src/main/content
 favicon.ico
 logo-art.png
+
 client/src/assets/*
+
+.DS_store
 
 
 # Logs
@@ -121,9 +123,6 @@ web_modules/
 # Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
-.yarn-integrity
-
 # dotenv environment variable files
 .env
 .env.development.local
@@ -173,10 +172,3 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*

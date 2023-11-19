@@ -4,8 +4,10 @@ import {
     TextInput,
     ImageInput,
     ImageField,
+    SelectArrayInput,
     // required,
 } from 'react-admin';
+import filterVars from '@/admin/data/listFilterVars.json';
 
 function ImageForm({ edit }) {
     return (
@@ -31,20 +33,19 @@ function ImageForm({ edit }) {
                 label="Caption (optional)"
                 className="form"
             />
-
+            <SelectArrayInput
+                source="group"
+                label="Groups"
+                choices={filterVars.imagesGroups}
+                optionText="label"
+                optionValue="id"
+            />
             {/* <Grid container spacing={2} className="form">
                 <Grid item xs={12} sm={6}>
                     <DateInput source="datePublished" fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <SelectInput
-                        source="category"
-                        choices={[
-                            { id: 'fiction', name: 'Fiction' },
-                            { id: 'non-fiction', name: 'Non-Fiction' },
-                        ]}
-                        fullWidth
-                    />
+                    
                 </Grid>
             </Grid> */}
         </SimpleForm>
