@@ -67,7 +67,7 @@ export default function AboutAuthorMini() {
                     mt: { xs: '1rem', [breakpoint]: 0 },
                 }}>
                 {!isXS && authorName}
-                <Divider width={'70%'} />
+                {!isXS && <Divider width={'70%'} />}
                 {authorDescription}
             </Box>
         </Box>
