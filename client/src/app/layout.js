@@ -17,6 +17,7 @@ const alex_brush = Alex_Brush({
 export default function RootLayout({ children }) {
     return (
         <html lang="en" className={`${alex_brush.variable}`}>
+            <head></head>
             <body>
                 <div id="root">
                     <RootStyleRegistry>{children}</RootStyleRegistry>
