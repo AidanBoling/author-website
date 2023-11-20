@@ -26,6 +26,19 @@ const arrayItemsAreAlphanumStr = array => {
     return true;
 };
 
+const arrayItemsAreAlphaWordsStr = array => {
+    array.forEach(item => {
+        if (typeof item === 'string' && item.match(/^([a-zA-Z0-9]+\s?){1,5}/)) {
+            return true;
+        } else {
+            throw new Error(
+                'One or more items in array are not alphabetical string'
+            );
+        }
+    });
+    return true;
+};
+
 // TODO: custom validator that calls a function from tags
 // to return all tag ids, and use that list to validate "tags" value
 
@@ -111,13 +124,13 @@ export const validationSchema = {
         group: {
             in: ['query'],
             isArray: true,
-            custom: { options: arrayItemsAreAlphanumStr },
+            custom: { options: arrayItemsAreAlphaWordsStr },
         },
 
         tags: {
             in: ['query'],
             isArray: true,
-            custom: { options: arrayItemsAreAlphanumStr },
+            custom: { options: arrayItemsAreAlphaWordsStr },
         },
     },
 
