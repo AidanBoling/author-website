@@ -18,9 +18,9 @@ import { useTheme } from 'next-themes';
 function ThemeWrapper(props) {
     const [currentTheme, setCurrentTheme] = useState(darkTheme);
     const { resolvedTheme } = useTheme();
-    const { systemTheme } = useTheme();
-    console.log('Prefers mode: ', systemTheme);
-    console.log('resolvedTheme: ', resolvedTheme);
+    // const { systemTheme } = useTheme();
+    // console.log('Prefers mode: ', systemTheme);
+    // console.log('resolvedTheme: ', resolvedTheme);
 
     useEffect(() => {
         resolvedTheme === 'light'

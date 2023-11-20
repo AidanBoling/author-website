@@ -1,10 +1,20 @@
 'use client';
 import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import ResponsiveImageContainer from '@/main/components/ResponsiveImageContainer';
 import pageContent from '../../content/aboutContent.json';
 
 function About() {
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const topImageWidth = 170;
+    const topImageHeight = topImageWidth / 0.8;
+    const bottomImageWidth = isXs ? 300 : 400;
+    const bottomImageHeight = bottomImageWidth / 0.88;
+
     return (
         <Box
             sx={{
@@ -13,16 +23,19 @@ function About() {
             <ResponsiveImageContainer
                 marginSize="2rem"
                 float="left"
-                breakpoint="md">
+                breakpoint="md"
+                sx={{ mb: '1rem' }}>
                 <Image
                     src={pageContent.sectionOne.imageUrl}
                     alt={pageContent.sectionOne.altText}
-                    height={350}
-                    width={300}
+                    width={topImageWidth}
+                    height={topImageHeight}
+                    priority
                     style={{
                         objectFit: 'cover',
                         borderRadius: '.15rem',
-                    }}></Image>
+                    }}
+                />
             </ResponsiveImageContainer>
             {pageContent.sectionOne.paragraphs.map((paragraph, i) => (
                 <Typography key={i}>{paragraph}</Typography>
@@ -30,13 +43,15 @@ function About() {
 
             <ResponsiveImageContainer
                 marginSize="2rem"
-                float="right"
-                breakpoint="sm">
+                // float="right"
+                breakpoint="sm"
+                sx={{ pt: '1rem' }}>
                 <Image
                     src={pageContent.sectionTwo.imageUrl}
                     alt={pageContent.sectionTwo.altText}
-                    height={350}
-                    width={300}
+                    width={bottomImageWidth}
+                    height={bottomImageHeight}
+                    priority
                     style={{
                         objectFit: 'cover',
                         borderRadius: '.15rem',
