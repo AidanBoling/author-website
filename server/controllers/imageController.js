@@ -17,8 +17,8 @@ const s3 = new S3Client(s3config);
 
 const imageController = {
     create: async (req, res) => {
-        // const { title, altText, caption } = matchedData(req);
-        const { title, altText, caption } = req.body;
+        // const { title, altText, caption, group } = matchedData(req);
+        const { title, altText, caption, group } = req.body;
 
         // generate random file name
         const imageFileName = randomBytes(16).toString('hex');
@@ -37,6 +37,7 @@ const imageController = {
             title: title,
             altText: altText,
             caption: caption,
+            group: group,
             url: `${cdnBaseUrl}/${imageFileName}`,
             fileName: imageFileName,
             dimensions: { width: dimensions.width, height: dimensions.height },

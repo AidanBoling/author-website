@@ -471,9 +471,7 @@ app.get(
 );
 app.put(
     '/admin/images/:id',
-    checkSchema({
-        id: validationSchema.id,
-    }),
+    checkSchema({ id: validationSchema.id }),
     imageController.update
 );
 app.delete(

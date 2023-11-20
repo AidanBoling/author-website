@@ -12,6 +12,7 @@ const createImageFormData = params => {
     params.data.title && formData.append('title', params.data.title);
     params.data.altText && formData.append('altText', params.data.altText);
     params.data.caption && formData.append('caption', params.data.caption);
+    params.data.group && formData.append('group', params.data.group);
 
     return formData;
 };

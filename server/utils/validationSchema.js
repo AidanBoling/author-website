@@ -31,6 +31,7 @@ const arrayItemsAreAlphaWordsStr = array => {
         if (typeof item === 'string' && item.match(/^([a-zA-Z0-9]+\s?){1,5}/)) {
             return true;
         } else {
+            console.log('arrayItemsAreAlphaWords error. Array Item: ', item);
             throw new Error(
                 'One or more items in array are not alphabetical string'
             );
@@ -81,15 +82,20 @@ export const validationSchema = {
             isIn: { options: [['2', '5', '10', '20', '30']] },
         },
 
+        title: {
+            in: ['body'],
+            isString: true,
+        },
+
         category: {
-            in: ['params', 'query'],
+            in: ['body', 'params', 'query'],
             isIn: { options: [['fiction', 'non-fiction']] },
         },
 
         tags: {
             in: ['params', 'query'],
             isArray: true,
-            custom: { options: arrayItemsAreAlphanumStr },
+            custom: { options: arrayItemsAreAlphaWordsStr },
             //     isIn: { options: [['', '']] },
         },
     },
@@ -239,10 +245,10 @@ export const validationSchema = {
         // remove/replace??: ^$*_§€#§¶\\/<>:;|=.,
     },
 
-    // textLong: {
-    //     trim: true,
-    //     // isString?
-    // },
+    textLong: {
+        trim: true,
+        isString: true,
+    },
 
     // jwtHeader: {
     //             in: ['headers'],
