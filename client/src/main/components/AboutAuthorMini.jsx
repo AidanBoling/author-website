@@ -8,21 +8,27 @@ import pageContent from '@/main/content/authorDetails.json';
 export default function AboutAuthorMini() {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMd = useMediaQuery(theme.breakpoints.down('lg'));
     const spacing = '2rem';
     const breakpoint = 'sm';
 
+    const imageWidth = isXS ? 120 : isMd ? 150 : 140;
+    const imageHeight = imageWidth;
+
     const authorName = (
-        <Typography
-            component="p"
-            variant="h5"
+        <Box
             sx={{
                 ml: { xs: spacing, [breakpoint]: 0 },
                 display: 'flex',
-                alignItems: 'center',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
                 mb: { [breakpoint]: '.5rem' },
             }}>
-            <i>About the Author</i>
-        </Typography>
+            <Typography component="p" variant="h5" sx={{ mb: '.5rem' }}>
+                <i>About the Author</i>
+            </Typography>
+            <Divider sx={{ width: { xs: '100%', sm: '70%' } }} />
+        </Box>
     );
 
     const authorDescription = (
@@ -43,17 +49,18 @@ export default function AboutAuthorMini() {
             }}>
             <Box
                 sx={{
-                    display: { xs: 'flex', [breakpoint]: 'inline' },
+                    display: { xs: 'flex', [breakpoint]: 'flex' },
                     justifyContent: {
                         xs: 'flex-start',
                         [breakpoint]: 'flex-start',
                     },
+                    alignItems: 'center',
                 }}>
                 <Image
                     src={pageContent.author.avatarURL}
                     alt="image of the author"
-                    height={120}
-                    width={120}
+                    width={imageWidth}
+                    height={imageHeight}
                     style={{
                         objectFit: 'cover',
                         borderRadius: '50%',
@@ -67,7 +74,6 @@ export default function AboutAuthorMini() {
                     mt: { xs: '1rem', [breakpoint]: 0 },
                 }}>
                 {!isXS && authorName}
-                {!isXS && <Divider width={'70%'} />}
                 {authorDescription}
             </Box>
         </Box>
