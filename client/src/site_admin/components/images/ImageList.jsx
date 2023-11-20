@@ -15,7 +15,9 @@ import { useMediaQuery } from '@mui/material';
 import filterVars from '@/admin/data/listFilterVars.json';
 
 const imageFilters = [
+    // eslint-disable-next-line react/jsx-key
     <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+    // eslint-disable-next-line react/jsx-key
     <SelectArrayInput
         source="group"
         choices={filterVars.imagesGroups}

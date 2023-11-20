@@ -12,6 +12,7 @@ import { MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 // It's important to pass the ref to allow Material UI to manage the keyboard navigation
+// eslint-disable-next-line react/display-name
 const AccountPageMenuItem = forwardRef((props, ref) => {
     // We are not using MenuItemLink so we retrieve the onClose function from the UserContext
     const { onClose } = useUserMenu();

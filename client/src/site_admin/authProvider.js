@@ -22,7 +22,7 @@ function parseResponse(response) {
 
 function handleResponse({ status, body }, passValidationErrors = false) {
     console.log('Handling response...');
-    console.log('Response content: ', body);
+    // console.log('Response content: ', body);
 
     // If unauthorized or other error:
     // function handleStatusNotOk(res)
@@ -84,7 +84,7 @@ function handlePwdLogin(request) {
         .then(response => parseResponse(response))
         .then(response => handleResponse(response))
         .then(data => {
-            console.log('Login response: ', data);
+            console.log('Login data received.');
 
             // If returns mfa indicator, redirect to mfa page
             if (data.challenge === 'MFA') {
@@ -97,7 +97,7 @@ function handlePwdLogin(request) {
                         info: data.mfa,
                     })
                 );
-                console.log(JSON.parse(localStorage.getItem('mfa')));
+                // console.log(JSON.parse(localStorage.getItem('mfa')));
                 return Promise.resolve({
                     redirectTo: '/auth-callback',
                 });
@@ -106,7 +106,7 @@ function handlePwdLogin(request) {
             }
         })
         .catch(error => {
-            console.log(error);
+            console.log('Password login error: ', error);
             if (error.message === 'Unauthorized') {
                 console.log('Login request failed.');
                 throw new Error('Invalid username or password');
@@ -124,7 +124,7 @@ function handleMFALogin(request) {
             handleIsAuthenticated();
         })
         .catch(error => {
-            console.log(error);
+            console.log('MFA login error:', error);
             if (error.message === 'Unauthorized') {
                 console.log(
                     'MFA request failed. Deleting mfa item and redirecting...'
@@ -257,7 +257,7 @@ export const authProvider = {
                     .then(response => handleResponse(response));
                 return Promise.resolve();
             } catch (error) {
-                console.log(error.message);
+                console.log('Auth check error: ', error.message);
                 if (error.message === 'Unauthorized')
                     return Promise.reject({
                         message: 'Unauthorized',
@@ -372,7 +372,7 @@ export const authProvider = {
                 }
                 throw new Error('Something went wrong with server logout.');
             })
-            .catch(error => console.log('Error: ', error.message));
+            .catch(error => console.log('Logout error: ', error.message));
     },
 
     getPermissions: () => Promise.resolve(''),
@@ -398,7 +398,7 @@ export const authProvider = {
             if (data) {
                 // console.log('User data: ', data);
                 const { id, fullName, avatar, email, lastLogin, mfa } = data;
-                console.log('user mfa info: ', mfa);
+                // console.log('user mfa info: ', mfa);
                 return Promise.resolve({
                     id,
                     fullName,
@@ -409,7 +409,7 @@ export const authProvider = {
                 });
             }
         } catch (error) {
-            console.log(error);
+            console.log('Get identity error: ', error);
             if (error.message === 'Unauthorized') {
                 console.log('Identity request failed.');
 
@@ -527,7 +527,7 @@ export const authProvider = {
                 .then(response => parseResponse(response))
                 .then(response => handleResponse(response));
         } catch (error) {
-            console.log(error);
+            console.log('Access code submission error: ', error);
             if (error.message !== 'Unauthorized') {
                 console.log('Server error');
             }

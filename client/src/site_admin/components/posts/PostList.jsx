@@ -9,7 +9,7 @@ import {
     TextInput,
     EditButton,
     DateField,
-    BooleanInput,
+    // BooleanInput,
 } from 'react-admin';
 import TagField from '../TagField';
 
@@ -17,8 +17,10 @@ import TagField from '../TagField';
 
 function PostList() {
     const postFilters = [
+        // eslint-disable-next-line react/jsx-key
         <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
         // <BooleanInput label="Published" source="published" alwaysOn />,
+        // eslint-disable-next-line react/jsx-key
         <ReferenceArrayInput reference="tags" source="tags">
             <SelectArrayInput optionText="name" variant="outlined" />
         </ReferenceArrayInput>,

@@ -266,7 +266,7 @@ app.get(
     async (req, res) => {
         try {
             const allEvents = await Event.find();
-            console.log(allEvents);
+            // console.log(allEvents);
             res.json(allEvents);
         } catch {
             handleGetItemsError(error, res);

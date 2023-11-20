@@ -11,6 +11,7 @@ import {
 import { Typography } from '@mui/material';
 
 const eventFilters = [
+    // eslint-disable-next-line react/jsx-key
     <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
 ];
 

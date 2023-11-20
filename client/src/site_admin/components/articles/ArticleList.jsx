@@ -17,7 +17,9 @@ import { useMediaQuery } from '@mui/material';
 import TagField from '../TagField';
 
 const articleFilters = [
+    // eslint-disable-next-line react/jsx-key
     <TextInput label="Search" source="q" alwaysOn variant="outlined" />,
+    // eslint-disable-next-line react/jsx-key
     <ReferenceArrayInput reference="tags" source="tags">
         <SelectArrayInput optionText="name" variant="outlined" />
     </ReferenceArrayInput>,

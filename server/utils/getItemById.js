@@ -18,7 +18,7 @@ export default async function getItemByValidatedId(
         .populate('tags', 'name')
         .exec();
 
-    console.log('Populated item: ', item);
+    // console.log('Populated item: ', item);
 
     if (item) {
         res.json(item);

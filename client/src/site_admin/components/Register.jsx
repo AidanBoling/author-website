@@ -10,6 +10,7 @@ import UserForm from './UserForm';
 
 export default function Register() {
     const [formSubmitted, setFormSubmitted] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [searchParams, setSearchParams] = useSearchParams();
     const params = {
         token: searchParams.get('token'),

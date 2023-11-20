@@ -9,7 +9,7 @@ async function getFilteredResourceList(
     overrides
 ) {
     // TODO (later): When add query, add validate
-    const { page = 1, limit = 2, ...query } = matchedData(req);
+    const { page = 1, limit = 10, ...query } = matchedData(req);
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const filter =
@@ -19,7 +19,7 @@ async function getFilteredResourceList(
     const sort = defaultSort;
 
     console.log(`Query: \n`, query);
-    console.log(`Skip: ${skip}\nLimit: ${limit}`);
+    // console.log(`Skip: ${skip}\nLimit: ${limit}`);
     console.log('Filter: ', filter);
 
     const items = await model

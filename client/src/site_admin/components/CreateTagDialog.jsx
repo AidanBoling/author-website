@@ -48,9 +48,9 @@ export default function CreateTagDialog({
     const record = useRecordContext();
     // Note: The conditional below breaks a react hook rule ("React Hook "useCreateSuggestionContext" is called conditionally. React Hooks must be called in the exact same order in every component render.")
     // However can't get it to work any other way (unless I duplicate this and adjust for New records only)
-
     const { filter, onCancel, onCreate } = newRecord
-        ? useCreateSuggestionContext()
+        ? // eslint-disable-next-line react-hooks/rules-of-hooks
+          useCreateSuggestionContext()
         : {};
 
     const [newTagName, setNewTagName] = useState((newRecord && filter) || '');
