@@ -16,10 +16,11 @@ import { useTheme } from 'next-themes';
 // export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function ThemeWrapper(props) {
-    const [currentTheme, setCurrentTheme] = useState(lightTheme);
+    const [currentTheme, setCurrentTheme] = useState(darkTheme);
     const { resolvedTheme } = useTheme();
-    // const { systemTheme } = useTheme();
-    // console.log('Prefers mode: ', systemTheme);
+    const { systemTheme } = useTheme();
+    console.log('Prefers mode: ', systemTheme);
+    console.log('resolvedTheme: ', resolvedTheme);
 
     useEffect(() => {
         resolvedTheme === 'light'

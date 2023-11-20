@@ -12,14 +12,18 @@ import {
     DialogActions,
     DialogContent,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import BgPatternBox from '../style/BgPatternBox';
 import NewsletterFormComponentContent from '../forms/NewsletterFormComponent';
 import pageContent from '@/main/content/authorDetails.json';
 import logo from '@/assets/logo-art.png';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function Footer(props) {
     const [open, setOpen] = useState(false);
+    const theme = useTheme();
+    const dialogIsFullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     function handleClickOpen() {
         setOpen(true);
@@ -63,6 +67,7 @@ function Footer(props) {
                                 alignItems: 'center',
                             }}>
                             <MuiLink
+                                color={'lightgold.main'}
                                 component={Link}
                                 href={'/contact'}
                                 aria-label={`Contact ${pageContent.author.name}`}
@@ -102,6 +107,7 @@ function Footer(props) {
                                 •
                             </Box> */}
                             <MuiLink
+                                color={'lightgold.main'}
                                 component="button"
                                 onClick={handleClickOpen}
                                 aria-label={`Subscribe to ${pageContent.author.name}'s newsletter mailing list`}
@@ -123,7 +129,12 @@ function Footer(props) {
                 </Container>
             </Box>
 
-            <Dialog open={open} onClose={handleClose} maxWidth={'md'} fullWidth>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth={'md'}
+                fullWidth={!dialogIsFullScreen}
+                fullScreen={dialogIsFullScreen}>
                 <DialogActions sx={{ padding: 0 }}>
                     <IconButton
                         color="primary"

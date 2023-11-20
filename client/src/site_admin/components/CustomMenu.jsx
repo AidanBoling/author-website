@@ -52,11 +52,7 @@ export default function CustomMenu() {
                     Images
                 </Typography>
             </Divider>
-            <Menu.Item
-                to="/images?filter=%7B%7D"
-                primaryText="All"
-                leftIcon={false}
-            />
+            <Menu.Item to="/images?filter=%7B%7D" primaryText="All" />
             <Menu.Item
                 to={{
                     pathname: '/images',
@@ -65,7 +61,6 @@ export default function CustomMenu() {
                     })}`,
                 }}
                 primaryText="Site Pages"
-                leftIcon={false}
             />
         </Menu>
     );
