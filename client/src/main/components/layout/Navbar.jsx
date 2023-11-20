@@ -121,6 +121,8 @@ function Navbar() {
                             <Image
                                 src={logo}
                                 alt={pageContent.logo.altText}
+                                sizes="120px"
+                                priority
                                 fill
                                 style={{
                                     zIndex: '1',

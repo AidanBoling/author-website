@@ -1,7 +1,7 @@
 'use client';
 import DOMPurify from 'dompurify';
 import { Box, Button, Typography } from '@mui/material';
-import Image from 'next/image';
+import BasicImageComponent from '@/main/components/BasicImageComponent';
 
 function BookPage({ book }) {
     const breakpoint = 'md';
@@ -31,7 +31,14 @@ function BookPage({ book }) {
         book && (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ mt: baselineGap }}>
-                    <Box
+                    <BasicImageComponent
+                        src={
+                            (book.coverImage && book.coverImage.url) ||
+                            book.coverImagePlaceholder
+                        }
+                        alt="book cover"
+                        priority={true}
+                        sizes="(max-width: 600px) 450px, (max-width: 950px) 400px, 300px"
                         sx={{
                             width: coverWidth,
                             aspectRatio: 0.67,
@@ -39,24 +46,11 @@ function BookPage({ book }) {
                             ml: { xs: 'auto', [breakpoint]: 0 },
                             mr: { xs: 'auto', [breakpoint]: baselineGap },
                             mb: baselineGap,
-                            flexShrink: 0,
                             float: { xs: 'unset', [breakpoint]: 'left' },
-                            contain: 'content',
                             shapeOutside: 'margin-box',
-                        }}>
-                        <Image
-                            className="book-cover"
-                            src={
-                                (book.coverImage && book.coverImage.url) ||
-                                book.coverImagePlaceholder
-                            }
-                            alt="book cover"
-                            fill
-                            style={{
-                                objectFit: 'cover',
-                            }}
-                        />
-                    </Box>
+                        }}
+                    />
+
                     <Header />
                     <Box>
                         {book.description &&
@@ -132,3 +126,33 @@ export default BookPage;
 //                 }}
 //             />
 //         );
+//
+//{/* <Box
+// //
+// sx={{
+//     width: coverWidth,
+//     aspectRatio: 0.67,
+//     borderRadius: '.25rem',
+//     ml: { xs: 'auto', [breakpoint]: 0 },
+//     mr: { xs: 'auto', [breakpoint]: baselineGap },
+//     mb: baselineGap,
+//     flexShrink: 0,
+//     float: { xs: 'unset', [breakpoint]: 'left' },
+//     contain: 'content',
+//     shapeOutside: 'margin-box',
+// }}>
+// <Image
+//     className="book-cover"
+//     src={
+//         (book.coverImage && book.coverImage.url) ||
+//         book.coverImagePlaceholder
+//     }
+//     alt="book cover"
+//     fill
+//     sizes="(max-width: 600px) 450px, (max-width: 950px) 400px, 300px"
+//     priority={true}
+//     style={{
+//         objectFit: 'cover',
+//     }}
+// />
+// </Box> */}

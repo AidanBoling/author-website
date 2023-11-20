@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import InnerPageContainer from '../layout/InnerPageContainer';
 import pageContent from '../../content/homeContent.json';
+import BasicImageComponent from '@/main/components/BasicImageComponent';
 
 function Home(props) {
     const headerImageMask = {
@@ -75,6 +76,7 @@ function Home(props) {
                         alt={pageContent.titleImage.altText}
                         fill
                         priority
+                        sizes="100vw"
                         style={{ width: '100%', objectFit: 'cover' }}
                     />
                 </Box>
@@ -95,23 +97,45 @@ function Home(props) {
                             sx={{
                                 display: 'flex',
                                 flexDirection: { xs: 'column', md: 'row' },
-                                p: '2rem',
+                                px: { xs: '0', sm: '2rem' },
                                 py: '5rem',
                                 mx: 'auto',
                             }}>
-                            <Box
-                                component="img"
+                            <BasicImageComponent
                                 src={pageContent.heroBook.imageUrl}
                                 alt="Book cover"
-                                className="hero book-cover"
+                                priority
+                                sizes="350px"
                                 sx={{
+                                    width: '325px',
+                                    aspectRatio: '0.67',
+                                    // height: 'calc(325px / 0.67)',
+                                    mx: { xs: 'auto' },
+                                    borderRadius: '.4rem',
+                                }}
+                            />
+                            {/* <Box
+                                sx={{
+                                    contain: 'content',
+                                    flexShrink: 0,
                                     borderRadius: '.4rem',
                                     width: '325px',
                                     aspectRatio: '0.67',
-                                    objectFit: 'fill',
+                                    // height: 'calc(325px / 0.67)',
                                     mx: { xs: 'auto' },
-                                }}
-                            />
+                                }}>
+                                <Image
+                                    src={pageContent.heroBook.imageUrl}
+                                    alt="Book cover"
+                                    priority={true}
+                                    fill
+                                    sizes="350px"
+                                    style={{
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </Box> */}
+
                             <Stack
                                 gap={3}
                                 className="hero content"
@@ -136,7 +160,7 @@ function Home(props) {
                                         sx={{ width: '200px', mx: 'auto' }}>
                                         <Button
                                             component={Link}
-                                            href="/"
+                                            href={pageContent.heroBook.pagePath}
                                             variant="outlined"
                                             color="lightgold">
                                             Learn More

@@ -250,6 +250,7 @@ const lightThemeOptions = {
             main: grey[600],
             light: grey[400],
             dark: grey[800],
+            medLight: grey[400],
         },
         background: {
             default: '#fcfdfc',
