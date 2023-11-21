@@ -28,6 +28,7 @@ const nextConfig = {
                 port: '',
             },
         ],
+        minimumCacheTTL: 3600,
     },
 
     // compiler: {

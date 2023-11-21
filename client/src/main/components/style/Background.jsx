@@ -1,5 +1,7 @@
 'use client';
+import Image from 'next/image';
 import { Box } from '@mui/material';
+import bgMountains from '@/public/green-gold-abstract-mountains_transparent-crop.png';
 // import { css } from '@emotion/react';
 
 export default function Background(props) {
@@ -9,13 +11,41 @@ export default function Background(props) {
         <>
             <Box
                 component="div"
-                className="bgmountains"
+                // className="bgmountains"
                 sx={{
+                    position: 'relative',
+
                     display: 'flex',
                     flexDirection: 'column',
                     minHeight: `calc(100vh - ${footerHeight})`,
-                    pb: { xs: '75px', sm: '125px', lg: '175px' },
+                    pb: {
+                        // xs: '75px',
+                        xs: '125px',
+                        lg: '175px',
+                    },
                 }}>
+                <Box
+                    sx={{
+                        width: '100%',
+                        height: 'min-content',
+                        position: 'absolute',
+                        bottom: '0',
+                        lineHeight: '0',
+                    }}>
+                    <Image
+                        alt="modern abstract green and gold mountains digital art"
+                        src={bgMountains}
+                        placeholder="blur"
+                        quality={100}
+                        sizes="100vw"
+                        style={{
+                            minWidth: '900px',
+                            maxWidth: '100%',
+                            height: 'auto',
+                            objectFit: 'contain',
+                        }}
+                    />
+                </Box>
                 <Box
                     className="bg-color"
                     sx={{

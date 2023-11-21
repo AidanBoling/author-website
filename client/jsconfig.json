@@ -5,7 +5,8 @@
             "@/styles/*": ["styles/*"],
             "@/main/*": ["main/*"],
             "@/admin/*": ["site_admin/*"],
-            "@/assets/*": ["assets/*"]
+            "@/assets/*": ["assets/*"],
+            "@/public/*": ["../public/*"]
         }
     },
     "exclude": ["node_modules"]
