@@ -38,7 +38,10 @@ function Events({ children }) {
                         Interested in booking {authorInfo.author.title}
                         {authorInfo.author.lName}? {/* </b> */}
                     </Typography>
-                    <Typography variant="p" component="span">
+                    <Typography
+                        variant="h6"
+                        component="span"
+                        sx={{ fontWeight: 260 }}>
                         <MuiLink
                             component={Link}
                             href={'/contact'}
