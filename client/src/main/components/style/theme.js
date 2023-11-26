@@ -150,6 +150,7 @@ const themeBase = {
     breakpoints: {
         values: {
             xs: 0,
+            sxs: 470,
             sm: 600,
             md: 950,
             lg: 1200,

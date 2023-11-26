@@ -10,13 +10,23 @@ import {
     Button,
 } from '@mui/material';
 import InnerPageContainer from '../layout/InnerPageContainer';
-import pageContent from '../../content/homeContent.json';
+import pageContent from '@/main/content/homeContent.json';
 import BasicImageComponent from '@/main/components/BasicImageComponent';
 
 function Home(props) {
     const headerImageMask = {
-        xs: 'linear-gradient(to top, black, black, rgba(0, 0, 0, 0.7), transparent, transparent)',
-        md: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 85%, transparent)',
+        xs: 'linear-gradient(to top, black, black 45%, rgba(0, 0, 0, 0.7) 60%, 66%, transparent 80%)',
+        sxs: 'linear-gradient(to top, black, black 45%, rgba(0, 0, 0, 0.7) 64%, 72%, transparent 82%)',
+        sm: 'linear-gradient(to top, black, black 45%, rgba(0, 0, 0, 0.7) 58%, 62%, transparent 76%)',
+        md: 'linear-gradient(to left, black, black, 45%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.35), transparent 68%)',
+        // lg: 'linear-gradient(to left, black, black, rgba(0, 0, 0, 0.7), transparent, 88%, transparent)',
+    };
+
+    const taglineFontSize = {
+        xs: '1.6rem !important',
+        sxs: '1.8rem !important',
+        sm: '1.85rem !important',
+        lg: '2.25rem !important',
     };
 
     return (
@@ -24,8 +34,8 @@ function Home(props) {
             <Container
                 sx={{
                     display: 'grid',
-                    gridTemplateRows: 'minmax(500px, 70vh)',
-                    gridTemplateColumns: '1fr',
+                    gridTemplateRows: 'minmax(500px, 75vh)',
+                    gridTemplateColumns: '1fr 1.1fr',
                     alignItems: 'start',
                     mt: '0',
                 }}
@@ -35,37 +45,67 @@ function Home(props) {
                     sx={{
                         display: 'flex',
                         flexDirection: { xs: 'column', md: 'row' },
-                        maxWidth: { md: '60vw', lg: '50vw' },
+                        maxWidth: { md: '52vw', lg: '54vw' },
                         gridRow: '1/-1',
                         gridColumn: '1/-1',
                         height: '100%',
                         zIndex: 1,
                     }}>
-                    <Typography
-                        variant="h2"
-                        component="p"
+                    <Box
                         sx={{
                             textAlign: 'center',
-                            m: '2rem',
-                            mt: { xs: '10vh', md: '20vh' },
-                            mx: '5vw',
+                            mb: '2rem',
+                            mt: {
+                                xs: '14vw',
+                                sxs: 'calc(10px + 10vw)',
+                                sm: '58px',
+                                md: '12vh',
+                            },
+                            mx: { xs: '5vw', md: '2vw', lg: '2vw' },
+                            // ml: { md: '2vw', lg: '2vw' },
+                            fontSize: {
+                                ...taglineFontSize,
+                            },
                         }}>
-                        {pageContent.headline.primary}
                         <Typography
                             variant="h2"
-                            component="span"
-                            color="primary.dark">
+                            component="p"
+                            sx={{
+                                fontWeight: { xs: 270, sm: 250 },
+
+                                fontSize: {
+                                    ...taglineFontSize,
+                                },
+                                mb: { xs: '.5rem', md: '1rem' },
+                            }}>
+                            {pageContent.headline.primary}
+                        </Typography>
+                        <Typography
+                            variant="h2"
+                            component="p"
+                            color="primary.dark"
+                            sx={{
+                                fontWeight: { xs: 300, md: 275 },
+
+                                fontSize: {
+                                    ...taglineFontSize,
+                                },
+                            }}>
                             {pageContent.headline.secondary}
                         </Typography>
-                    </Typography>
+                    </Box>
                 </Box>
 
                 <Box
                     sx={{
-                        height: '100%',
+                        height: { xs: '90%', sm: '100%' },
+                        // width: { md: '90%' },
                         gridRow: '1/-1',
                         gridColumn: '1/-1',
                         position: 'relative',
+                        // display: 'flex',
+                        marginLeft: { md: '18vw' },
+                        marginTop: { xs: 'auto', sm: '0' },
                         zIndex: '0',
                         maskImage: headerImageMask,
                         WebkitMaskImage: headerImageMask,
@@ -77,7 +117,10 @@ function Home(props) {
                         fill
                         priority
                         sizes="100vw"
-                        style={{ width: '100%', objectFit: 'cover' }}
+                        style={{
+                            objectFit: 'cover',
+                            objectPosition: '85% 45%',
+                        }}
                     />
                 </Box>
             </Container>
