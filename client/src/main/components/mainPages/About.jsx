@@ -1,16 +1,17 @@
 'use client';
+import DOMPurify from 'dompurify';
 import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ResponsiveImageContainer from '@/main/components/ResponsiveImageContainer';
-import pageContent from '../../content/aboutContent.json';
+import pageContent from '@/main/content/aboutContent.json';
 
 function About() {
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const topImageWidth = 170;
+    const topImageWidth = 200;
     const topImageHeight = topImageWidth / 0.8;
     const bottomImageWidth = isXs ? 300 : 400;
     const bottomImageHeight = bottomImageWidth / 0.88;
@@ -24,7 +25,7 @@ function About() {
                 marginSize="2rem"
                 float="left"
                 breakpoint="md"
-                sx={{ mb: '1rem' }}>
+                sx={{ mb: { xs: '2rem', md: '.75rem', lg: 0 } }}>
                 <Image
                     src={pageContent.sectionOne.imageUrl}
                     alt={pageContent.sectionOne.altText}
@@ -38,7 +39,13 @@ function About() {
                 />
             </ResponsiveImageContainer>
             {pageContent.sectionOne.paragraphs.map((paragraph, i) => (
-                <Typography key={i}>{paragraph}</Typography>
+                <Typography key={i}>
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(paragraph),
+                        }}
+                    />
+                </Typography>
             ))}
 
             <ResponsiveImageContainer
