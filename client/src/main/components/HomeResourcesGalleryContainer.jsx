@@ -210,17 +210,29 @@ export default function ResourcesGalleryContainer(props) {
                                 sx={{
                                     flexShrink: 0,
                                     transitionDuration: '50ms',
-                                    pl: '1.5rem',
+                                    // pl: '1rem',
+                                    pt: '225px',
                                     backgroundColor: 'transparent',
                                     '&:hover': {
                                         color: 'primary.light',
                                         backgroundColor: 'greyAlpha10.main',
                                     },
+                                    fontSize: '1rem',
+                                    lineHeight: '1rem',
+                                    maxWidth: '80px',
+                                    textAlign: 'center',
+                                    alignItems: 'flex-start',
                                 }}>
-                                More
-                                <ArrowRightAltIcon
-                                    sx={{ pl: '.25rem', fontSize: '2rem' }}
-                                />
+                                <div>
+                                    More
+                                    <ArrowRightAltIcon
+                                        sx={{
+                                            px: '.25rem',
+                                            pl: 0,
+                                            fontSize: '2rem',
+                                        }}
+                                    />
+                                </div>
                             </Button>
                             <ScrollSpacer />
                         </Box>

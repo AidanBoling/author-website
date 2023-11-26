@@ -49,8 +49,43 @@ function ResourceGalleryCard(props) {
                         title={props.imageAlt}
                     />
                 ))}
-            <Box className="resource-card content" mt={'auto'}>
-                <CardHeader
+            <Box
+                className="resource-card gallery content"
+                sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                }}>
+                <Typography
+                    variant="h6"
+                    component="p"
+                    sx={{
+                        lineHeight: '1.6rem',
+                    }}>
+                    {textLinkWrapper(props, props.title)}
+                </Typography>
+                <div>
+                    <Typography
+                        variant="subheading1"
+                        component="p"
+                        mb={0}
+                        sx={{ fontSize: '1.05rem', fontWeight: '400' }}>
+                        {new Date(datePublished).toLocaleDateString(
+                            'en-us',
+                            dateFormat
+                        )}
+                    </Typography>
+                    {props.publisher && (
+                        <Typography
+                            variant="subheading1"
+                            component="p"
+                            sx={{ fontSize: '15px', mt: '.5rem' }}>
+                            {props.publisher}
+                        </Typography>
+                    )}
+                </div>
+                {/* <CardHeader
                     sx={{ py: '.5rem' }}
                     title={
                         <Typography
@@ -81,7 +116,7 @@ function ResourceGalleryCard(props) {
                             )}
                         </div>
                     }
-                />
+                /> */}
                 {props.actions && <CardActions>{props.actions}</CardActions>}
             </Box>
         </Card>
