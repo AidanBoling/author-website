@@ -29,6 +29,7 @@ const postController = {
         };
 
         if (post.published) {
+            console.log('Post marked as published');
             newPostData = { ...newPostData, datePublished: new Date() };
         }
 
@@ -73,17 +74,20 @@ const postController = {
     // Update a post
     update: async (req, res) => {
         const { id } = matchedData(req);
-        let updates = { ...req.body, updatedAt: new Date() };
+        const now = new Date();
+        let updates = { ...req.body, updatedAt: now };
 
         if (updates.published && !updates.datePublished) {
-            updates = { ...updates, datePublished: new Date() };
+            updates = { ...updates, datePublished: now };
         }
-        console.log(updates);
+        // console.log('Post updates: ', updates);
 
         try {
-            const postToUpdate = await Post.findByIdAndUpdate(id, updates);
-            // const postToUpdate = await Post.findById(postId);
-            sendResponse(Post, 'posts', { data: postToUpdate }, res, 200);
+            const updatedPost = await Post.findByIdAndUpdate(id, updates, {
+                new: true,
+            });
+            // console.log('Updated post: ', updatedPost);
+            sendResponse(Post, 'posts', { data: updatedPost }, res, 200);
         } catch (e) {
             res.status(500).send(e);
         }

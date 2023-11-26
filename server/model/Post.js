@@ -21,7 +21,7 @@ const postSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    datePublished: { type: Date, immutable: true },
+    datePublished: { type: Date },
 });
 
 postSchema.pre('save', function (next) {
@@ -30,7 +30,7 @@ postSchema.pre('save', function (next) {
 });
 
 // postSchema.pre('save', function (next) {
-//     if (published === true) {
+//     if (this.published === true && !this.datePublished) {
 //         this.publishDate = Date.now();
 //     }
 //     return next();
