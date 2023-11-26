@@ -17,7 +17,7 @@ function ImageForm({ edit }) {
                     source="image"
                     label="Image File"
                     accept="image/*"
-                    placeholder={<p>Drop your file here</p>}
+                    // placeholder={<p>Drop your file here</p>}
                     className="form">
                     <ImageField source="src" title="title" />
                 </ImageInput>
