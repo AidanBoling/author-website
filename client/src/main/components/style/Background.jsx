@@ -1,11 +1,12 @@
 'use client';
 import Image from 'next/image';
 import { Box } from '@mui/material';
-import bgMountains from '@/public/green-gold-abstract-mountains_transparent-crop.png';
+import pageContent from '@/main/content/siteContent.json';
+// import bgMountains from '@/public/green-gold-abstract-mountains_transparent-crop.png';
 // import { css } from '@emotion/react';
 
 export default function Background(props) {
-    const footerHeight = '140px';
+    const footerHeight = '150px';
 
     return (
         <>
@@ -27,22 +28,28 @@ export default function Background(props) {
                 <Box
                     sx={{
                         width: '100%',
+                        // minWidth: '900px',
+                        // maxWidth: '100%',
                         height: 'min-content',
                         position: 'absolute',
                         bottom: '0',
                         lineHeight: '0',
                     }}>
                     <Image
-                        alt="modern abstract green and gold mountains digital art"
-                        src={bgMountains}
-                        placeholder="blur"
+                        // src={bgMountains}
+                        src={pageContent.bgImages.mountains.url}
+                        alt={pageContent.bgImages.mountains.altText}
+                        width={2048}
+                        height={297}
                         quality={100}
-                        sizes="100vw"
+                        sizes="(max-width: 900px) 900px, 100vw"
                         style={{
                             minWidth: '900px',
                             maxWidth: '100%',
                             height: 'auto',
                             objectFit: 'contain',
+                            // position: 'absolute',
+                            // bottom: '0',
                         }}
                     />
                 </Box>

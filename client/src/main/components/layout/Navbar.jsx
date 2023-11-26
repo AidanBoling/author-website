@@ -21,9 +21,9 @@ import { NavbarModeButton, MenuModeToggle } from '../ColorModeToggles';
 import BgPatternBox from '../style/BgPatternBox';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import pageContent from '@/main/content/authorDetails.json';
 import { NavButton } from '@/main/components/NavButton';
-import logo from '@/assets/logo-art.png';
+import pageContent from '@/main/content/authorDetails.json';
+// import logo from '@/assets/logo-art.png';
 
 const pages = [
     { name: 'HOME', link: '/' },
@@ -119,10 +119,10 @@ function Navbar() {
                                 borderStyle: 'solid',
                             }}>
                             <Image
-                                src={logo}
+                                src={pageContent.logo.url}
                                 alt={pageContent.logo.altText}
                                 sizes="120px"
-                                priority
+                                priority={true}
                                 fill
                                 style={{
                                     zIndex: '1',

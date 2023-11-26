@@ -14,11 +14,11 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import BgPatternBox from '../style/BgPatternBox';
 import NewsletterFormComponentContent from '../forms/NewsletterFormComponent';
 import pageContent from '@/main/content/authorDetails.json';
-import logo from '@/assets/logo-art.png';
-import useMediaQuery from '@mui/material/useMediaQuery';
+// import logo from '@/assets/logo-art.png';
 
 function Footer(props) {
     const [open, setOpen] = useState(false);
@@ -52,7 +52,8 @@ function Footer(props) {
                             alignItems: 'center',
                             justifyContent: 'flex-end',
                             height: '100%',
-                            py: '1.5rem',
+                            pt: '2rem',
+                            pb: '1.25rem',
                         }}>
                         <Box
                             zIndex={1}
@@ -91,10 +92,10 @@ function Footer(props) {
                                         height: '50px',
                                     }}>
                                     <Image
-                                        src={logo}
+                                        src={pageContent.logo.url}
                                         alt={pageContent.logo.altText}
-                                        width={'50px'}
-                                        height={'50px'}
+                                        width={50}
+                                        height={50}
                                         style={{
                                             height: '100%',
                                             width: '100%',

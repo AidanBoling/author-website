@@ -1,20 +1,3 @@
-/* html,
-body,
-.root { */
-/* color: #000;
-    background: #fcfdfc; */
-/* background-image: */
-/* url("https://www.transparenttextures.com/patterns/rice-paper-2.png"); */
-/* url("https://www.transparenttextures.com/patterns/light-paper-fibers.png"); */
-/* linear-gradient(to top, blue, 75%, white); */
-/* background-size: 20%;
-    width: 100vw;
-    height: 100%;
-    position: fixed;
-    background-attachment: fixed;
-    opacity: .2; */
-/* } */
-
 [data-theme='light'],
 [data-theme='light'] body {
     color: #000;
@@ -57,20 +40,6 @@ p {
 body {
     padding: 0;
     margin: 0 !important;
-
-    /* background: var(--bg); */
-
-    /* background-image:
-        linear-gradient(to top, rgba(162, 166, 184, 1) 60%, 85%, transparent); */
-
-    /* background-image: url("https://www.transparenttextures.com/patterns/dark-wall.png"); */
-    /* background-image:
-        url("https://www.transparenttextures.com/patterns/xv.png"),
-    background-size: 25%;
-    background-position: center; */
-    /* background-repeat: no-repeat;
-
-    background-attachment: fixed; */
 }
 
 
@@ -79,9 +48,8 @@ body {
 .bg.pattern {
     background-image:
         /* url("https://www.transparenttextures.com/patterns/rice-paper-2.png"); */
-        url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
-    /* linear-gradient(to top, blue, 75%, white); */
-    background-size: 20%;
+        url("https://dgsacbpbvk2fr.cloudfront.net/static/light-paper-fibers.png");
+    background-size: 350px;
 }
 
 /* 
@@ -116,16 +84,6 @@ img.bgmountains {
 
 
 /* Probably remove the following two... */
-/* img.background-edge {
-    padding: 0;
-    margin: 0; */
-/* width: 100%; */
-/* height: 150%;
-    position: fixed;
-    z-index: 3;
-    object-fit: contain;
-    object-fit: scale-down;
-} */
 
 /* .hero.bg {
     /* background-image: 
@@ -136,25 +94,9 @@ img.bgmountains {
 } */
 
 
-/* .bgmask.edge {
-    --mgradient: linear-gradient(to left, black, 18%, rgba(0, 0, 0, 0.7) 20%, 22%, rgba(0, 0, 0, 0.2) 24%, 26%, transparent 32%, transparent);
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%; */
-/* position: fixed; */
-/* z-index: -1;
-
-    mask-image: var(--mgradient);
-    mask-size: 100% 100%;
-    -webkit-mask-image: var(--mgradient); */
-/* mask-position: center, right; */
-/* mask-repeat: no-repeat; */
-/* overflow-x: hidden; */
-/* contain: strict; */
-/* } */
 
 /* Containers, Headers */
+
 /* 
 h1,
 h2,
@@ -293,17 +235,18 @@ aspect-ratio: 1.6;
     border-radius: .4rem;
 }
 
+.resource-card.card.media .gallery {
+    padding: 1.25rem;
+}
+
 .resource-card.card.media.MuiCard-root {
     padding: 0;
     display: flex;
 }
 
-.resource-card.skeleton .MuiSkeleton-root {
-    margin: 1rem,
-}
-
+.resource-card.skeleton .MuiSkeleton-root,
 .resource-card.book .MuiCardMedia-root {
-    margin: 1rem;
+    margin: 1rem,
 }
 
 .card .MuiCardHeader-root {

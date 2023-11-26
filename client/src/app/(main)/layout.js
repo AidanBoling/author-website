@@ -6,7 +6,7 @@ import Background from '../../main/components/style/Background';
 import '@/main/styles/styles.css';
 
 export default function MainLayout(props) {
-    const footerHeight = '140px';
+    const footerHeight = '150px';
 
     return (
         <ThemeWrapper>
