@@ -8,7 +8,9 @@ async function getFilteredResourceList(
     defaultSort,
     overrides
 ) {
-    // TODO (later): When add query, add validate
+    // [-] TODO (later): When add query, add validate
+    console.log('Getting filtered list...');
+
     const { page = 1, limit = 10, ...query } = matchedData(req);
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -18,9 +20,9 @@ async function getFilteredResourceList(
             : { ...query };
     const sort = defaultSort;
 
-    console.log(`Query: \n`, query);
+    // console.log(`Query: \n`, query);
     // console.log(`Skip: ${skip}\nLimit: ${limit}`);
-    console.log('Filter: ', filter);
+    // console.log('Filter: ', filter);
 
     const items = await model
         .find(filter)

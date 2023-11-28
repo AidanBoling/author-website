@@ -14,6 +14,7 @@ import { darkTheme, lightTheme } from '@/main/components/style/theme';
 import { useTheme } from 'next-themes';
 
 // export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+// const userSetThemeValue = { dark: darkTheme, light: lightTheme };
 
 function ThemeWrapper(props) {
     const [currentTheme, setCurrentTheme] = useState(darkTheme);
@@ -23,7 +24,10 @@ function ThemeWrapper(props) {
     // console.log('resolvedTheme: ', resolvedTheme);
 
     useEffect(() => {
-        resolvedTheme === 'light'
+        const userSetTheme = localStorage.getItem('theme');
+        const setTheme = userSetTheme ? userSetTheme : resolvedTheme;
+
+        setTheme === 'light'
             ? setCurrentTheme(lightTheme)
             : setCurrentTheme(darkTheme);
     }, [resolvedTheme]);

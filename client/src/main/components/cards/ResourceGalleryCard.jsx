@@ -1,12 +1,5 @@
 'use client';
-import {
-    Card,
-    Box,
-    CardHeader,
-    CardActions,
-    CardMedia,
-    Typography,
-} from '@mui/material';
+import { Card, Box, CardActions, CardMedia, Typography } from '@mui/material';
 import {
     textLinkWrapper,
     cardMediaWithLink,

@@ -25,9 +25,10 @@ function NavbarModeButton() {
     return (
         <Tooltip title={tooltipText} sx={{ ml: 1 }}>
             <IconButton
-                onClick={() =>
-                    setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-                }
+                onClick={() => {
+                    setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
+                    // localStorage.setItem('lhrMode', resolvedTheme);
+                }}
                 color="inherit">
                 {modeIcon}
             </IconButton>
@@ -44,9 +45,10 @@ function MenuModeToggle(props) {
 
     return (
         <ListItemButton
-            onClick={() =>
-                setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-            }>
+            onClick={() => {
+                setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
+                // localStorage.setItem('lhrMode', resolvedTheme);
+            }}>
             <ListItemIcon sx={{ minWidth: '40px' }}>{modeIcon}</ListItemIcon>
             <ListItemText
                 primary={labelText}
