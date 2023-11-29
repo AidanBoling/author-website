@@ -18,7 +18,9 @@ export default function Background(props) {
 
                     display: 'flex',
                     flexDirection: 'column',
+                    width: '100vw',
                     minHeight: `calc(100vh - ${footerHeight})`,
+                    overflowX: 'hidden',
                     pb: {
                         // xs: '75px',
                         xs: '125px',

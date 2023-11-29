@@ -36,6 +36,7 @@ function Footer(props) {
     return (
         <>
             <Box
+                component="footer"
                 sx={{
                     width: '100%',
                     height: props.height,
@@ -118,6 +119,7 @@ function Footer(props) {
                             </MuiLink>
                         </Box>
                         <Typography
+                            component="small"
                             color={'grey.medLight'}
                             sx={{ fontSize: '14px', mb: 'auto', mt: '.65rem' }}>
                             © {new Date().getFullYear()}{' '}
