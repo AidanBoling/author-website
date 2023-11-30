@@ -6,6 +6,7 @@ import PostsCards from '@/main/components/lists/PostsCardsList';
 import ResourcesGalleryContainer from '@/main/components/HomeResourcesGalleryContainer';
 import ArticlesCards from '@/main/components/lists/ArticlesCardsList';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 300;
 
 export default async function Page() {
