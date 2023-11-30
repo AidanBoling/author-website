@@ -20,14 +20,16 @@ import {
 } from '../ResourceCardLinkWrappers';
 
 function ResourceCard(props) {
-    const isSmall = useMediaQuery(theme => theme.breakpoints.down('md'));
+    const isSmall = useMediaQuery(theme => theme.breakpoints.down('msm'));
     const [isExpanded, setExpanded] = useState(false);
+    const break1 = 'xs';
+    const break2 = 'msm';
 
     const mediaSX = props.mediaSXOverride
         ? props.mediaSXOverride
         : {
-              width: { xs: 'unset', md: 200 },
-              height: { xs: 200, md: 'unset' },
+              width: { [break1]: 'unset', [break2]: 200 },
+              height: { [break1]: 200, [break2]: 'unset' },
               flexShrink: 0,
           };
     const dateFormat = props.dateFormatOverride
@@ -45,7 +47,7 @@ function ResourceCard(props) {
             expand={isExpanded}
             onClick={handleExpandClick}
             aria-expanded={isExpanded}
-            aria-label="show more"
+            aria-label="Expand the article description"
             sx={{ ml: 'auto', mt: 'auto' }}>
             <ExpandMoreIcon />
         </ExpandMore>
@@ -61,7 +63,7 @@ function ResourceCard(props) {
             elevation={3}
             sx={{
                 display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
+                flexDirection: { [break1]: 'column', [break2]: 'row' },
             }}>
             {props.image &&
                 (props.mainLinkTo ? (
@@ -88,8 +90,12 @@ function ResourceCard(props) {
                         </>
                     }
                 />
-                <Divider sx={{ marginLeft: '1rem', width: '80%' }} />
-                {isSmall && props.content.length > 150 ? (
+                <Box sx={{ px: '1rem' }}>
+                    <Divider
+                        sx={{ width: { [break1]: '100%', [break2]: '80%' } }}
+                    />
+                </Box>
+                {isSmall && props.content?.length > 180 ? (
                     <>
                         <CardContent>
                             {!isExpanded

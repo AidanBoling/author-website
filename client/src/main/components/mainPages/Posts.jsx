@@ -7,7 +7,7 @@ import NoItemsMessage from '@/main/components/NoItemsMessage';
 
 function Posts(props) {
     return (
-        <Stack spacing={3}>
+        <Stack spacing={{ xs: 4, md: 3 }}>
             {props.posts.length > 0 ? (
                 props.posts.map(post => (
                     <ErrorBoundary

@@ -16,7 +16,12 @@ function Events({ children }) {
                     </Typography>
                 ))}
                 {pageContent.headerText.bullets.map((paragraph, i) => (
-                    <Box key={i} component="p" m={0} mb={'1rem'} ml={'4rem'}>
+                    <Box
+                        key={i}
+                        component="p"
+                        m={0}
+                        mb={'1rem'}
+                        ml={{ sxs: '4rem' }}>
                         <Typography
                             variant="h6"
                             component="span"

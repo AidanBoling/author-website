@@ -152,6 +152,7 @@ const themeBase = {
             xs: 0,
             sxs: 470,
             sm: 600,
+            msm: 768,
             md: 950,
             lg: 1200,
             xl: 1536,

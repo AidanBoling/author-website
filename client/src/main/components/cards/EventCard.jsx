@@ -23,6 +23,8 @@ import ExpandMore from '../ExpandToggle';
 
 function EventCard({ event }) {
     const [isExpanded, setExpanded] = useState(false);
+    const break1 = 'xs';
+    const break2 = 'msm';
 
     function handleExpandClick() {
         setExpanded(!isExpanded);
@@ -30,8 +32,17 @@ function EventCard({ event }) {
 
     return (
         <ErrorBoundary fallback={<ResourceCardError item={event} />}>
-            <Card className="card resource-card media" sx={{ display: 'flex' }}>
-                <Box sx={{ p: '1.75rem' }}>
+            <Card
+                className="card resource-card media"
+                sx={{
+                    display: 'flex',
+                    flexDirection: { [break1]: 'column', [break2]: 'row' },
+                }}>
+                <Box
+                    sx={{
+                        p: '1.75rem',
+                        pb: { [break1]: 0, [break2]: '1.75rem' },
+                    }}>
                     <Box
                         color={'primary.contrastText'}
                         bgcolor={'primary.dark'}

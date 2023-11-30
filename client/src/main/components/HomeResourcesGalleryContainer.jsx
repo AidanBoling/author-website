@@ -63,35 +63,11 @@ export default function ResourcesGalleryContainer(props) {
     const sideScroll = (element, speed, distance, step) => {
         let scrollAmount = 0;
 
-        // const scrollMax = element.scrollWidth - element.offsetWidth;
-        // let setLeft = disableButton.left;
-        // let setRight = disableButton.right;
-
-        // console.log('ScrollWidth - Width: ' + scrollMax);
-
         const slideTimer = setInterval(() => {
             element.scrollLeft += step;
             scrollAmount += Math.abs(step);
             if (scrollAmount >= distance) {
                 clearInterval(slideTimer);
-
-                // // console.log('ScrollLeft: ' + element.scrollLeft);
-                // if (element.scrollLeft > 0) {
-                //     // console.log('Setting disableButtonLEFT = false');
-                //     setLeft = false;
-                // } else if (element.scrollLeft === 0) {
-                //     // console.log('Setting disableButtonLEFT = true');
-                //     setLeft = true;
-                // }
-                // if (element.scrollLeft >= scrollMax) {
-                //     // console.log('Setting disableButtonRight = true');
-                //     setRight = true;
-                // } else if (element.scrollLeft < scrollMax) {
-                //     // console.log('Setting disableButtonRight = false');
-                //     setRight = false;
-                // }
-
-                // setDisableButton({ left: setLeft, right: setRight });
             }
         }, speed);
     };
@@ -144,20 +120,24 @@ export default function ResourcesGalleryContainer(props) {
         <Box
             sx={{
                 flexShrink: 0,
-                width: { xs: 'calc(35px + 2vw)', sm: `40px` },
+                width: {
+                    xs: 'calc(1vw)',
+                    sxs: 'calc(35px + 2vw)',
+                    sm: `40px`,
+                },
             }}
         />
     );
 
     return (
-        <Box>
+        <>
             <Typography
                 variant="h4"
                 component="p"
                 sx={{
                     mt: { xs: 'calc(4rem + 4vw)', sm: '4rem', md: '3.5rem' },
                     mb: '1rem',
-                    px: { xs: '1rem', sm: 0 },
+                    px: { xs: '.5rem', sxs: 0 },
                 }}>
                 {props.title}
             </Typography>
@@ -172,8 +152,9 @@ export default function ResourcesGalleryContainer(props) {
                     borderRadius: '.4rem',
                     ...paperColors,
                     // backgroundColor: paperBG,
-                    width: { xs: '108%', sm: 'inherit' },
-                    ml: { xs: '-4%', sm: 'inherit' },
+                    width: { xs: '120%', sm: '100%' },
+                    ml: { xs: '-10%', sm: 0 },
+
                     position: 'relative',
                 }}>
                 <ErrorBoundary fallback={<ItemsListError />}>
@@ -211,7 +192,7 @@ export default function ResourcesGalleryContainer(props) {
                                     flexShrink: 0,
                                     transitionDuration: '50ms',
                                     // pl: '1rem',
-                                    pt: '225px',
+                                    pt: '238px',
                                     backgroundColor: 'transparent',
                                     '&:hover': {
                                         color: 'primary.light',
@@ -253,6 +234,34 @@ export default function ResourcesGalleryContainer(props) {
                     <ArrowForwardIosIcon fontSize={isXS ? 'medium' : 'large'} />
                 </ScrollButton>
             </Paper>
-        </Box>
+        </>
     );
 }
+
+//
+// TEMP Archive -------------------------
+//
+//
+
+// const scrollMax = element.scrollWidth - element.offsetWidth;
+// let setLeft = disableButton.left;
+// let setRight = disableButton.right;
+// console.log('ScrollWidth - Width: ' + scrollMax);
+
+// // console.log('ScrollLeft: ' + element.scrollLeft);
+// if (element.scrollLeft > 0) {
+//     // console.log('Setting disableButtonLEFT = false');
+//     setLeft = false;
+// } else if (element.scrollLeft === 0) {
+//     // console.log('Setting disableButtonLEFT = true');
+//     setLeft = true;
+// }
+// if (element.scrollLeft >= scrollMax) {
+//     // console.log('Setting disableButtonRight = true');
+//     setRight = true;
+// } else if (element.scrollLeft < scrollMax) {
+//     // console.log('Setting disableButtonRight = false');
+//     setRight = false;
+// }
+
+// setDisableButton({ left: setLeft, right: setRight });

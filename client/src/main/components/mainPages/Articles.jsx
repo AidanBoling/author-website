@@ -7,7 +7,7 @@ import NoItemsMessage from '@/main/components/NoItemsMessage';
 
 function Articles(props) {
     return (
-        <Stack spacing={3}>
+        <Stack spacing={{ xs: 4, md: 3 }}>
             {/* {console.log('Articles: ', props.articles)} */}
             {props.articles.length > 0 ? (
                 props.articles.map(article => (

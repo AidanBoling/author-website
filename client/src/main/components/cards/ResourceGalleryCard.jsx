@@ -7,7 +7,7 @@ import {
 
 function ResourceGalleryCard(props) {
     const mediaSX = {
-        height: 200,
+        height: 215,
         flexShrink: 0,
     };
 
@@ -78,38 +78,7 @@ function ResourceGalleryCard(props) {
                         </Typography>
                     )}
                 </div>
-                {/* <CardHeader
-                    sx={{ py: '.5rem' }}
-                    title={
-                        <Typography
-                            variant="h6"
-                            component="p"
-                            sx={{ lineHeight: '1.6rem' }}>
-                            {textLinkWrapper(props, props.title)}
-                        </Typography>
-                    }
-                    subheader={
-                        <div>
-                            <Typography
-                                variant="subheading1"
-                                component="p"
-                                mt={'.5rem'}>
-                                {new Date(datePublished).toLocaleDateString(
-                                    'en-us',
-                                    dateFormat
-                                )}
-                            </Typography>
-                            {props.publisher && (
-                                <Typography
-                                    variant="subheading1"
-                                    component="p"
-                                    sx={{ fontSize: '14px', mt: '.5rem' }}>
-                                    {props.publisher}
-                                </Typography>
-                            )}
-                        </div>
-                    }
-                /> */}
+
                 {props.actions && <CardActions>{props.actions}</CardActions>}
             </Box>
         </Card>
@@ -117,3 +86,41 @@ function ResourceGalleryCard(props) {
 }
 
 export default ResourceGalleryCard;
+
+//
+//
+// TEMP Archive -------------------
+//
+
+// {/* <CardHeader
+//                     sx={{ py: '.5rem' }}
+//                     title={
+//                         <Typography
+//                             variant="h6"
+//                             component="p"
+//                             sx={{ lineHeight: '1.6rem' }}>
+//                             {textLinkWrapper(props, props.title)}
+//                         </Typography>
+//                     }
+//                     subheader={
+//                         <div>
+//                             <Typography
+//                                 variant="subheading1"
+//                                 component="p"
+//                                 mt={'.5rem'}>
+//                                 {new Date(datePublished).toLocaleDateString(
+//                                     'en-us',
+//                                     dateFormat
+//                                 )}
+//                             </Typography>
+//                             {props.publisher && (
+//                                 <Typography
+//                                     variant="subheading1"
+//                                     component="p"
+//                                     sx={{ fontSize: '14px', mt: '.5rem' }}>
+//                                     {props.publisher}
+//                                 </Typography>
+//                             )}
+//                         </div>
+//                     }
+//                 /> */}

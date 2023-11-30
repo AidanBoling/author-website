@@ -18,12 +18,18 @@ function BookCard({ book }) {
                 Order on {store.location}
             </Button>
         ));
+    // width: '325px',
+    const break1 = 'xs';
+    const break2 = 'msm';
 
     const mediaSXOverride = {
-        width: 200,
-        height: 275,
+        width: { [break1]: 250, [break2]: 200 },
+        aspectRatio: '0.67',
+        // height: 275,
         borderRadius: '.25rem',
-        m: '.75rem',
+        mx: { [break1]: 'auto', [break2]: '.75rem' },
+        mt: { [break1]: '1.25rem', [break2]: '.75rem' },
+        mb: { [break1]: 0, [break2]: '.75rem' },
         flexShrink: 0,
     };
 
@@ -47,10 +53,10 @@ function BookCard({ book }) {
                     sx={{
                         width: '100%',
                         display: 'flex',
-                        flexDirection: { xs: 'column', md: 'row' },
+                        flexDirection: { [break1]: 'column', sm: 'row' },
                         gap: '1rem',
                         justifyContent: 'space-between',
-                        mr: '1.75rem',
+                        mr: { [break1]: 0, sm: '1.75rem' },
                     }}>
                     <Button
                         component={Link}
@@ -66,9 +72,20 @@ function BookCard({ book }) {
                 <Box
                     sx={{
                         width: '100%',
+                        // display: { [break1]: 'flex', sm: 'inline' },
                         display: 'flex',
-                        mr: '1.75rem',
+                        flexDirection: { [break1]: 'column', sm: 'row' },
+                        gap: '1rem',
+                        justifyContent: 'space-between',
+                        mr: { [break1]: 0, sm: '1.75rem' },
                     }}>
+                    <Button
+                        component={Link}
+                        href={`/published/books/id/${book._id}`}
+                        className="link"
+                        variant="outlined">
+                        ➣ Read more
+                    </Button>
                     {purchaseButtons}
                 </Box>
             }

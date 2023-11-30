@@ -11,7 +11,6 @@ export default function Background(props) {
     return (
         <>
             <Box
-                component="div"
                 // className="bgmountains"
                 sx={{
                     position: 'relative',
@@ -25,6 +24,7 @@ export default function Background(props) {
                         // xs: '75px',
                         xs: '125px',
                         lg: '175px',
+                        xl: '325px',
                     },
                 }}>
                 <Box
