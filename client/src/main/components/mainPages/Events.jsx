@@ -57,7 +57,7 @@ function Events({ children }) {
                                 paddingLeft: '8px',
                             }}>
                             See a list of {authorInfo.author.title}
-                            {authorInfo.author.lName}'s past speaking
+                            {authorInfo.author.lName}&apos;s past speaking
                             engagements
                         </Typography>
                         <Box component="ul" sx={{ ml: '1.5rem', my: '1rem' }}>
