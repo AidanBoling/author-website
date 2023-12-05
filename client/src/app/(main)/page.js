@@ -6,7 +6,7 @@ import PostsCards from '@/main/components/lists/PostsCardsList';
 import ResourcesGalleryContainer from '@/main/components/HomeResourcesGalleryContainer';
 import ArticlesCards from '@/main/components/lists/ArticlesCardsList';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // Temporary workaround for NextJS bug -- 304 response for static pages with revalidate
 export const revalidate = 300;
 
 export default async function Page() {
