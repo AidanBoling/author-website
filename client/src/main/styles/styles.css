@@ -17,16 +17,12 @@
 }
 
 * {
-    /* padding: 0; */
-    /* margin: 0; */
     box-sizing: border-box;
 }
 
 html {
     margin: 0 !important;
     padding: 0;
-    /* font-family: "Helvetica", sans-serif; */
-    /* width: 100%; */
     width: 100vw;
     overflow-x: hidden;
     display: flex;
@@ -42,6 +38,14 @@ body {
     margin: 0 !important;
 }
 
+details summary {
+    cursor: pointer;
+}
+
+details summary>* {
+    display: inline;
+}
+
 
 /* Backgrounds */
 
@@ -51,17 +55,6 @@ body {
         url("https://dgsacbpbvk2fr.cloudfront.net/static/light-paper-fibers.png");
     background-size: 350px;
 }
-
-/* 
-.bgmountains.gradient {
-    height: 100%;
-    width: 100%;
-    background-image:
-        linear-gradient(to top, rgba(162, 166, 184, 1), transparent);
-
-    background-repeat: no-repeat;
-    /* background-attachment: fixed; */
-/*} */
 
 img.bgmountains {
     margin-top: auto;
@@ -83,60 +76,7 @@ img.bgmountains {
 }
 
 
-/* Probably remove the following two... */
-
-/* .hero.bg {
-    /* background-image: 
-    lineargradient(to right, ),
-    url("https://picsum.photos/800/400?random=1");
-
-    background-color: var(--forest-green-light);
-} */
-
-
-
 /* Containers, Headers */
-
-/* 
-h1,
-h2,
-a { */
-/* color: var(--text-color); */
-/* font-weight: 300;
-} */
-
-/* .main { */
-/* margin: 0px 16px; */
-/* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem 5vw; */
-
-/* background-image: url("../../assets/leaves-wall_matteo-miliddi-unsplash.jpeg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: 25% 25%; */
-/* width: 100%; */
-/* } */
-
-/* .main .header {
-    text-align: center;
-    /* align-self: center; */
-/*    margin: 2rem 0;
-} */
-
-/* .main>.content {
-    width: 80%;
-    max-width: 900px;
-} */
-
-/* .main  hr {
-    width: 80vw;
-    max-width: 700px; */
-/* color: var(--grey-m); */
-/* background: var(--grey-m); */
-/* } */
 
 .main h1 {
     text-align: center;
@@ -151,16 +91,6 @@ a { */
 
 /* --Home-- */
 
-/* .home-header-image {
-    width: 100%;
-    object-fit: cover;
-} */
-
-
-/* div.gallery-container * {
-    scrollbar-width: thin;
-    scrollbar-color: transparent;
-} */
 
 /* .MuiBox-root.gallery-container {
     display: flex;
@@ -174,29 +104,6 @@ a { */
     border-radius: .4rem;
     padding: 2rem;
     overflow-x: scroll;
-} */
-
-/* div.gallery-container *::-webkit-scrollbar {
-    width: 25px;
-    height: 25px;
-} */
-
-/* Track */
-/* *::-webkit-scrollbar {
-    width: 25px !important;
-    height: 25px;
-
-} */
-
-/* Handle */
-/* .gallery-container::-webkit-scrollbar-thumb {
-    background: #3e3e3e;
-    border-radius: .5rem;
-} */
-
-/* Handle on hover */
-/* .gallery-container::-webkit-scrollbar-thumb:hover {
-    background: #323232;
 } */
 
 
@@ -273,26 +180,11 @@ aspect-ratio: 1.6;
 
 .contactform .MuiTextField-root {
     width: 100%;
-    /* margin: 2rem; */
 }
 
 
 
 /* POSTS */
-
-/* 
-.post.card {
-    margin: 2.5rem 0;
-} */
-
-/* .post-header {
-    display: flex;
-    align-items: baseline;
-}
-
-.post-header.fullpage {
-    flex-direction: column;
-} */
 
 .post-header span {
     margin-left: auto;
@@ -301,10 +193,6 @@ aspect-ratio: 1.6;
 .post-header h1 {
     margin-bottom: 0;
 }
-
-/* .post-header h2 {
-    margin-bottom: .5rem;
-} */
 
 .post.card .link {
     text-decoration: none;
