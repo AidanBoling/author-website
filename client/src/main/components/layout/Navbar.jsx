@@ -23,16 +23,15 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { NavButton } from '@/main/components/NavButton';
 import pageContent from '@/main/content/authorDetails.json';
-// import logo from '@/assets/logo-art.png';
 
 const pages = [
-    { name: 'HOME', link: '/' },
-    { name: 'BOOKS', link: '/published/books' },
-    { name: 'ARTICLES', link: '/published/articles' },
-    { name: 'BLOG', link: '/published/posts' },
-    { name: 'EVENTS', link: '/events' },
-    { name: 'ABOUT', link: '/about' },
-    { name: 'CONTACT', link: '/contact' },
+    { name: 'Home', link: '/' },
+    { name: 'Books', link: '/published/books' },
+    { name: 'Articles', link: '/published/articles' },
+    { name: 'Blog', link: '/published/posts' },
+    { name: 'Speaking', link: '/events' },
+    { name: 'About', link: '/about' },
+    { name: 'Contact', link: '/contact' },
 ];
 
 function Navbar() {
@@ -139,7 +138,6 @@ function Navbar() {
                             maxWidth: { xs: '55%', sm: '100%' },
                             flexGrow: '1',
                             fontFamily: 'var(--font-alex-brush), cursive',
-                            // fontFamily: "'Great Vibes', cursive",
                             textAlign: 'center',
                             mb: { xs: '.25rem', sm: '.6rem', md: '.6rem' },
                             mt: { xs: '.6rem', sm: '1rem', md: '.8rem' },
@@ -260,47 +258,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-//
-//
-// TEMP Archive -------------------
-//
-
-//{/* {pages.map(page => (
-//<Typography
-// key={page.name}
-// component="span"
-// zIndex={1}
-// sx={{ ...navTextStyles }}>
-// <MuiLink
-//     component={Link}
-//     href={page.link}
-//     underline="none"
-//     color="inherit"
-//     sx={{
-//         ':hover': {
-//             color: 'lightgold.light',
-//         },
-//     }}>
-//     {page.name}
-// </MuiLink>
-// </Typography>
-// ))}
-
-//
-//
-// <Box
-//     component="span"
-//     sx={{
-//         mb: 0,
-//     }}>
-//     {pageContent.author.fName}
-// </Box>
-// <Box
-//     component="span"
-//     sx={{
-//         display: { xs: 'block', sm: 'inline' },
-//         // mt: '.5rem',
-//     }}>
-//     {pageContent.author.lName}
-// </Box>

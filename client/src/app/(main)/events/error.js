@@ -3,6 +3,10 @@ import ResourceListPageError from '@/main/components/errors/ResourceListPageErro
 
 export default function Error({ error, reset }) {
     return (
-        <ResourceListPageError resource="Events" error={error} reset={reset} />
+        <ResourceListPageError
+            resource="Speaking & Consultations"
+            error={error}
+            reset={reset}
+        />
     );
 }

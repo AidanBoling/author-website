@@ -20,6 +20,7 @@ function PageTitle(props) {
                 <DividerStyled
                     sx={{
                         width: '100%',
+                        marginTop: '.5rem',
                     }}
                 />
             </Box>

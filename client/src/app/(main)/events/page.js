@@ -12,7 +12,7 @@ export default function Page() {
     preloadGetList('events');
 
     return (
-        <PageWrapper header="Events">
+        <PageWrapper header="Speaking & Consultations">
             <Events>
                 <Suspense fallback={<EventListSkeleton />}>
                     <EventsList />

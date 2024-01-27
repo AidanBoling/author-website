@@ -5,7 +5,7 @@ import EventCardSkeleton from '@/main/components/skeletons/EventCardSkeleton';
 
 export default function EventPageHeaderSkeleton() {
     return (
-        <PageWrapper header="Events">
+        <PageWrapper header="Speaking & Consultations">
             <Box sx={{ my: '2rem' }}>
                 <Skeleton variant="text" sx={{ fontSize: '1.25rem' }} />
                 <Skeleton variant="text" sx={{ fontSize: '1.25rem' }} />

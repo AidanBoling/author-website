@@ -58,6 +58,7 @@ export function NavButton({ page }) {
         fontWeight: '300',
         fontSize: '1.1rem',
         letterSpacing: '.02rem',
+        textTransform: 'uppercase',
     };
     const ulWidth = page.name.length + 2;
 
