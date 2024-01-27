@@ -59,9 +59,6 @@ details summary>* {
 img.bgmountains {
     margin-top: auto;
     width: 100%;
-    /* height: 50vw; */
-    /* transform: translateY(45%); */
-    /* object-fit: scale-down; */
 }
 
 
@@ -88,51 +85,6 @@ img.bgmountains {
 }
 
 /* PAGES */
-
-/* --Home-- */
-
-
-/* .MuiBox-root.gallery-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 400px;
-    flex-shrink: 0;
-    flex-wrap: nowrap;
-    border-width: 5px !important;
-    border-color: grey !important;
-    border-radius: .4rem;
-    padding: 2rem;
-    overflow-x: scroll;
-} */
-
-
-/* .home-headerhero-mask {
-
-    --mgradient: linear-gradient(to left, black, rgba(0, 0, 0, 0.7), transparent, transparent);
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    mask-image: var(--mgradient);
-    mask-size: 100% 100%;
-    -webkit-mask-image: var(--mgradient);
-    mask-position: center, right;
-    mask-repeat: no-repeat;
-} */
-
-/* .page-title {
-    margin-bottom: 2rem;
-} */
-
-/* --Resource full pages-- */
-/* 
-.book-cover {
-aspect-ratio: 1.6;
-
-} */
-
 
 /* Resource Cards */
 
