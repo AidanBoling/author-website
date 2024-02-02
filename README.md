@@ -4,7 +4,7 @@ The professional website for an author to showcase her written works, and as a p
 
 I designed and built this full-stack project from scratch, using React/NextJS (React framework) for the front-end, Express for the backend server/API, and the database on MongoDB Atlas. The front-end content management section was built using the React Admin library.
 
--   [Visit Live Site](https://www.laurenhallruddell.com)
+-   [Visit live site](https://www.laurenhallruddell.com)
 -   [Read more project details](https://aidanboling.com/work/author-site) on my portfolio site
 
 
@@ -16,9 +16,9 @@ I designed and built this full-stack project from scratch, using React/NextJS (R
 
 ## Screenshots
 
-![Screenshots of home page in browser and mobile view](https://dg8lucrkskkqo.cloudfront.net/LHR-Cover.png 'Homepage')
-![Screenshots of articles page and a post page](https://dg8lucrkskkqo.cloudfront.net/LHR-Pages.png 'Homepage')
-![Screenshots of content management list, post detail, and post edit pages](https://dg8lucrkskkqo.cloudfront.net/LHR-Admin-pages.png 'Content management pages')
+<img src="https://dg8lucrkskkqo.cloudfront.net/LHR-Cover.png" width="550" alt="Views of home page in browser and mobile view" title="Homepage">
+<img src="https://dg8lucrkskkqo.cloudfront.net/LHR-Pages.png" width="550" alt="Articles list page and a post page" title="Published work pages">
+<img src="https://dg8lucrkskkqo.cloudfront.net/LHR-Admin-pages.png" width="550" alt="Screenshots of content management list, post detail, and post edit pages" title="Content management pages">
 
 
 ## Feature Spotlight: User Authentication
@@ -31,7 +31,8 @@ Implementation details include:
 -   Restricted accounts — account creation and “forgot password” reset require a time-limited code from the site admin, created through backend
 -   User sessions managed using session IDs
 
-![Screenshots of content management login screens and user security settings](https://dg8lucrkskkqo.cloudfront.net/LHR-Admin-security.png 'Login and security settings pages')
+  
+<img src="https://dg8lucrkskkqo.cloudfront.net/LHR-Admin-security.png" width="550" alt="Content management login screens and user security settings" title="Login and security settings pages">
 
 
 ## Current Status/Upcoming Features
